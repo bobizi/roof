@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Калькулятор Металлочерепицы • Заказ прямоугольниками</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  body{font-family:'Inter',sans-serif;background:#eef2f7}
+  .card{background:#fff;border-radius:.85rem;box-shadow:0 4px 14px -4px rgba(15,23,42,.12);border:1px solid #e2e8f0}
+  canvas{display:block;width:100%;height:100%}
+  .fld{width:100%;padding:.5rem .6rem;border:1px solid #cbd5e1;border-radius:.45rem;background:#f8fafc;font-size:.9rem;transition:.15s}
+  .fld:focus{outline:none;border-color:#e11d48;background:#fff;box-shadow:0 0 0 3px rgba(225,29,72,.15)}
+  .chip{display:inline-flex;align-items:center;gap:.35rem;padding:.2rem .55rem;border-radius:.4rem;font-size:.7rem;font-weight:600;border:1px solid}
+  select.fld{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='3'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .6rem center;padding-right:1.8rem}
+</style>
+</head>
+<body class="p-3 md:p-6 text-slate-800">
+
+<div class="max-w-[1500px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-5">
+
+  <!-- ============ INPUTS ============ -->
+  <div class="lg:col-span-4 xl:col-span-3 space-y-5">
+    <div class="bg-gradient-to-br from-rose-600 to-orange-600 text-white p-5 rounded-2xl shadow-lg">
+      <h1 class="text-xl font-extrabold leading-tight">🏠 Металлочерепица</h1>
+      <p class="text-rose-100 text-xs mt-1">Заказ прямоугольниками • косой рез — на месте</p>
+    </div>
+
+    <div class="card p-4 space-y-3">
+      <h3 class="font-bold text-slate-700 border-b pb-2 text-sm">📐 Геометрия ската (м)</h3>
+      <div class="grid grid-cols-2 gap-3">
+        <div class="col-span-2"><label class="text-[10px] font-bold text-slate-500 uppercase flex justify-between">Конёк (верх)<span class="bg-slate-200 px-1 rounded text-[9px]">0 = треугольник</span></label>
+          <input type="number" id="inRidge" value="0" step="0.1" min="0" class="fld mt-1 border-t-2 border-t-rose-400"></div>
+        <div class="col-span-2"><label class="text-[10px] font-bold text-slate-500 uppercase">Карниз (низ)</label>
+          <input type="number" id="inCornice" value="9" step="0.1" min="0.1" class="fld mt-1 border-b-2 border-b-orange-400"></div>
+        <div><label class="text-[10px] font-bold text-slate-500 uppercase">Левый скос</label>
+          <input type="number" id="inLeft" value="4.5" step="0.1" min="0.1" class="fld mt-1 border-l-4 border-l-blue-400"></div>
+        <div><label class="text-[10px] font-bold text-slate-500 uppercase">Правый скос</label>
+          <input type="number" id="inRight" value="4.5" step="0.1" min="0.1" class="fld mt-1 border-r-4 border-r-blue-400"></div>
+      </div>
+      <p class="text-[10px] text-slate-400 italic">* Длина по скату (карниз→конёк) — по теореме Пифагора.</p>
+    </div>
+
+    <div class="card p-4 space-y-3 border-l-4 border-l-rose-500">
+      <h3 class="font-bold text-rose-700 border-b pb-2 text-sm">🧱 Профиль черепицы</h3>
+      <label class="text-[10px] font-bold text-slate-500 uppercase">Марка</label>
+      <select id="grade" class="fld mt-1" onchange="applyGrade()">
+        <option value="custom">— задать вручную —</option>
+        <option value="monterrey" selected>Монтеррей (1100/1180, шаг 350)</option>
+        <option value="supermonterrey">Супермонтеррей (1100/1180, шаг 350)</option>
+        <option value="maxi">Макси (1100/1180, шаг 400)</option>
+        <option value="cascade">Каскад (1000/1080, шаг 350)</option>
+        <option value="kameya">Камея (1000/1080, шаг 350)</option>
+      </select>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="text-[10px] font-bold text-slate-500 uppercase">Рабочая ширина, мм</label><input type="number" id="usefulW" value="1100" class="fld mt-1"></div>
+        <div><label class="text-[10px] font-bold text-slate-500 uppercase">Полная ширина, мм</label><input type="number" id="fullW" value="1180" class="fld mt-1"></div>
+        <div><label class="text-[10px] font-bold text-slate-500 uppercase">Шаг волны, мм</label><input type="number" id="waveStep" value="350" class="fld mt-1"></div>
+        <div><label class="text-[10px] font-bold text-slate-500 uppercase">1-й модуль, мм</label><input type="number" id="firstLen" value="500" class="fld mt-1"></div>
+      </div>
+      <p class="text-[10px] text-slate-400 italic">Длина N-модуля = 1-й модуль + (N−1)·шаг. Лист заказывается прямоугольником модульной длины.</p>
+    </div>
+
+    <div class="card p-4 space-y-3 border-l-4 border-l-purple-500">
+      <h3 class="font-bold text-purple-700 border-b pb-2 text-sm">⚙️ Укладка</h3>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="text-[10px] font-bold text-slate-500 uppercase">Нахлёст по длине, мм</label><input type="number" id="overL" value="150" class="fld mt-1"></div>
+        <div><label class="text-[10px] font-bold text-slate-500 uppercase">Свес карниза, мм</label><input type="number" id="overhang" value="50" class="fld mt-1"></div>
+        <div class="col-span-2"><label class="text-[10px] font-bold text-slate-500 uppercase">Макс. длина листа, м</label><input type="number" id="maxLen" value="3.65" step="0.05" class="fld mt-1"></div>
+      </div>
+    </div>
+
+    <button onclick="calculate()" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 rounded-xl shadow-md transition active:scale-95">🚀 Рассчитать заказ</button>
+  </div>
+
+  <!-- ============ RESULTS ============ -->
+  <div class="lg:col-span-8 xl:col-span-9 space-y-5">
+
+    <div id="statsGrid" class="hidden grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div class="card p-3 bg-rose-50 border-rose-200"><div class="text-[10px] text-rose-600 font-bold uppercase">Листов (шт)</div><div class="text-2xl font-extrabold text-rose-800" id="statSheets">0</div></div>
+      <div class="card p-3 bg-indigo-50 border-indigo-200"><div class="text-[10px] text-indigo-600 font-bold uppercase">Заказ, м²</div><div class="text-2xl font-extrabold text-indigo-800" id="statBuy">0</div></div>
+      <div class="card p-3 bg-emerald-50 border-emerald-200"><div class="text-[10px] text-emerald-600 font-bold uppercase">КПД</div><div class="text-2xl font-extrabold text-emerald-800" id="statEff">0%</div></div>
+      <div class="card p-3 bg-orange-50 border-orange-200"><div class="text-[10px] text-orange-600 font-bold uppercase">Отрежу сам, м²</div><div class="text-2xl font-extrabold text-orange-800" id="statWaste">0</div></div>
+    </div>
+
+    <div id="periGrid" class="hidden grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+      <div class="card p-2 text-center"><span class="text-slate-400">Площадь ската</span><div class="font-bold text-slate-700" id="pRoof">0</div></div>
+      <div class="card p-2 text-center"><span class="text-slate-400">Карниз / конёк</span><div class="font-bold text-slate-700" id="pEdges">0</div></div>
+      <div class="card p-2 text-center"><span class="text-slate-400">Колонок</span><div class="font-bold text-slate-700" id="pCols">0</div></div>
+      <div class="card p-2 text-center"><span class="text-slate-400">Нахлёсты (перерасход)</span><div class="font-bold text-slate-700" id="pOver">0</div></div>
+    </div>
+
+    <div class="card p-4">
+      <div class="flex flex-wrap justify-between items-center mb-2 gap-2">
+        <h3 class="font-bold text-slate-700 text-sm">🗺️ Раскладка (вид сверху): прямоугольники = заказ, штриховка = отрежете сами</h3>
+        <div class="flex gap-3 text-[11px]">
+          <span class="flex items-center"><span class="w-3 h-3 rounded-sm mr-1 border border-slate-400"></span>Лист (цвет = длина)</span>
+          <span class="flex items-center"><span class="w-3 h-3 mr-1" style="background:repeating-linear-gradient(45deg,#fca5a5,#fca5a5 2px,#fee2e2 2px,#fee2e2 4px)"></span>Косой рез / конёк</span>
+          <span class="flex items-center"><span class="w-3 h-1 bg-amber-700 mr-1"></span>Обрешётка (шаг волны)</span>
+        </div>
+      </div>
+      <div class="rounded-lg border border-slate-200 relative bg-slate-50" style="height:540px"><canvas id="schemeCanvas"></canvas></div>
+    </div>
+
+    <div id="orderSection" class="hidden card p-5 border-l-4 border-l-blue-500">
+      <h3 class="font-bold text-blue-700 mb-1 text-sm">🛒 Заказ на производство (прямоугольные листы, шт)</h3>
+      <p class="text-[11px] text-slate-500 mb-3">Заказываете листы прямоугольниками модульной длины. По фронтонам и коньку подрежете на месте. Цвет = цвет на схеме.</p>
+      <div id="orderList" class="flex flex-wrap gap-2"></div>
+    </div>
+
+    <div id="cutSection" class="hidden card p-5 border-l-4 border-l-emerald-500">
+      <h3 class="font-bold text-emerald-700 mb-1 text-sm">✂️ Подсказка по резу (типы прямоугольников)</h3>
+      <p class="text-[11px] text-slate-500 mb-3">Каждая плашка — прямоугольный лист из заказа. Красный пунктир — линия косого реза по фронтону, серая полоса сверху — срежете по коньку.</p>
+      <div id="cutList" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2"></div>
+    </div>
+
+    <div class="card p-5">
+      <h3 class="font-bold text-slate-700 mb-3 text-sm">📋 Раскладка по колонкам (слева направо, ярусы снизу вверх)</h3>
+      <div id="detailsList" class="space-y-2 max-h-[460px] overflow-y-auto text-sm pr-1"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* пресеты: [рабочая_мм, полная_мм, шаг_волны_мм, 1-й_модуль_мм] */
+const GRADES={
+  monterrey:[1100,1180,350,500], supermonterrey:[1100,1180,350,500],
+  maxi:[1100,1180,400,550], cascade:[1000,1080,350,500], kameya:[1000,1080,350,500]
+};
+function applyGrade(){ const g=document.getElementById('grade').value;
+  if(GRADES[g]){ const d=GRADES[g];
+    document.getElementById('usefulW').value=d[0]; document.getElementById('fullW').value=d[1];
+    document.getElementById('waveStep').value=d[2]; document.getElementById('firstLen').value=d[3]; } }
+
+const PALETTE=['#e11d48','#0ea5e9','#10b981','#f59e0b','#8b5cf6','#ec4899','#14b8a6','#eab308','#06b6d4','#f97316','#a855f7','#84cc16','#6366f1','#65a30d','#7c3aed','#db2777'];
+const r2=v=>Math.round(v*100)/100, EPS=1e-4;
+
+/* фронтоны: x_left(y), x_right(y); центр ската x=0 */
+function fronts(C,R,H){ const half=(C-R)/2||1e-9;
+  return { L:y=>-C/2+half*(y/H), R:y=>C/2-half*(y/H) }; }
+function heightAt(x,C,R,H){ const half=(C-R)/2||1e-9;
+  if(x<=-R/2) return Math.max(0,H*(x+C/2)/half);
+  if(x>= R/2) return Math.max(0,H*(C/2-x)/half);
+  return H; }
+/* интеграл clamp(p+q*y,0,w) по [a,b] */
+function intClamp(p,q,w,a,b){ if(b<=a) return 0; const pts=[a,b];
+  if(Math.abs(q)>1e-9){ const y0=-p/q,yw=(w-p)/q; if(y0>a&&y0<b)pts.push(y0); if(yw>a&&yw<b)pts.push(yw); }
+  pts.sort((x,y)=>x-y); let s=0;
+  for(let i=0;i<pts.length-1;i++){ const m=(pts[i]+pts[i+1])/2; let f=p+q*m; f=f<0?0:(f>w?w:f); s+=f*(pts[i+1]-pts[i]); }
+  return s; }
+/* полезная площадь листа [x0,x0+W] на скате в диапазоне y∈[yA,yB] */
+function usefulArea(x0,W,C,R,H,yA,yB){
+  const a=Math.max(yA,0), b=Math.min(yB,H); if(b<=a) return 0;
+  const half=(C-R)/2||1e-9;
+  const leftCut = intClamp((-C/2+ -x0), half/H, W, a, b);          // max(0, x_left-x0)
+  const rightCut= intClamp((x0+W - C/2), -half/H, W, a, b);        // max(0, x0+W-x_right)
+  return Math.max(0, W*(b-a) - leftCut - rightCut);
+}
+
+/* модульные длины (м), не превышающие maxLen */
+function buildAvail(firstLen,step,maxLen){ const a=[]; let n=1;
+  while(n<80){ const L=(firstLen+(n-1)*step)/1000; if(L>maxLen+EPS) break; a.push({n,len:+L.toFixed(4)}); n++; }
+  if(!a.length) a.push({n:1,len:+(firstLen/1000).toFixed(4)}); return a; }
+function ceilMod(a,v){ for(const x of a) if(x.len>=v-EPS) return x; return a[a.length-1]; }
+
+/* раскрой колонки по длине: жадно макс.модулем, последний округлён вверх */
+function layoutColumn(maxH,avail,overL,start){
+  const maxA=avail[avail.length-1].len, minA=avail[0].len, tiers=[]; let b=-start, guard=0;
+  while(b<maxH-EPS && guard++<60){
+    const rem=maxH-b;
+    if(rem<=maxA+EPS){ const L=ceilMod(avail,Math.max(rem,minA)).len; tiers.push({len:L,b,t:b+L}); break; }
+    const L=maxA; tiers.push({len:L,b,t:b+L}); b=b+L-overL;
+  }
+  return tiers;
+}
+
+function calculate(){
+  const R=+document.getElementById('inRidge').value||0;
+  const C=+document.getElementById('inCornice').value||0;
+  const leftL=+document.getElementById('inLeft').value||0;
+  const uW=(+document.getElementById('usefulW').value||1100)/1000;
+  const fW=(+document.getElementById('fullW').value||1180)/1000;
+  const wStep=(+document.getElementById('waveStep').value||350)/1000;
+  const fLen=(+document.getElementById('firstLen').value||500)/1000;
+  const overL=(+document.getElementById('overL').value||150)/1000;
+  const start=(+document.getElementById('overhang').value||50)/1000;
+  const maxLen=+document.getElementById('maxLen').value||3.65;
+
+  if(fW<=uW){ alert('Полная ширина должна быть больше рабочей!'); return; }
+
+  let H=0; const diff=(C-R)/2;
+  if(R===0) H=leftL;
+  else if(leftL>Math.abs(diff)) H=Math.sqrt(leftL*leftL-diff*diff);
+  else { alert('Ошибка геометрии: боковой скос слишком короткий.'); return; }
+
+  const fr=fronts(C,R,H), avail=buildAvail(fLen*1000,wStep*1000,maxLen);
+  const N=Math.max(1,Math.ceil(C/uW-EPS));
+  const cols=[]; let sheets=0,buy=0,waste=0,overlap=0;
+  const lenG={}, cutT={};
+
+  for(let j=0;j<N;j++){
+    const w=(j===N-1)?Math.max(0.05,C-(N-1)*uW):uW;     // рабочая ширина колонки
+    const x0=-C/2+j*uW, x1=x0+w;
+    const hL=heightAt(x0,C,R,H), hR=heightAt(x1,C,R,H), maxH=Math.max(hL,hR);
+    if(maxH<=0.01) continue;
+    const tiers=layoutColumn(maxH,avail,overL,start);
+
+    tiers.forEach(t=>{
+      sheets++; buy+=fW*t.len;
+      const yA=Math.max(t.b,0), yB=Math.min(t.t,H);
+      const use=usefulArea(x0,fW,C,R,H,yA,yB);          // на скате (рабочая ширина листа = fW)
+      const overhangA=fW*Math.max(0,Math.min(t.t,0)-t.b);// свес карниза (не отход)
+      waste += Math.max(0, fW*t.len - use - overhangA);  // косой рез + запас конька
+      overlap += (fW-w)*Math.max(0,yB-yA);              // нахлёст по ширине
+      const Lmm=Math.round(t.len*1000);
+      (lenG[Lmm]=lenG[Lmm]||{count:0}).count++;
+      const delta=r2(Math.abs(hL-hR)), side=delta<0.001?'-':(hL<hR?'L':'R');
+      const topCut=r2(Math.max(0,t.t-H));
+      const key=`${Lmm}|${side}|${delta}|${topCut}`;
+      (cutT[key]=cutT[key]||{count:0,len_mm:Lmm,side,delta,topCut}).count++;
+    });
+    for(let i=1;i<tiers.length;i++){ const ov=Math.max(0,tiers[i-1].t-tiers[i].b); overlap+=w*ov; }
+    cols.push({j,x0,x1,w,hL,hR,tiers});
+  }
+
+  const sorted=Object.keys(lenG).map(Number).sort((a,b)=>a-b);
+  sorted.forEach((L,i)=> lenG[L].color=PALETTE[i%PALETTE.length]);
+  cols.forEach(c=> c.tiers.forEach(t=> t.color=lenG[Math.round(t.len*1000)].color));
+
+  const Sroof=(C+R)/2*H, eff=buy>0?(Sroof/buy*100):0;
+
+  document.getElementById('statsGrid').classList.remove('hidden');
+  document.getElementById('periGrid').classList.remove('hidden');
+  document.getElementById('statSheets').textContent=sheets;
+  document.getElementById('statBuy').textContent=r2(buy);
+  document.getElementById('statEff').textContent=eff.toFixed(1)+'%';
+  document.getElementById('statWaste').textContent=r2(waste);
+  document.getElementById('pRoof').textContent=r2(Sroof)+' м²';
+  document.getElementById('pEdges').textContent=C+' / '+R+' м';
+  document.getElementById('pCols').textContent=cols.length+' шт';
+  document.getElementById('pOver').textContent=r2(overlap)+' м²';
+
+  document.getElementById('orderSection').classList.remove('hidden');
+  document.getElementById('orderList').innerHTML = sorted.map(L=>{ const c=lenG[L].color;
+    return `<span class="chip px-3 py-1 text-sm" style="background:${c}22;border-color:${c}88;color:${c}">
+      <span class="w-2 h-2 rounded-full" style="background:${c}"></span>${L} мм × <b class="ml-1 text-base">${lenG[L].count}</b> шт</span>`;
+  }).join('')+`<span class="chip bg-slate-100 text-slate-600 border-slate-300 text-sm px-3 py-1">лист ${Math.round(fW*1000)} мм · итого ${r2(buy)} м²</span>`;
+
+  const maxLmm=sorted[sorted.length-1]||1;
+  document.getElementById('cutSection').classList.remove('hidden');
+  document.getElementById('cutList').innerHTML = Object.values(cutT).sort((a,b)=>b.len_mm-a.len_mm).map(t=>{
+    const col=lenG[t.len_mm].color, W=170,Hh=52,pad=5, sc=(W-2*pad)/(maxLmm/1000);
+    const w=(t.len_mm/1000)*sc, x=pad, top=pad, bot=Hh-pad;
+    const topFrac=Math.min(0.45, t.topCut/Math.max(0.3,t.len_mm/1000));   // серая полоса конька
+    const sl=t.side==='L';
+    const diagF=Math.min(0.7, 0.12 + t.delta/Math.max(0.4,t.len_mm/1000)*0.6);
+    let body;
+    if(t.side==='-'){
+      body=`<rect x="${x}" y="${top}" width="${w}" height="${(bot-top)*(1-topFrac)}" fill="${col}" opacity=".85"/>`;
+    } else {
+      const yTopCut=top+(bot-top)*topFrac;
+      const p = sl ? `${x},${yTopCut+(bot-yTopCut)*diagF} ${x+w},${yTopCut} ${x+w},${bot} ${x},${bot}`
+                   : `${x},${yTopCut} ${x+w},${yTopCut+(bot-yTopCut)*diagF} ${x+w},${bot} ${x},${bot}`;
+      body=`<rect x="${x}" y="${yTopCut}" width="${w}" height="${bot-yTopCut}" fill="#fee2e2"/>
+            <polygon points="${p}" fill="${col}" opacity=".85"/>
+            <line x1="${sl?x:x+w}" y1="${sl?yTopCut+(bot-yTopCut)*diagF:yTopCut}" x2="${sl?x+w:x}" y2="${sl?yTopCut:yTopCut+(bot-yTopCut)*diagF}" stroke="#dc2626" stroke-width="1.6" stroke-dasharray="4 2"/>`;
+    }
+    const topBar = topFrac>0.001 ? `<rect x="${x}" y="${top}" width="${w}" height="${(bot-top)*topFrac}" fill="#cbd5e1"/>
+       <line x1="${x}" y1="${top+(bot-top)*topFrac}" x2="${x+w}" y2="${top+(bot-top)*topFrac}" stroke="#64748b" stroke-width="1" stroke-dasharray="3 2"/>` : '';
+    const sideTxt=t.side==='-'?'прямой лист':(t.side==='L'?'рез слева':'рез справа');
+    return `<div class="rounded-lg p-2 border" style="border-color:${col}66;background:${col}10">
+      <div class="flex justify-between items-center mb-1">
+        <span class="text-xs font-bold" style="color:${col}">${t.len_mm} мм</span>
+        <span class="text-[10px] bg-white px-1.5 py-0.5 rounded border border-slate-200">×${t.count}</span>
+      </div>
+      <svg width="100%" viewBox="0 0 ${W} ${Hh}" class="block">${body}${topBar}
+        <rect x="${x}" y="${top}" width="${w}" height="${bot-top}" fill="none" stroke="${col}" stroke-width="1"/></svg>
+      <div class="text-[10px] text-slate-500 mt-1">${sideTxt}${t.delta>0.001?` · перепад ${t.delta} м`:''}${t.topCut>0.001?` · конёк −${t.topCut} м`:''}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('detailsList').innerHTML = cols.map(c=>`
+    <div class="border-b border-slate-100 pb-2 last:border-0">
+      <div class="flex justify-between items-center mb-1">
+        <span class="font-semibold text-slate-700">Колонка #${c.j+1}
+          <span class="text-slate-400 font-normal">· раб. ${r2(c.w*1000)} мм · по скату ${r2(Math.max(c.hL,c.hR))} м · ${c.tiers.length} ярус(ов)</span></span>
+        <span class="text-[10px] text-slate-500">h ${r2(c.hL)}→${r2(c.hR)}</span>
+      </div>
+      <div class="flex flex-wrap gap-1">
+        ${c.tiers.map(t=>{ const n=avail.find(a=>Math.abs(a.len-t.len)<EPS);
+          return `<span class="text-[10px] px-2 py-0.5 rounded border font-semibold" style="background:${t.color}22;border-color:${t.color}88;color:${t.color}">
+            ${Math.round(t.len*1000)} мм${n?` · ${n.n} мод`:''}</span>`; }).join('')}
+      </div>
+    </div>`).join('');
+
+  drawScheme(C,R,H,cols,wStep,start);
+}
+
+/* ---------- отрисовка: единая линейная система координат (без кривизны) ---------- */
+function drawScheme(C,R,H,cols,wStep,start){
+  const cv=document.getElementById('schemeCanvas'), ctx=cv.getContext('2d'), box=cv.parentElement;
+  const dpr=window.devicePixelRatio||1, Rc=box.getBoundingClientRect();
+  cv.width=Rc.width*dpr; cv.height=Rc.height*dpr; cv.style.width=Rc.width+'px'; cv.style.height=Rc.height+'px';
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  const W=Rc.width,HH=Rc.height,pad=44;
+
+  let xmin=-C/2, xmax=C/2, ymin=-start, ymax=H;
+  cols.forEach(c=> c.tiers.forEach(t=>{ xmin=Math.min(xmin,c.x0); xmax=Math.max(xmax,c.x1); ymin=Math.min(ymin,t.b); ymax=Math.max(ymax,t.t); }));
+  const sc=Math.min((W-2*pad)/(xmax-xmin),(HH-2*pad)/(ymax-ymin));
+  const offX=(W-(xmax-xmin)*sc)/2, offY=(HH-(ymax-ymin)*sc)/2;
+  const X=x=>offX+(x-xmin)*sc, Y=y=>offY+(ymax-y)*sc;
+  ctx.clearRect(0,0,W,HH);
+
+  const fr=fronts(C,R,H);
+  const roofPoly=()=>{ ctx.beginPath(); ctx.moveTo(X(-C/2),Y(0)); ctx.lineTo(X(C/2),Y(0)); ctx.lineTo(X(R/2),Y(H)); ctx.lineTo(X(-R/2),Y(H)); ctx.closePath(); };
+
+  /* 1) прямоугольные листы (заказ) — бледная подложка полной ширины */
+  cols.forEach(c=> c.tiers.forEach(t=>{
+    ctx.fillStyle=t.color+'26';
+    ctx.fillRect(X(c.x0),Y(t.t),(c.x1-c.x0)*sc,(t.t-t.b)*sc);
+  }));
+
+  /* 2) штриховка «отрежу сам» по всему прямоугольнику листа */
+  cols.forEach(c=> c.tiers.forEach(t=>{
+    ctx.save();
+    ctx.beginPath(); ctx.rect(X(c.x0),Y(t.t),(c.x1-c.x0)*sc,(t.t-t.b)*sc); ctx.clip();
+    ctx.strokeStyle='#ef4444'; ctx.lineWidth=1; ctx.globalAlpha=.5;
+    const x0p=X(c.x0), y0p=Y(t.t), wp=(c.x1-c.x0)*sc, hp=(t.t-t.b)*sc;
+    for(let d=-hp;d<wp+hp;d+=6){ ctx.beginPath(); ctx.moveTo(x0p+d,y0p); ctx.lineTo(x0p+d+hp,y0p+hp); ctx.stroke(); }
+    ctx.globalAlpha=1; ctx.restore();
+  }));
+
+  /* 3) полезная форма (пересечение листа со скатом) поверх — перекрывает штриховку внутри ската */
+  cols.forEach(c=> c.tiers.forEach(t=>{
+    const yA=Math.max(t.b,0), yB=Math.min(t.t,H); if(yB<=yA) return;
+    const lx_b=Math.min(Math.max(fr.L(yA),c.x0),c.x1), lx_t=Math.min(Math.max(fr.L(yB),c.x0),c.x1);
+    const rx_b=Math.min(Math.max(fr.R(yA),c.x0),c.x1), rx_t=Math.min(Math.max(fr.R(yB),c.x0),c.x1);
+    ctx.beginPath();
+    ctx.moveTo(X(lx_b),Y(yA)); ctx.lineTo(X(lx_t),Y(yB)); ctx.lineTo(X(rx_t),Y(yB)); ctx.lineTo(X(rx_b),Y(yA)); ctx.closePath();
+    ctx.fillStyle=t.color+'d0'; ctx.fill();
+    ctx.strokeStyle=t.color; ctx.lineWidth=1.1; ctx.stroke();
+    ctx.fillStyle='rgba(255,255,255,.16)';
+    ctx.fillRect(X(lx_b),Y(yB),(rx_b-lx_b)*sc,(yB-yA)*sc*0.26);
+  }));
+
+  /* 4) обрешётка (шаг волны) — клип по скату */
+  ctx.save(); roofPoly(); ctx.clip();
+  ctx.strokeStyle='#b08848'; ctx.lineWidth=1; ctx.globalAlpha=.55;
+  for(let y=0;y<=H+EPS;y+=wStep){ ctx.beginPath(); ctx.moveTo(X(-C/2)-4,Y(y)); ctx.lineTo(X(C/2)+4,Y(y)); ctx.stroke(); }
+  ctx.globalAlpha=1; ctx.restore();
+
+  /* 5) границы рабочей ширины (нахлёст по ширине) */
+  ctx.strokeStyle='rgba(71,85,105,.45)'; ctx.lineWidth=1; ctx.setLineDash([4,3]);
+  cols.forEach(c=> c.tiers.forEach(t=>{ const yA=Math.max(t.b,0),yB=Math.min(t.t,H); if(yB<=yA)return;
+    ctx.beginPath(); ctx.moveTo(X(c.x0+c.w),Y(yA)); ctx.lineTo(X(c.x0+c.w),Y(yB)); ctx.stroke(); }));
+  ctx.setLineDash([]);
+
+  /* 6) линии нахлёста по длине между ярусами */
+  ctx.strokeStyle='rgba(30,41,59,.4)'; ctx.lineWidth=1; ctx.setLineDash([6,4]);
+  cols.forEach(c=>{ for(let i=1;i<c.tiers.length;i++){ const yy=c.tiers[i].b; if(yy>0&&yy<H){
+    ctx.beginPath(); ctx.moveTo(X(c.x0),Y(yy)); ctx.lineTo(X(c.x1),Y(yy)); ctx.stroke(); } } });
+  ctx.setLineDash([]);
+
+  /* 7) контур ската + карниз */
+  roofPoly(); ctx.strokeStyle='#334155'; ctx.lineWidth=2; ctx.stroke();
+  ctx.strokeStyle='#0f172a'; ctx.lineWidth=2.6; ctx.beginPath(); ctx.moveTo(X(-C/2),Y(0)); ctx.lineTo(X(C/2),Y(0)); ctx.stroke();
+
+  /* подписи */
+  ctx.fillStyle='#475569'; ctx.font='700 12px Inter'; ctx.textAlign='center';
+  ctx.fillText(`Карниз ${C} м`, X(0), Y(0)+22);
+  ctx.fillText(R>0?`Конёк ${R} м`:`Вершина 0 м`, X(0), Y(H)-10);
+  ctx.save(); ctx.translate(14,(Y(0)+Y(H))/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText(`По скату ${H.toFixed(2)} м`,0,0); ctx.restore();
+}
+
+window.addEventListener('resize',()=>{ if(!document.getElementById('statsGrid').classList.contains('hidden')) calculate(); });
+applyGrade();
+setTimeout(calculate,80);
+</script>
+</body>
+</html>

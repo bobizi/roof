@@ -1,395 +1,436 @@
-``html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Калькулятор Обрешётки • Оптимум</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  body{font-family:'Inter',sans-serif;background:#eef2f7}
+  .card{background:#fff;border-radius:.85rem;box-shadow:0 4px 14px -4px rgba(15,23,42,.12);border:1px solid #e2e8f0}
+  canvas{display:block;width:100%;height:100%}
+  .fld{width:100%;padding:.5rem .6rem;border:1px solid #cbd5e1;border-radius:.45rem;background:#f8fafc;font-size:.9rem;transition:.15s}
+  .fld:focus{outline:none;border-color:#6366f1;background:#fff;box-shadow:0 0 0 3px rgba(99,102,241,.15)}
+  .chk{display:flex;align-items:center;gap:.5rem;cursor:pointer;user-select:none;padding:.35rem .5rem;border:1px solid #e2e8f0;border-radius:.45rem;transition:.15s}
+  .chk:hover{border-color:#a5b4fc}
+  .chk input{width:17px;height:17px;accent-color:#16a34a;cursor:pointer}
+  .chip{display:inline-flex;align-items:center;gap:.35rem;padding:.2rem .55rem;border-radius:.4rem;font-size:.7rem;font-weight:600;border:1px solid}
+</style>
+</head>
+<body class="p-3 md:p-6 text-slate-800">
 
-    
-    
-    Калькулятор Обрешётки: Профессиональный
-    
-    
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
-        .card { background: white; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border: 1px solid #e2e8f0; }
-        canvas { background: #fff; border-radius: 0.5rem; border: 1px solid #cbd5e1; width: 100%; height: 100%; }
-        .input-field { width: 100%; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 0.375rem; background: #f8fafc; font-size: 0.9rem; transition: all 0.2s; }
-        .input-field:focus { outline: none; border-color: #6366f1; background: #fff; }
-        .checkbox-label { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; }
-        .checkbox-label input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
-        .custom-len { display: flex; gap: 0.5rem; align-items: center; margin-top: 0.5rem; }
-    
+<div class="max-w-[1500px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-5">
 
-    
-        
-        
-        
-            
-                 Калькулятор Ската
-                Best Fit Decreasing • Оптимизация раскроя
-            
+  <!-- INPUTS -->
+  <div class="lg:col-span-4 xl:col-span-3 space-y-5">
+    <div class="bg-gradient-to-br from-indigo-600 to-violet-700 text-white p-5 rounded-2xl shadow-lg">
+      <h1 class="text-xl font-extrabold leading-tight">📐 Калькулятор Обрешётки</h1>
+      <p class="text-indigo-100 text-xs mt-1">Оптимальный раскрой • Шахматные стыки</p>
+    </div>
 
-            
-            
-                🏠 Границы ската (метры)
-                
-                
-                    
-                        
-                            Конек (Верх)
-                            0 = Треугольник
-                        
-                        
-                    
+    <div class="card p-4 space-y-3">
+      <h3 class="font-bold text-slate-700 border-b pb-2 text-sm">🏠 Геометрия ската (м)</h3>
+      <div class="grid grid-cols-2 gap-3">
+        <div class="col-span-2">
+          <label class="text-[10px] font-bold text-slate-500 uppercase flex justify-between">Конёк (верх)<span class="bg-slate-200 px-1 rounded text-[9px]">0 = треугольник</span></label>
+          <input type="number" id="inRidge" value="0" step="0.1" min="0" class="fld mt-1 border-t-2 border-t-indigo-400">
+        </div>
+        <div class="col-span-2">
+          <label class="text-[10px] font-bold text-slate-500 uppercase">Карниз (низ)</label>
+          <input type="number" id="inCornice" value="10" step="0.1" min="0.1" class="fld mt-1 border-b-2 border-b-orange-400">
+        </div>
+        <div>
+          <label class="text-[10px] font-bold text-slate-500 uppercase">Левый скос</label>
+          <input type="number" id="inLeft" value="5" step="0.1" min="0.1" class="fld mt-1 border-l-4 border-l-blue-400">
+        </div>
+        <div>
+          <label class="text-[10px] font-bold text-slate-500 uppercase">Правый скос</label>
+          <input type="number" id="inRight" value="5" step="0.1" min="0.1" class="fld mt-1 border-r-4 border-r-blue-400">
+        </div>
+      </div>
+      <p class="text-[10px] text-slate-400 italic">* Высота по теореме Пифагора.</p>
+    </div>
 
-                    
-                        Карниз (Низ)
-                        
-                    
+    <div class="card p-4 space-y-3 border-l-4 border-l-purple-500">
+      <h3 class="font-bold text-purple-700 border-b pb-2 text-sm">⚙️ Параметры</h3>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="text-[10px] font-bold text-slate-500 uppercase">Шаг обрешётки (см)</label><input type="number" id="lStep" value="35" class="fld mt-1"></div>
+        <div><label class="text-[10px] font-bold text-slate-500 uppercase">Шаг стропил (см)</label><input type="number" id="rStep" value="80" class="fld mt-1"></div>
+        <div><label class="text-[10px] font-bold text-slate-500 uppercase">Нахлёст стыка (см)</label><input type="number" id="lOver" value="20" class="fld mt-1"></div>
+        <div><label class="text-[10px] font-bold text-slate-500 uppercase">Сечение (мм)</label>
+          <div class="flex gap-1 mt-1"><input type="number" id="lW" value="25" class="fld"><input type="number" id="lH" value="100" class="fld"></div>
+        </div>
+      </div>
+    </div>
 
-                    
-                        Левый край (м)
-                        
-                    
+    <div class="card p-4 space-y-3 border-l-4 border-l-green-500">
+      <h3 class="font-bold text-green-700 border-b pb-2 text-sm">📏 Заготовки в продаже</h3>
+      <div class="grid grid-cols-2 gap-2">
+        <label class="chk"><input type="checkbox" id="len3" value="3"><span class="text-sm">3 м</span></label>
+        <label class="chk"><input type="checkbox" id="len4" value="4"><span class="text-sm">4 м</span></label>
+        <label class="chk"><input type="checkbox" id="len6" value="6" checked><span class="text-sm font-semibold">6 м</span></label>
+        <label class="chk"><input type="checkbox" id="len8" value="8"><span class="text-sm">8 м</span></label>
+      </div>
+      <div class="flex gap-2">
+        <input type="number" id="customLen" placeholder="своя длина, м" step="0.1" min="1" class="fld flex-1">
+        <button onclick="addCustomLen()" class="bg-green-600 hover:bg-green-700 text-white px-3 rounded font-bold text-sm">+</button>
+      </div>
+      <div id="customLensList" class="flex flex-wrap gap-1 min-h-[10px]"></div>
+    </div>
 
-                    
-                        Правый край (м)
-                        
-                    
-                
-                * Высота ската рассчитывается автоматически по теореме Пифагора.
-            
+    <button onclick="calculate()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl shadow-md transition active:scale-95">🚀 Рассчитать оптимальный раскрой</button>
+  </div>
 
-            
-            
-                ⚙️ Параметры
-                
-                    
-                        Шаг обрешётки (см)
-                        
-                    
-                    
-                        Шаг стропил (см)
-                        
-                    
-                    
-                        Нахлёст (см)
-                        
-                    
-                    
-                        Сечение (мм)
-                        
-                            
-                            
-                        
-                    
-                
-            
+  <!-- RESULTS -->
+  <div class="lg:col-span-8 xl:col-span-9 space-y-5">
 
-            
-            
-                📏 Доступные заготовки
-                Отметьте какие длины досок есть в наличии:
-                
-                    
-                        
-                        3 м
-                    
-                    
-                        
-                        4 м
-                    
-                    
-                        
-                        6 м
-                    
-                    
-                        
-                        8 м
-                    
-                
-                
-                    
-                    +
-                
-                
-            
+    <div id="statsGrid" class="hidden grid grid-cols-2 md:grid-cols-5 gap-3">
+      <div class="card p-3 bg-indigo-50 border-indigo-200"><div class="text-[10px] text-indigo-600 font-bold uppercase">Рядов</div><div class="text-2xl font-extrabold text-indigo-800" id="statRows">0</div></div>
+      <div class="card p-3 bg-blue-50 border-blue-200"><div class="text-[10px] text-blue-600 font-bold uppercase">Заготовок</div><div class="text-2xl font-extrabold text-blue-800" id="statStocks">0</div></div>
+      <div class="card p-3 bg-emerald-50 border-emerald-200"><div class="text-[10px] text-emerald-600 font-bold uppercase">КПД раскроя</div><div class="text-2xl font-extrabold text-emerald-800" id="statEff">0%</div></div>
+      <div class="card p-3 bg-orange-50 border-orange-200"><div class="text-[10px] text-orange-600 font-bold uppercase">Отходы (м.п.)</div><div class="text-2xl font-extrabold text-orange-800" id="statWaste">0</div></div>
+      <div class="card p-3 bg-purple-50 border-purple-200"><div class="text-[10px] text-purple-600 font-bold uppercase">Объём (м³)</div><div class="text-2xl font-extrabold text-purple-800" id="statVol">0</div></div>
+    </div>
 
-            
-                 Рассчитать раскрой
-            
-        
+    <div class="card p-4">
+      <div class="flex flex-wrap justify-between items-center mb-2 gap-2">
+        <h3 class="font-bold text-slate-700 text-sm">🗺️ Схема ската (вид сверху на стропила + обрешётку)</h3>
+        <div class="flex gap-3 text-[11px]">
+          <span class="flex items-center"><span class="w-3 h-3 rounded-sm mr-1" style="background:#cbb28a"></span>Стропило</span>
+          <span class="flex items-center"><span class="w-3 h-3 rounded-sm mr-1 border border-slate-400" style="background:repeating-linear-gradient(45deg,#a5b4fc,#a5b4fc 2px,#c7d2fe 2px,#c7d2fe 4px)"></span>Доска (цвет = заготовка)</span>
+          <span class="flex items-center"><span class="w-3 h-3 rounded-full mr-1 bg-red-500"></span>Стык</span>
+        </div>
+      </div>
+      <div class="rounded-lg border border-slate-200 relative bg-slate-50" style="height:520px"><canvas id="schemeCanvas"></canvas></div>
+    </div>
 
-        
-        
-            
-            
-            
-                
-                    Рядов
-                    0
-                
-                
-                    Заготовок
-                    0
-                
-                
-                    Исп. обрезков
-                    0
-                
-                
-                    Отходы (м)
-                    0
-                
-                
-                    Объём (м³)
-                    0
-                
-            
+    <div id="purchaseSection" class="hidden card p-5 border-l-4 border-l-blue-500">
+      <h3 class="font-bold text-blue-700 mb-3 text-sm">🛒 Список покупок</h3>
+      <div id="purchaseList" class="flex flex-wrap gap-2"></div>
+    </div>
 
-            
-            
-                
-                    🗺️ Схема раскладки ската
-                    
-                        Целая
-                        Обрезок
-                        Стык
-                        Стропило
-                    
-                
-                
-                    
-                
-            
+    <div id="cutSection" class="hidden card p-5 border-l-4 border-l-emerald-500">
+      <h3 class="font-bold text-emerald-700 mb-1 text-sm">✂️ Карта раскроя заготовок</h3>
+      <p class="text-[11px] text-slate-500 mb-3">Каждая плашка — одна покупная доска. Цвет совпадает с цветом её кусков на схеме. Куски перечислены с привязкой к ряду.</p>
+      <div id="cutList" class="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-[420px] overflow-y-auto pr-1"></div>
+    </div>
 
-            
-            
-                 Что купить (заготовки)
-                
-            
+    <div id="wasteSection" class="hidden card p-5 border-l-4 border-l-orange-500">
+      <h3 class="font-bold text-orange-700 mb-2 text-sm">🗑️ Неизбежные отходы (огрызки после раскроя)</h3>
+      <div id="wasteList" class="flex flex-wrap gap-2"></div>
+    </div>
 
-            
-            
-                🗑️ Отходы (непригодные куски)
-                
-            
+    <div class="card p-5">
+      <h3 class="font-bold text-slate-700 mb-3 text-sm">📋 Раскладка по рядам (от длинного к короткому)</h3>
+      <div id="detailsList" class="space-y-2 max-h-[460px] overflow-y-auto text-sm pr-1"></div>
+    </div>
 
-            
-            
-                📋 Детализация по рядам
-                
-            
+  </div>
+</div>
 
-        
-    
+<script>
+/* =========================================================
+   ПАЛИТРА: каждой заготовке (bin) — свой цвет.
+   ========================================================= */
+const PALETTE = ['#6366f1','#10b981','#f59e0b','#ef4444','#8b5cf6','#06b6d4',
+                 '#ec4899','#84cc16','#f97316','#14b8a6','#a855f7','#eab308',
+                 '#0ea5e9','#e11d48','#65a30d','#7c3aed'];
+const TINY = 0.05; // технический порог: кусок < 5 см = мусор, не используем
 
-    
-        let customLengths = [];
+let customLengths = [];
+function addCustomLen(){
+  const v = parseFloat(document.getElementById('customLen').value);
+  if(v>=1){ customLengths.push(v); document.getElementById('customLen').value=''; renderCustom(); }
+}
+function rmCustom(i){ customLengths.splice(i,1); renderCustom(); }
+function renderCustom(){
+  document.getElementById('customLensList').innerHTML = customLengths.map((l,i)=>
+    `<span class="chip bg-green-100 text-green-800 border-green-300">${l}м <button onclick="rmCustom(${i})" class="hover:text-red-600 font-bold">×</button></span>`).join('');
+}
 
-        function addCustomLen() {
-            const val = parseFloat(document.getElementById('customLen').value);
-            if (val >= 1) {
-                customLengths.push(val);
-                document.getElementById('customLen').value = '';
-                renderCustomLens();
-            }
-        }
+/* =========================================================
+   ФАЗА 1 — генерация сегментов по рядам (длинный → короткий).
+   Шахматный порядок: стык ряда i запрещён на стропиле,
+   где был стык ряда i-1 (=> соседи никогда не совпадают).
+   Возвращает плоский список сегментов + стыки по рядам.
+   ========================================================= */
+function generateSegments(rowWidth, rowIdx, forbiddenAbs, rStep, lOver, maxStock, corniceW){
+  const offset = ((corniceW % rStep) + rStep) % rStep / 2; // центрирование стропил
+  // абсолютные координаты стропил (фиксированы для всего ската)
+  const rafters = [];
+  for(let x = -corniceW/2 + offset; x <= corniceW/2 + 1e-6; x += rStep){
+    const local = x + rowWidth/2;
+    if(local >= -1e-6 && local <= rowWidth + 1e-6) rafters.push({abs:+x.toFixed(4), local:+local.toFixed(4)});
+  }
+  const forb = new Set(forbiddenAbs.map(v=>+v.toFixed(3)));
+  const minSeg = rStep*0.5;
 
-        function removeCustomLen(i) {
-            customLengths.splice(i, 1);
-            renderCustomLens();
-        }
+  const segs = [], jointsAbs = [];
+  let cx = 0, guard = 0;
+  while(cx < rowWidth - 1e-4 && guard++ < 1000){
+    const rem = rowWidth - cx;
+    if(rem <= maxStock + 1e-4){                 // последний кусок — до края ската
+      segs.push({len:+rem.toFixed(4), row:rowIdx, from:cx, to:rowWidth, jointAbs:null});
+      cx = rowWidth; break;
+    }
+    const lo = cx + minSeg, hi = cx + maxStock - lOver;
+    if(hi <= lo){ // degenerate — принудительный рез
+      const cut = Math.min(cx + maxStock - lOver, rowWidth-1e-4);
+      segs.push({len:+(cut-cx+lOver).toFixed(4), row:rowIdx, from:cx, to:cut, jointAbs:+(cut-rowWidth/2).toFixed(4)});
+      jointsAbs.push(+(cut-rowWidth/2).toFixed(4)); cx = cut; continue;
+    }
+    let cands = rafters.filter(r=> r.local>=lo-1e-4 && r.local<=hi+1e-4 && !forb.has(+r.abs.toFixed(3)));
+    if(!cands.length) cands = rafters.filter(r=> r.local>=lo-1e-4 && r.local<=hi+1e-4); // нарушаем шахматность только если иначе никак
+    let chosen;
+    if(cands.length){
+      // берём самую дальнюю разрешённую => меньше досок
+      chosen = cands.reduce((a,b)=> b.local>a.local? b : a);
+    } else {
+      chosen = {local: Math.min(hi, rowWidth-1e-4), abs: Math.min(hi,rowWidth-1e-4)-rowWidth/2};
+    }
+    const segLen = chosen.local - cx + lOver;
+    segs.push({len:+segLen.toFixed(4), row:rowIdx, from:cx, to:+chosen.local.toFixed(4), jointAbs:+chosen.abs.toFixed(4)});
+    jointsAbs.push(+chosen.abs.toFixed(4));
+    cx = chosen.local;
+  }
+  return {segs, jointsAbs};
+}
 
-        function renderCustomLens() {
-            const el = document.getElementById('customLensList');
-            el.innerHTML = customLengths.map((l, i) => 
-                
-                    ${l}м
-                    ×
-                
-            ).join('');
-        }
+/* =========================================================
+   ФАЗА 2 — Variable-Sized Bin Packing (Best-Fit Decreasing).
+   Сегменты сортируем по убыванию длины и пакуем в заготовки:
+   длинный сегмент открывает заготовку, короткие (свесы/верхушка)
+   добираются в её остаток => обрезки используются на 100%.
+   ========================================================= */
+function packSegments(allSegs, lengths){
+  const sorted = [...allSegs].sort((a,b)=> b.len - a.len);
+  const bins = []; // {stock, pieces:[seg...], waste}
+  for(const seg of sorted){
+    // best-fit: bin с наименьшим остатком, куда сегмент влезает
+    let bi=-1, best=Infinity;
+    for(let i=0;i<bins.length;i++){
+      if(bins[i].waste >= seg.len-1e-4 && bins[i].waste < best){ best=bins[i].waste; bi=i; }
+    }
+    if(bi===-1){
+      const stock = lengths.filter(l=> l >= seg.len-1e-4).sort((a,b)=>a-b)[0];
+      if(!stock){ // сегмент длиннее любой заготовки (не должно случиться)
+        bins.push({stock:seg.len, pieces:[seg], waste:0}); seg.bin=bins.length-1; continue;
+      }
+      bins.push({stock, pieces:[seg], waste:+(stock-seg.len).toFixed(4)});
+      seg.bin = bins.length-1;
+    } else {
+      bins[bi].pieces.push(seg); bins[bi].waste = +(bins[bi].waste - seg.len).toFixed(4);
+      seg.bin = bi;
+    }
+  }
+  // нумеруем куски внутри каждой заготовки (порядок реза)
+  bins.forEach((b,bi)=> b.pieces.forEach((p,i)=>{ p.piece=i; p.bin=bi; }));
+  return bins;
+}
 
-        /
-         * BEST FIT DECREASING АЛГОРИТМ
-         * 
-         * Принцип:
-         * 1. Раскладываем целые заготовки по шахматному паттерну
-         * 2. Собираем все обрезки
-         * 3. Сортируем обрезки от большего к меньшему
-         * 4. Для каждого участка ряда ищем НАИЛУЧШЕЕ соответствие (best fit)
-         * 5. Повторяем пока не заполним все ряды
-         */
-        function optimizeLayout(rowConfigs, availableLengths, rStep, lOver) {
-            let scrapsPool = [];
-            let stocksUsed = {};
-            let scrapsUsedCount = 0;
-            let totalVol = 0;
-            let rowsData = [];
+/* =========================================================
+   РАСЧЁТ
+   ========================================================= */
+function calculate(){
+  const ridgeW  = +document.getElementById('inRidge').value  || 0;
+  const corniceW= +document.getElementById('inCornice').value|| 0;
+  const leftL   = +document.getElementById('inLeft').value   || 0;
+  const lStep   = (+document.getElementById('lStep').value||35)/100;
+  const rStep   = (+document.getElementById('rStep').value||80)/100;
+  const lOver   = (+document.getElementById('lOver').value||20)/100;
+  const lW = (+document.getElementById('lW').value||25)/1000;
+  const lH = (+document.getElementById('lH').value||100)/1000;
 
-            // ШАГ 1: Раскладываем целые заготовки
-            rowConfigs.forEach(config => {
-                const { rowWidth, isEven, index } = config;
-                const parts = [];
-                
-                // Определяем стропилы
-                const shift = isEven ? rStep / 2 : 0;
-                let rafters = [];
-                for (let x = shift; x = 0 && x  0.01) rafters.unshift(0);
-                if (rafters[rafters.length - 1]  r > currentX + 0.05);
-                    
-                    if (nextRafterIdx === -1) {
-                        // До конца ряда
-                        const neededLen = rowWidth - currentX;
-                        const stockLen = findBestStock(neededLen, availableLengths);
-                        if (stockLen) {
-                            const cutOff = stockLen - neededLen;
-                            parts.push({
-                                len: neededLen,
-                                fromScrap: false,
-                                stockLength: stockLen,
-                                cutOff: cutOff
-                            });
-                            if (cutOff > 0.01) scrapsPool.push(cutOff);
-                            currentX = rowWidth;
-                        }
-                        break;
-                    }
+  const lengths = [...customLengths];
+  if(document.getElementById('len3').checked) lengths.push(3);
+  if(document.getElementById('len4').checked) lengths.push(4);
+  if(document.getElementById('len6').checked) lengths.push(6);
+  if(document.getElementById('len8').checked) lengths.push(8);
+  if(!lengths.length){ alert('Отметьте хотя бы одну длину заготовки!'); return; }
+  const maxStock = Math.max(...lengths);
 
-                    // Берём максимальную заготовку и идём максимально далеко
-                    const stockLen = Math.max(...availableLengths);
-                    let boardEnd = currentX;
-                    let usedLength = 0;
-                    let rafterIdx = nextRafterIdx;
+  // высота ската
+  let H=0; const diff=(corniceW-ridgeW)/2;
+  if(ridgeW===0) H=leftL;
+  else if(leftL>Math.abs(diff)) H=Math.sqrt(leftL*leftL-diff*diff);
+  else { alert('Ошибка геометрии: боковой скос слишком короткий для такой разницы ширин.'); return; }
 
-                    while (rafterIdx = rowWidth - 0.05;
-                    const actualLen = boardEnd - currentX + (isLast ? 0 : lOver);
-                    const cutOff = stockLen - actualLen;
+  // --- ФАЗА 1: ряды снизу вверх (длинный → короткий) ---
+  const rowCount = Math.ceil(H/lStep)+1;
+  const rows = [];          // {idx,width,segs,isEven}
+  const allSegs = [];
+  let prevJoints = [];      // абсолютные x стыков предыдущего ряда
+  for(let i=0;i<rowCount;i++){
+    const y=i*lStep; if(y>H+0.1) break;
+    const w = corniceW-(corniceW-ridgeW)*(H>0?y/H:0);
+    if(w<=0.05) break;
+    const {segs, jointsAbs} = generateSegments(w, i+1, prevJoints, rStep, lOver, maxStock, corniceW);
+    prevJoints = jointsAbs;
+    rows.push({idx:i+1, width:w, segs, isEven:i%2!==0});
+    allSegs.push(...segs);
+  }
 
-                    parts.push({
-                        len: actualLen,
-                        fromScrap: false,
-                        stockLength: stockLen,
-                        cutOff: cutOff,
-                        jointAt: isLast ? null : boardEnd
-                    });
+  // --- ФАЗА 2: упаковка сегментов в заготовки ---
+  const bins = packSegments(allSegs, lengths);
 
-                    if (cutOff > 0.01) scrapsPool.push(cutOff);
-                    currentX = boardEnd;
-                }
+  // --- статистика ---
+  const stockCount = bins.length;
+  const totalStockLen = bins.reduce((s,b)=>s+b.stock,0);
+  const totalWaste = bins.reduce((s,b)=>s+(b.waste>0?b.waste:0),0);
+  const usedLen = totalStockLen - totalWaste;
+  const eff = totalStockLen>0 ? (usedLen/totalStockLen*100) : 0;
+  const vol = totalStockLen*lW*lH;
 
-                rowsData.push({ index, width: rowWidth, parts, isEven });
-            });
+  const stockMap={};
+  bins.forEach(b=> stockMap[b.stock.toFixed(1)]=(stockMap[b.stock.toFixed(1)]||0)+1);
 
-            // ШАГ 2: Сортируем обрезки от большего к меньшему
-            scrapsPool.sort((a, b) => b - a);
+  // --- UI статистика ---
+  document.getElementById('statsGrid').classList.remove('hidden');
+  document.getElementById('statRows').textContent  = rows.length;
+  document.getElementById('statStocks').textContent= stockCount;
+  document.getElementById('statEff').textContent   = eff.toFixed(1)+'%';
+  document.getElementById('statWaste').textContent = totalWaste.toFixed(2);
+  document.getElementById('statVol').textContent   = vol.toFixed(3);
 
-            // ШАГ 3: Пытаемся заменить целые заготовки обрезками (best fit)
-            rowsData.forEach(row => {
-                row.parts.forEach(part => {
-                    if (!part.fromScrap && part.len  0.01) scrapsPool.push(cutOff);
-                            scrapsUsedCount++;
-                        }
-                    }
-                });
-            });
+  // покупки
+  const ps=document.getElementById('purchaseSection'), pl=document.getElementById('purchaseList');
+  if(stockCount>0){
+    ps.classList.remove('hidden');
+    pl.innerHTML = Object.entries(stockMap).sort((a,b)=>+b[0]-+a[0]).map(([l,c])=>
+      `<span class="chip bg-blue-100 text-blue-800 border-blue-300 text-sm px-3 py-1">${l} м × <b class="ml-1 text-base">${c}</b></span>`).join('');
+  } else ps.classList.add('hidden');
 
-            // Пересчитываем статистику
-            rowsData.forEach(row => {
-                row.parts.forEach(p => {
-                    if (p.fromScrap) {
-                        scrapsUsedCount++;
-                    } else {
-                        const key = p.stockLength.toFixed(1);
-                        stocksUsed[key] = (stocksUsed[key] || 0) + 1;
-                        totalVol += p.stockLength  (parseFloat(document.getElementById('lW').value) / 1000)  (parseFloat(document.getElementById('lH').value) / 1000);
-                    }
-                });
-            });
+  // карта раскроя
+  const cs=document.getElementById('cutSection'), cl=document.getElementById('cutList');
+  if(bins.length){
+    cs.classList.remove('hidden');
+    cl.innerHTML = bins.map((b,bi)=>{
+      const col = PALETTE[bi%PALETTE.length];
+      const pieces = b.pieces.map(p=>
+        `<span class="text-[10px] bg-white/80 px-1.5 py-0.5 rounded border border-black/10">${p.len.toFixed(2)}м <span class="opacity-60">→ ряд ${p.row}</span></span>`).join('');
+      const wasteTag = b.waste>TINY
+        ? `<span class="text-[10px] bg-orange-100 text-orange-700 px-1.5 py-0.5 rounded border border-orange-300">отход ${b.waste.toFixed(2)}м</span>`
+        : `<span class="text-[10px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded border border-emerald-300">без отходов ✓</span>`;
+      return `<div class="rounded-lg p-2 border" style="background:${col}1a;border-color:${col}66">
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-xs font-bold" style="color:${col}">● Заготовка #${bi+1} — ${b.stock} м</span>
+          ${wasteTag}
+        </div>
+        <div class="flex flex-wrap gap-1">${pieces}</div>
+      </div>`;
+    }).join('');
+  } else cs.classList.add('hidden');
 
-            // Сортируем обрезки снова для отходов
-            scrapsPool.sort((a, b) => b - a);
+  // отходы
+  const ws=document.getElementById('wasteSection'), wl=document.getElementById('wasteList');
+  const wasteArr = bins.map(b=>b.waste).filter(w=>w>TINY).sort((a,b)=>b-a);
+  if(wasteArr.length){
+    ws.classList.remove('hidden');
+    wl.innerHTML = wasteArr.map(w=>`<span class="chip bg-orange-100 text-orange-800 border-orange-300">${w.toFixed(2)}м</span>`).join('')
+      + `<span class="text-xs text-slate-500 self-center ml-1">всего ${totalWaste.toFixed(2)} м.п.</span>`;
+  } else ws.classList.add('hidden');
 
-            return { rowsData, scrapsPool, stocksUsed, scrapsUsedCount, totalVol };
-        }
+  // детализация по рядам
+  document.getElementById('detailsList').innerHTML = rows.map(r=>`
+    <div class="border-b border-slate-100 pb-2 last:border-0">
+      <div class="flex justify-between items-center mb-1">
+        <span class="font-semibold text-slate-700">Ряд #${r.idx} <span class="text-slate-400 font-normal">· ${r.width.toFixed(2)} м · ${r.segs.length} досок</span></span>
+        <span class="text-[10px] uppercase tracking-wider ${r.isEven?'text-purple-600 bg-purple-50 px-2 py-0.5 rounded':'text-slate-400'}">${r.isEven?'сдвиг стыков':'база'}</span>
+      </div>
+      <div class="flex flex-wrap gap-1">
+        ${r.segs.map(p=>{
+          const col = PALETTE[p.bin%PALETTE.length];
+          const jt = p.jointAbs!==null ? ` · стык@${(p.jointAbs).toFixed(2)}` : ' · край';
+          return `<span class="text-[10px] px-2 py-0.5 rounded border font-semibold" style="background:${col}22;border-color:${col}88;color:${col}">
+            #${p.bin+1}/${p.piece+1}: ${p.len.toFixed(2)}м${jt}</span>`;
+        }).join('')}
+      </div>
+    </div>`).join('');
 
-        function findBestFitScrap(pool, needed) {
-            let bestIdx = -1;
-            let bestDiff = Infinity;
-            
-            for (let i = 0; i = -0.001 && diff  a - b);
-            for (const len of sorted) {
-                if (len >= needed - 0.001) return len;
-            }
-            return null;
-        }
+  drawScheme(corniceW, ridgeW, H, rows, rStep);
+}
 
-        function calculate() {
-            const ridgeW = parseFloat(document.getElementById('inRidge').value) || 0;
-            const corniceW = parseFloat(document.getElementById('inCornice').value) || 0;
-            const leftL = parseFloat(document.getElementById('inLeft').value) || 0;
-            
-            const lStep = (parseFloat(document.getElementById('lStep').value) || 35) / 100;
-            const rStep = (parseFloat(document.getElementById('rStep').value) || 80) / 100;
-            const lOver = (parseFloat(document.getElementById('lOver').value) || 20) / 100;
-            const lW_m = (parseFloat(document.getElementById('lW').value) || 25) / 1000;
-            const lH_m = (parseFloat(document.getElementById('lH').value) || 100) / 1000;
+/* =========================================================
+   ОТРИСОВКА: стропила-брусья + доски (цвет=заготовка) + стыки
+   ========================================================= */
+function drawScheme(bW, tW, H, rows, rStep){
+  const cv=document.getElementById('schemeCanvas'), ctx=cv.getContext('2d'), box=cv.parentElement;
+  const dpr=window.devicePixelRatio||1, R=box.getBoundingClientRect();
+  cv.width=R.width*dpr; cv.height=R.height*dpr; cv.style.width=R.width+'px'; cv.style.height=R.height+'px';
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  const w=R.width, h=R.height, pad=46;
+  const sc=Math.min((w-2*pad)/Math.max(bW,tW), (h-2*pad)/H);
+  const cx=w/2, by=h-pad, ty=by-H*sc;
+  ctx.clearRect(0,0,w,h);
 
-            const availableLengths = [...customLengths];
-            if (document.getElementById('len3').checked) availableLengths.push(3);
-            if (document.getElementById('len4').checked) availableLengths.push(4);
-            if (document.getElementById('len6').checked) availableLengths.push(6);
-            if (document.getElementById('len8').checked) availableLengths.push(8);
-            
-            if (availableLengths.length === 0) {
-                alert('Выберите хотя бы одну длину заготовки!');
-                return;
-            }
+  const bL=cx-bW*sc/2, bR=cx+bW*sc/2, tL=cx-tW*sc/2, tR=cx+tW*sc/2;
 
-            let height = 0;
-            const diff = (corniceW - ridgeW) / 2;
-            if (ridgeW === 0) {
-                height = leftL;
-            } else {
-                if (leftL > Math.abs(diff)) {
-                    height = Math.sqrt(leftL  leftL - diff  diff);
-                } else {
-                    alert("Ошибка геометрии: Боковая сторона слишком коротка!");
-                    return;
-                }
-            }
+  // контур ската
+  ctx.beginPath(); ctx.moveTo(bL,by); ctx.lineTo(bR,by); ctx.lineTo(tR,ty); ctx.lineTo(tL,ty); ctx.closePath();
+  ctx.fillStyle='#f1f5f9'; ctx.fill();
 
-            const rowCount = Math.ceil(height / lStep) + 1;
-            let rowConfigs = [];
+  // --- СТРОПИЛА как брусья (под обрешёткой) ---
+  const offset=(((bW%rStep)+rStep)%rStep)/2;
+  const denom=(bW-tW)||1;
+  ctx.lineWidth=1;
+  let rafterNo=0;
+  for(let x=-bW/2+offset; x<=bW/2+1e-6; x+=rStep){
+    const ax=Math.abs(x);
+    const progMax=(bW/2-ax)/((bW-tW)/2 || 1); // доля высоты, где стропило ещё внутри ската
+    if(progMax<=0) continue;
+    const yTop = by - Math.min(progMax,1)*(by-ty);
+    const px = cx + x*sc;
+    const bw = Math.max(4, Math.min(10, rStep*sc*0.18));
+    // тело бруса
+    const g=ctx.createLinearGradient(px-bw/2,0,px+bw/2,0);
+    g.addColorStop(0,'#b89968'); g.addColorStop(.5,'#d8bd92'); g.addColorStop(1,'#a8854f');
+    ctx.fillStyle=g; ctx.fillRect(px-bw/2, yTop, bw, by-yTop);
+    ctx.strokeStyle='#8a6d3b'; ctx.strokeRect(px-bw/2, yTop, bw, by-yTop);
+    // номер стропилы снизу
+    ctx.fillStyle='#94a3b8'; ctx.font='9px Inter'; ctx.textAlign='center';
+    ctx.fillText(++rafterNo, px, by+11);
+  }
 
-            for (let i = 0; i  height + 0.1) break;
-                
-                const progress = height > 0 ? y / height : 0;
-                const currentRowWidth = corniceW - (corniceW - ridgeW) * progress;
-                if (currentRowWidth  a + b, 0);
-            document.getElementById('statScrapsUsed').innerText = result.scrapsUsedCount;
-            document.getElementById('statWaste').innerText = result.scrapsPool.reduce((sum, s) => sum + s, 0).toFixed(2);
-            document.getElementById('statVol').innerText = result.totalVol.toFixed(3);
+  // контур поверх (рамка)
+  ctx.beginPath(); ctx.moveTo(bL,by); ctx.lineTo(bR,by); ctx.lineTo(tR,ty); ctx.lineTo(tL,ty); ctx.closePath();
+  ctx.strokeStyle='#475569'; ctx.lineWidth=2; ctx.stroke();
 
-            const purchaseSection = document.getElementById('purchaseSection');
-            const purchaseList = document.getElementById('purchaseList');
-            const totalStocks = Object.values(result.stocksUsed).reduce((a, b) => a + b, 0);
-            if (totalStocks > 0) {
-                purchaseSection.classList.remove('hidden');
-                purchaseList.innerHTML = Object.entries(result.stocksUsed)
-                    .sort((a, b) => parseFloat(b[0]) - parseFloat(a[0]))
-                    .map(([len, cnt]) => 
-                        
-                            ${len}м × ${cnt} шт.
-                        
-                    ).join('');
-            } else {
-                purchaseSection.classList.add('hidden');
-            }
+  // --- ДОСКИ ОБРешётки ---
+  const rowH = Math.max(6, Math.min(16, (by-ty)/rows.length*0.62));
+  rows.forEach((row,idx)=>{
+    const prog = rows.length>1 ? idx/(rows.length-1) : 0;
+    const y = by - prog*(by-ty);
+    const rW = bW + (tW-bW)*prog;
+    const rL = cx - rW*sc/2;
+    row.segs.forEach(p=>{
+      const x0 = rL + p.from*sc, pw = p.len*sc;
+      const col = PALETTE[p.bin%PALETTE.length];
+      ctx.fillStyle = col+'cc';
+      ctx.fillRect(x0, y-rowH/2, pw, rowH);
+      ctx.strokeStyle = col; ctx.lineWidth=1; ctx.strokeRect(x0+.5, y-rowH/2+.5, pw-1, rowH-1);
+      // блик
+      ctx.fillStyle='rgba(255,255,255,.25)'; ctx.fillRect(x0, y-rowH/2, pw, rowH*0.32);
+      // стык
+      if(p.jointAbs!==null){
+        const jx = rL + p.to*sc;
+        ctx.beginPath(); ctx.arc(jx, y, Math.max(3,rowH*0.42), 0, Math.PI*2);
+        ctx.fillStyle='#ef4444'; ctx.fill(); ctx.strokeStyle='#fff'; ctx.lineWidth=1.5; ctx.stroke();
+      }
+    });
+  });
 
-            const wasteSection = document.getElementById('wasteSection');
-            const wasteList = document.getElementById('wasteList');
-            if (result.scrapsPool.length > 0) {
-                wasteSection.classList.remove('hidden');
-                wasteList.innerHTML = result.scrapsPool.map(w => 
-                    
-                        ${w.toFixed(2)}м
-                    
-                ).join('') + Итого: ${result.scrapsPool.reduce((sum, s
+  // подписи
+  ctx.fillStyle='#475569'; ctx.font='700 12px Inter'; ctx.textAlign='center';
+  ctx.fillText(`Карниз ${bW} м`, cx, by+26);
+  ctx.fillText(tW>0?`Конёк ${tW} м`:`Вершина 0 м`, cx, ty-10);
+  ctx.save(); ctx.translate(16,(by+ty)/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText(`Высота ${H.toFixed(2)} м`,0,0); ctx.restore();
+}
+
+window.addEventListener('resize', ()=>{ if(!document.getElementById('statsGrid').classList.contains('hidden')) calculate(); });
+renderCustom();
+setTimeout(calculate,80);
+</script>
+</body>
+</html>

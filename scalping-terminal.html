@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Скальпинг Терминал - Демо Режим</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #00d9ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .demo-badge {
+            display: inline-block;
+            background: #ff6b6b;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .panel h2 {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            color: #00d9ff;
+            border-bottom: 2px solid rgba(0, 217, 255, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .quote-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            margin: 8px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .quote-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .symbol {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .price {
+            font-family: 'Courier New', monospace;
+            font-size: 1.2em;
+        }
+
+        .price-up {
+            color: #00ff88;
+        }
+
+        .price-down {
+            color: #ff6b6b;
+        }
+
+        .change {
+            font-size: 0.9em;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+
+        .change-positive {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+        }
+
+        .change-negative {
+            background: rgba(255, 107, 107, 0.2);
+            color: #ff6b6b;
+        }
+
+        .trading-controls {
+            display: grid;
+            gap: 15px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-size: 0.9em;
+            color: #aaa;
+        }
+
+        input, select {
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1em;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #00d9ff;
+        }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        button {
+            padding: 15px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .btn-buy {
+            background: linear-gradient(135deg, #00ff88, #00cc6a);
+            color: #1a1a2e;
+        }
+
+        .btn-buy:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4);
+        }
+
+        .btn-sell {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+            color: white;
+        }
+
+        .btn-sell:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-close {
+            background: linear-gradient(135deg, #ffa502, #ff7f00);
+            color: white;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .positions-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .positions-table th,
+        .positions-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .positions-table th {
+            background: rgba(0, 217, 255, 0.2);
+            color: #00d9ff;
+        }
+
+        .positions-table tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .pnl-positive {
+            color: #00ff88;
+            font-weight: bold;
+        }
+
+        .pnl-negative {
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+
+        .account-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .info-card .label {
+            font-size: 0.85em;
+            color: #aaa;
+            margin-bottom: 5px;
+        }
+
+        .info-card .value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #00d9ff;
+        }
+
+        .chart-container {
+            height: 300px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        .status-connected {
+            background: #00ff88;
+        }
+
+        .status-disconnected {
+            background: #ff6b6b;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification-success {
+            background: #00ff88;
+        }
+
+        .notification-error {
+            background: #ff6b6b;
+        }
+
+        .notification-info {
+            background: #00d9ff;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .refresh-btn {
+            background: rgba(0, 217, 255, 0.2);
+            color: #00d9ff;
+            border: 1px solid #00d9ff;
+            padding: 8px 15px;
+            margin-bottom: 15px;
+        }
+
+        .refresh-btn:hover {
+            background: rgba(0, 217, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 Скальпинг Терминал</h1>
+            <p>Профессиональная торговая платформа для высокочастотной торговли</p>
+            <span class="demo-badge">ДЕМО РЕЖИМ</span>
+            <span style="margin-left: 15px;">
+                <span class="status-indicator status-connected" id="connectionStatus"></span>
+                <span id="connectionText">Подключено к API</span>
+            </span>
+        </header>
+
+        <div class="dashboard">
+            <!-- Account Info Panel -->
+            <div class="panel">
+                <h2>💼 Счет</h2>
+                <div class="account-info">
+                    <div class="info-card">
+                        <div class="label">Баланс</div>
+                        <div class="value" id="balance">$10,000.00</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="label">Эквити</div>
+                        <div class="value" id="equity">$10,000.00</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="label">Прибыль/Убыток</div>
+                        <div class="value" id="totalPnl">$0.00</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="label">Открытые позиции</div>
+                        <div class="value" id="openPositions">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Market Quotes Panel -->
+            <div class="panel">
+                <h2>📊 Котировки рынка</h2>
+                <button class="refresh-btn" onclick="fetchQuotes()">🔄 Обновить</button>
+                <div id="quotesList">
+                    <div class="empty-state">Загрузка котировок...</div>
+                </div>
+            </div>
+
+            <!-- Trading Controls Panel -->
+            <div class="panel">
+                <h2>🎯 Торговая панель</h2>
+                <div class="trading-controls">
+                    <div class="control-group">
+                        <label>Инструмент</label>
+                        <select id="symbolSelect" onchange="updateCurrentPrice()">
+                            <option value="EURUSD">EUR/USD</option>
+                            <option value="GBPUSD">GBP/USD</option>
+                            <option value="USDJPY">USD/JPY</option>
+                            <option value="BTCUSD">BTC/USD</option>
+                            <option value="ETHUSD">ETH/USD</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Объем (лот)</label>
+                        <input type="number" id="volume" value="0.1" step="0.01" min="0.01" max="10">
+                    </div>
+                    <div class="control-group">
+                        <label>Стоп Лосс (пункты)</label>
+                        <input type="number" id="stopLoss" value="20" step="5" min="5">
+                    </div>
+                    <div class="control-group">
+                        <label>Тейк Профит (пункты)</label>
+                        <input type="number" id="takeProfit" value="30" step="5" min="5">
+                    </div>
+                    <div class="control-group">
+                        <label>Текущая цена</label>
+                        <input type="text" id="currentPrice" value="1.0850" readonly>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn-buy" onclick="openPosition('buy')">BUY 📈</button>
+                        <button class="btn-sell" onclick="openPosition('sell')">SELL 📉</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Positions Panel -->
+        <div class="panel">
+            <h2>📋 Открытые позиции</h2>
+            <table class="positions-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Инструмент</th>
+                        <th>Тип</th>
+                        <th>Объем</th>
+                        <th>Цена входа</th>
+                        <th>Текущая цена</th>
+                        <th>SL</th>
+                        <th>TP</th>
+                        <th>P&L</th>
+                        <th>Действие</th>
+                    </tr>
+                </thead>
+                <tbody id="positionsTable">
+                    <tr>
+                        <td colspan="10" class="empty-state">Нет открытых позиций</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Chart Panel -->
+        <div class="panel" style="margin-top: 20px;">
+            <h2>📈 График цены (Real-time)</h2>
+            <div class="chart-container">
+                <canvas id="priceChart" class="chart-canvas"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <script>
+        // Demo API Configuration
+        const API_CONFIG = {
+            baseUrl: 'https://api.demo-scalping.com',
+            apiKey: 'demo_key_12345',
+            refreshInterval: 1000,
+            isDemo: true
+        };
+
+        // State Management
+        let state = {
+            balance: 10000,
+            equity: 10000,
+            positions: [],
+            quotes: {},
+            priceHistory: [],
+            connected: false
+        };
+
+        // Initialize Demo Data
+        const DEMO_QUOTES = {
+            EURUSD: { bid: 1.0850, ask: 1.0852, change: 0.15 },
+            GBPUSD: { bid: 1.2650, ask: 1.2653, change: -0.08 },
+            USDJPY: { bid: 149.50, ask: 149.53, change: 0.22 },
+            BTCUSD: { bid: 43250.00, ask: 43280.00, change: 1.25 },
+            ETHUSD: { bid: 2280.00, ask: 2285.00, change: -0.45 }
+        };
+
+        // Initialize Application
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeConnection();
+            fetchQuotes();
+            startPriceUpdates();
+            initChart();
+            showNotification('Добро пожаловать в демо режим!', 'info');
+        });
+
+        // Simulate API Connection
+        function initializeConnection() {
+            setTimeout(() => {
+                state.connected = true;
+                updateConnectionStatus();
+                showNotification('Подключено к демо API', 'success');
+            }, 1000);
+        }
+
+        // Update Connection Status
+        function updateConnectionStatus() {
+            const statusIndicator = document.getElementById('connectionStatus');
+            const connectionText = document.getElementById('connectionText');
+            
+            if (state.connected) {
+                statusIndicator.className = 'status-indicator status-connected';
+                connectionText.textContent = 'Подключено к API';
+            } else {
+                statusIndicator.className = 'status-indicator status-disconnected';
+                connectionText.textContent = 'Отключено';
+            }
+        }
+
+        // Fetch Quotes from API (Simulated)
+        async function fetchQuotes() {
+            try {
+                // Simulate API call with demo data
+                await simulateAPIDelay();
+                
+                // Update quotes with small random changes
+                Object.keys(DEMO_QUOTES).forEach(symbol => {
+                    const quote = DEMO_QUOTES[symbol];
+                    const changePercent = (Math.random() - 0.5) * 0.001;
+                    quote.bid += quote.bid * changePercent;
+                    quote.ask = quote.bid + 0.0002;
+                    state.quotes[symbol] = quote;
+                });
+
+                renderQuotes();
+                updatePositions();
+                updateChart();
+                
+            } catch (error) {
+                console.error('Error fetching quotes:', error);
+                showNotification('Ошибка получения котировок', 'error');
+            }
+        }
+
+        // Simulate API Delay
+        function simulateAPIDelay() {
+            return new Promise(resolve => setTimeout(resolve, 200));
+        }
+
+        // Render Quotes List
+        function renderQuotes() {
+            const quotesList = document.getElementById('quotesList');
+            
+            if (Object.keys(state.quotes).length === 0) {
+                quotesList.innerHTML = '<div class="empty-state">Нет данных</div>';
+                return;
+            }
+
+            quotesList.innerHTML = Object.entries(state.quotes).map(([symbol, quote]) => `
+                <div class="quote-item">
+                    <div>
+                        <div class="symbol">${symbol}</div>
+                        <div style="font-size: 0.8em; color: #aaa;">
+                            Bid: ${quote.bid.toFixed(4)} | Ask: ${quote.ask.toFixed(4)}
+                        </div>
+                    </div>
+                    <div>
+                        <span class="price ${quote.change >= 0 ? 'price-up' : 'price-down'}">
+                            ${quote.bid.toFixed(4)}
+                        </span>
+                        <span class="change ${quote.change >= 0 ? 'change-positive' : 'change-negative'}">
+                            ${quote.change >= 0 ? '+' : ''}${quote.change.toFixed(2)}%
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Update Current Price in Trading Panel
+        function updateCurrentPrice() {
+            const symbol = document.getElementById('symbolSelect').value;
+            const priceInput = document.getElementById('currentPrice');
+            
+            if (state.quotes[symbol]) {
+                priceInput.value = state.quotes[symbol].bid.toFixed(4);
+            }
+        }
+
+        // Open Position
+        function openPosition(type) {
+            const symbol = document.getElementById('symbolSelect').value;
+            const volume = parseFloat(document.getElementById('volume').value);
+            const stopLoss = parseFloat(document.getElementById('stopLoss').value);
+            const takeProfit = parseFloat(document.getElementById('takeProfit').value);
+            
+            if (!state.quotes[symbol]) {
+                showNotification('Нет котировок для инструмента', 'error');
+                return;
+            }
+
+            const currentPrice = type === 'buy' ? state.quotes[symbol].ask : state.quotes[symbol].bid;
+            
+            const position = {
+                id: Date.now(),
+                symbol: symbol,
+                type: type,
+                volume: volume,
+                entryPrice: currentPrice,
+                stopLoss: calculateSL(currentPrice, type, stopLoss),
+                takeProfit: calculateTP(currentPrice, type, takeProfit),
+                openTime: new Date().toISOString()
+            };
+
+            state.positions.push(position);
+            updatePositions();
+            updateAccountInfo();
+            
+            showNotification(`Позиция ${type.toUpperCase()} ${symbol} открыта!`, 'success');
+        }
+
+        // Calculate Stop Loss
+        function calculateSL(entryPrice, type, points) {
+            const pointValue = getPointValue(entryPrice);
+            if (type === 'buy') {
+                return entryPrice - (points * pointValue);
+            } else {
+                return entryPrice + (points * pointValue);
+            }
+        }
+
+        // Calculate Take Profit
+        function calculateTP(entryPrice, type, points) {
+            const pointValue = getPointValue(entryPrice);
+            if (type === 'buy') {
+                return entryPrice + (points * pointValue);
+            } else {
+                return entryPrice - (points * pointValue);
+            }
+        }
+
+        // Get Point Value based on instrument
+        function getPointValue(price) {
+            if (price > 100) return 0.01; // For JPY pairs and crypto
+            return 0.0001; // For regular forex pairs
+        }
+
+        // Close Position
+        function closePosition(positionId) {
+            const position = state.positions.find(p => p.id === positionId);
+            if (!position) return;
+
+            const currentPrice = state.quotes[position.symbol]?.bid || position.entryPrice;
+            const pnl = calculatePnL(position, currentPrice);
+            
+            state.balance += pnl;
+            state.positions = state.positions.filter(p => p.id !== positionId);
+            
+            updatePositions();
+            updateAccountInfo();
+            
+            showNotification(`Позиция закрыта. P&L: $${pnl.toFixed(2)}`, pnl >= 0 ? 'success' : 'error');
+        }
+
+        // Calculate P&L
+        function calculatePnL(position, currentPrice) {
+            const priceDiff = position.type === 'buy' 
+                ? currentPrice - position.entryPrice 
+                : position.entryPrice - currentPrice;
+            
+            const pipValue = getPointValue(position.entryPrice);
+            const pips = priceDiff / pipValue;
+            
+            return pips * position.volume * 10; // Simplified calculation
+        }
+
+        // Update Positions Display
+        function updatePositions() {
+            const tableBody = document.getElementById('positionsTable');
+            
+            if (state.positions.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="10" class="empty-state">Нет открытых позиций</td></tr>';
+                document.getElementById('openPositions').textContent = '0';
+                return;
+            }
+
+            document.getElementById('openPositions').textContent = state.positions.length;
+
+            tableBody.innerHTML = state.positions.map(position => {
+                const currentPrice = state.quotes[position.symbol]?.bid || position.entryPrice;
+                const pnl = calculatePnL(position, currentPrice);
+                
+                return `
+                    <tr>
+                        <td>#${position.id.toString().slice(-6)}</td>
+                        <td><strong>${position.symbol}</strong></td>
+                        <td style="color: ${position.type === 'buy' ? '#00ff88' : '#ff6b6b'}">
+                            ${position.type.toUpperCase()}
+                        </td>
+                        <td>${position.volume}</td>
+                        <td>${position.entryPrice.toFixed(4)}</td>
+                        <td>${currentPrice.toFixed(4)}</td>
+                        <td>${position.stopLoss.toFixed(4)}</td>
+                        <td>${position.takeProfit.toFixed(4)}</td>
+                        <td class="${pnl >= 0 ? 'pnl-positive' : 'pnl-negative'}">
+                            $${pnl.toFixed(2)}
+                        </td>
+                        <td>
+                            <button class="btn-close" style="padding: 5px 10px; font-size: 0.8em;" 
+                                    onclick="closePosition(${position.id})">
+                                Закрыть
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            // Calculate total P&L
+            const totalPnl = state.positions.reduce((sum, pos) => {
+                const currentPrice = state.quotes[pos.symbol]?.bid || pos.entryPrice;
+                return sum + calculatePnL(pos, currentPrice);
+            }, 0);
+
+            state.equity = state.balance + totalPnl;
+            document.getElementById('totalPnl').textContent = `$${totalPnl.toFixed(2)}`;
+            document.getElementById('totalPnl').className = `value ${totalPnl >= 0 ? 'pnl-positive' : 'pnl-negative'}`;
+        }
+
+        // Update Account Info
+        function updateAccountInfo() {
+            document.getElementById('balance').textContent = `$${state.balance.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('equity').textContent = `$${state.equity.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        }
+
+        // Start Real-time Price Updates
+        function startPriceUpdates() {
+            setInterval(() => {
+                if (state.connected) {
+                    fetchQuotes();
+                }
+            }, API_CONFIG.refreshInterval);
+        }
+
+        // Show Notification
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification notification-${type} show`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Chart Initialization
+        let chartCtx = null;
+        let chartData = [];
+
+        function initChart() {
+            const canvas = document.getElementById('priceChart');
+            chartCtx = canvas.getContext('2d');
+            
+            // Set canvas size
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            
+            // Initialize with some data
+            for (let i = 0; i < 50; i++) {
+                chartData.push(1.0850 + (Math.random() - 0.5) * 0.001);
+            }
+            
+            drawChart();
+        }
+
+        function updateChart() {
+            const symbol = document.getElementById('symbolSelect').value;
+            if (state.quotes[symbol]) {
+                chartData.push(state.quotes[symbol].bid);
+                if (chartData.length > 100) {
+                    chartData.shift();
+                }
+                drawChart();
+            }
+        }
+
+        function drawChart() {
+            if (!chartCtx || chartData.length === 0) return;
+            
+            const canvas = chartCtx.canvas;
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            // Clear canvas
+            chartCtx.clearRect(0, 0, width, height);
+            
+            // Background gradient
+            const gradient = chartCtx.createLinearGradient(0, 0, 0, height);
+            gradient.addColorStop(0, 'rgba(0, 217, 255, 0.1)');
+            gradient.addColorStop(1, 'rgba(0, 217, 255, 0)');
+            
+            // Find min and max for scaling
+            const min = Math.min(...chartData);
+            const max = Math.max(...chartData);
+            const range = max - min || 0.001;
+            
+            // Draw line chart
+            chartCtx.beginPath();
+            chartCtx.strokeStyle = '#00d9ff';
+            chartCtx.lineWidth = 2;
+            
+            chartData.forEach((price, index) => {
+                const x = (index / (chartData.length - 1)) * width;
+                const y = height - ((price - min) / range) * (height - 40) - 20;
+                
+                if (index === 0) {
+                    chartCtx.moveTo(x, y);
+                } else {
+                    chartCtx.lineTo(x, y);
+                }
+            });
+            
+            chartCtx.stroke();
+            
+            // Fill area under line
+            chartCtx.lineTo(width, height);
+            chartCtx.lineTo(0, height);
+            chartCtx.closePath();
+            chartCtx.fillStyle = gradient;
+            chartCtx.fill();
+            
+            // Draw current price line
+            const lastPrice = chartData[chartData.length - 1];
+            const lastY = height - ((lastPrice - min) / range) * (height - 40) - 20;
+            
+            chartCtx.beginPath();
+            chartCtx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+            chartCtx.setLineDash([5, 5]);
+            chartCtx.moveTo(0, lastY);
+            chartCtx.lineTo(width, lastY);
+            chartCtx.stroke();
+            chartCtx.setLineDash([]);
+            
+            // Draw price label
+            chartCtx.fillStyle = '#00d9ff';
+            chartCtx.font = '12px Arial';
+            chartCtx.fillText(lastPrice.toFixed(4), width - 60, lastY - 5);
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            if (chartCtx) {
+                const canvas = chartCtx.canvas;
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
+                drawChart();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -64,10 +64,11 @@ input,select{user-select:text}
 .depBtn.rst{color:var(--red);border-color:rgba(255,84,112,.4);background:rgba(255,84,112,.06)}
 
 /* market watch */
-.wrow{display:grid;grid-template-columns:62px 1fr 56px 10px 36px 20px;gap:7px;align-items:center;padding:8px 6px;border-radius:8px;cursor:pointer;border:1px solid transparent;transition:opacity .2s}
+.wrow{display:grid;grid-template-columns:60px 13px 1fr 56px 10px 36px 20px;gap:6px;align-items:center;padding:8px 6px;border-radius:8px;cursor:pointer;border:1px solid transparent;transition:opacity .2s}
 .wrow.off{opacity:.4}
 .wrow.sel{background:#16233a;border-color:#2a3f63}
 .wname{font-family:'Chakra Petch';font-weight:600;font-size:11px;letter-spacing:1px}
+.wfit{color:var(--cyn);font-style:normal;font-size:10px}
 .wprice{font-size:12.5px;text-align:right;transition:color .12s}
 .wprice.up{color:var(--grn2)} .wprice.dn{color:var(--red)}
 .wchg{font-size:10px;text-align:right;color:var(--mut)}
@@ -126,12 +127,18 @@ input,select{user-select:text}
 .cwrap{height:200px}
 canvas{width:100%;height:100%;display:block}
 
-/* backtest */
-.btBtn{width:100%;height:44px;margin-top:10px;border-radius:8px;border:1px solid rgba(90,209,255,.45);background:rgba(90,209,255,.08);color:var(--cyn);font-family:'Chakra Petch';font-weight:700;font-size:12px;letter-spacing:1.5px;cursor:pointer;transition:all .15s}
+/* backtest / fit */
+.btBtn{width:100%;height:44px;border-radius:8px;border:1px solid rgba(90,209,255,.45);background:rgba(90,209,255,.08);color:var(--cyn);font-family:'Chakra Petch';font-weight:700;font-size:11.5px;letter-spacing:1px;cursor:pointer;transition:all .15s}
+.btBtn.fit{border-color:rgba(255,180,84,.45);background:rgba(255,180,84,.08);color:var(--amb)}
 .btBtn:disabled{opacity:.5;cursor:wait}
+.btRow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
 .btGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
 .btWrap{height:90px;margin-top:8px}
 .btNote{margin-top:8px;font-size:10px;color:var(--mut);line-height:1.5}
+.profHead{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:1px dashed var(--line)}
+.profHead b{font-family:'Chakra Petch';font-size:10.5px;letter-spacing:2px;color:var(--amb)}
+.miniBtn2{background:none;border:1px solid #24344f;border-radius:6px;color:var(--mut);font-family:'Chakra Petch';font-size:9px;letter-spacing:1px;padding:5px 8px;cursor:pointer}
+.miniBtn2:hover{color:var(--red);border-color:rgba(255,84,112,.5)}
 
 /* tabs */
 .tabs{display:flex;gap:6px;margin-bottom:10px}
@@ -230,7 +237,7 @@ details[open] summary::after{transform:rotate(180deg)}
     .btnSell:hover{filter:brightness(1.12)}
     .btn.stop:hover{background:rgba(255,84,112,.16)}
     .btn.close:hover{background:#2c3d5a}
-    .btBtn:hover{background:rgba(90,209,255,.16)}
+    .btBtn:hover{filter:brightness(1.2)}
     .tr:hover{background:#152034}
     .tile:hover{border-color:#3a5578}
     summary:hover{color:var(--txt)}
@@ -280,7 +287,7 @@ details[open] summary::after{transform:rotate(180deg)}
       </section>
 
       <section class="card watchCard">
-        <div class="chead"><span>MARKET WATCH · <b id="wCount">0</b></span><span style="font-size:8.5px;letter-spacing:.5px">ползунок = вкл/выкл пару</span></div>
+        <div class="chead"><span>MARKET WATCH · <b id="wCount">0</b></span><span style="font-size:8.5px;letter-spacing:.5px">⚙ = личный профиль пары</span></div>
         <div id="watch"></div>
         <div class="addrow">
           <select id="addSel"></select>
@@ -306,7 +313,7 @@ details[open] summary::after{transform:rotate(180deg)}
           <div class="field"><label>Пауза между действиями, с</label><input type="number" id="cool" value="3" min="0" inputmode="numeric"></div>
         </div>
         <label class="chk"><input type="checkbox" id="guard"> Дополнительно: блокировать сделку, если свободных средств меньше её размера</label>
-        <div class="hint">Макс. маржа считается от доступных средств (equity): новые сделки не открываются, пока суммарная маржа не опустится ниже лимита. Макс. убыток корзины 0 = выключен. Лимит усреднений — 5 на сторону (встроенный).</div>
+        <div class="hint">Эти поля — ручные настройки. Если у пары есть подобранный профиль (⚙), автопилот использует его вместо полей выше. Макс. убыток корзины 0 = выключен.</div>
         </div>
       </details>
 
@@ -322,11 +329,11 @@ details[open] summary::after{transform:rotate(180deg)}
         </div>
       </details>
 
-      <details class="acc btAcc">
-        <summary>ТЕСТ АВТОПИЛОТА · ИСТОРИЯ</summary>
+      <details class="acc btAcc" open>
+        <summary>ТЕСТ И ПОДБОР СТРАТЕГИИ · ИСТОРИЯ</summary>
         <div class="accBody">
           <div class="grid2">
-            <div class="field"><label>Период теста</label>
+            <div class="field"><label>Период истории</label>
               <select id="btPeriod">
                 <option value="6h">6 часов · свечи 1м</option>
                 <option value="1d" selected>1 день · свечи 5м</option>
@@ -336,9 +343,40 @@ details[open] summary::after{transform:rotate(180deg)}
             </div>
             <div class="field"><label>Депозит теста, $</label><input type="number" id="btDep" value="10000" min="100" inputmode="numeric"></div>
           </div>
-          <button class="btBtn" id="btnBT">▶ ЗАПУСТИТЬ ТЕСТ</button>
-          <div class="hint">Прогон текущих настроек (включённые индикаторы, пороги, движок восстановления, лимит маржи) на исторических свечах выбранной пары: <b id="btSym" style="color:var(--cyn)">BTCUSDT</b></div>
+          <div class="btRow">
+            <button class="btBtn" id="btnBT">▶ ТЕСТ ТЕКУЩЕЙ</button>
+            <button class="btBtn fit" id="btnFit">⚙ ПОДБОР ПАРАМЕТРОВ</button>
+          </div>
+          <label class="chk"><input type="checkbox" id="autoRefit" checked> Автоподбор в реальном времени (перефитчивает пары на свежей истории)</label>
+          <div class="grid2" style="margin-top:8px">
+            <div class="field"><label>Периодичность</label>
+              <select id="fitEvery">
+                <option value="5" selected>каждые 5 минут</option>
+                <option value="15">каждые 15 минут</option>
+                <option value="30">каждые 30 минут</option>
+              </select>
+            </div>
+            <div class="field"><label>Профиль пары <span id="fitSymLbl" style="color:var(--cyn)">BTCUSDT</span></label>
+              <div id="fitTime" style="font-size:11px;color:var(--mut);padding-top:10px">не подобран</div>
+            </div>
+          </div>
+          <div class="hint">Подбор: 1024 комбинации (голоса × стоп × трейлинг × шаг × тейк) на истории пары; критерий = прибыль − 0.7×просадка. Лучшая сохраняется как профиль пары ⚙ и применяется автопилотом. При автоподборе новый профиль ставится, только если лучше старого ≥ 10%.</div>
+
+          <div id="fitRes" class="hidden">
+            <div class="profHead"><b>ПРОФИЛЬ ПАРЫ <span id="fitSym">—</span></b><button class="miniBtn2" id="btnProfRst">✕ СБРОСИТЬ</button></div>
+            <div class="btGrid">
+              <div class="sc"><span class="lbl">Голоса ≥</span><b id="fThr">—</b></div>
+              <div class="sc"><span class="lbl">Стоп, п</span><b id="fSl">—</b></div>
+              <div class="sc"><span class="lbl">Трейлинг, п</span><b id="fTr">—</b></div>
+              <div class="sc"><span class="lbl">Шаг уср., п</span><b id="fSt">—</b></div>
+              <div class="sc"><span class="lbl">Тейк корр., $</span><b id="fTk">—</b></div>
+              <div class="sc"><span class="lbl">Тест дал</span><b id="fPL">—</b></div>
+            </div>
+            <div class="btNote" id="fitNote"></div>
+          </div>
+
           <div id="btRes" class="hidden">
+            <div class="profHead"><b>РЕЗУЛЬТАТ ТЕСТА</b></div>
             <div class="btGrid">
               <div class="sc"><span class="lbl">Итог</span><b id="btPL">—</b></div>
               <div class="sc"><span class="lbl">Доходность</span><b id="btPCT">—</b></div>
@@ -358,10 +396,10 @@ details[open] summary::after{transform:rotate(180deg)}
         <div class="accBody"><ol class="logic">
           <li><b class="k4">Вход:</b> 18 индикаторов голосуют по каждой паре. Голоса ≥ +N → LONG, ≤ −N → SHORT.</li>
           <li><b class="k1">Одиночная сделка:</b> прибыль растёт — держим пик; откат от пика — фиксируем сразу; прибыли не было — ждём стоп-лосс.</li>
-          <li><b class="k2">Сделка в минусе, сигнал развернулся</b> — движок открывает <b>хедж на объём убыточной корзины</b>.</li>
-          <li><b class="k3">Сделка в минусе, сигнал за неё</b> — движок <b>усредняет</b> через расширяющийся шаг (до 5 раз на сторону).</li>
-          <li><b class="k5">Корзина (2+ сделок)</b> закрывается целиком: суммарный P/L ≥ тейка корзины, либо при откате от пика к безубытку, либо на макс. убытке корзины.</li>
-          <li><b class="k2">Лимит маржи:</b> новые сделки отклоняются, если суммарная маржа превысит заданный % (1–100) от доступных средств.</li>
+          <li><b class="k2">Минус + разворот сигнала</b> → хедж на объём корзины. <b class="k3">Минус + сигнал за корзину</b> → усреднение расширяющимся шагом.</li>
+          <li><b class="k5">Корзина (2+ сделок)</b> закрывается целиком по тейку корзины / откату от пика к безубытку / макс. убытку.</li>
+          <li><b class="k2">Подбор стратегии:</b> для каждой пары терминал перебирает 1024 комбинации параметров на истории и торгует её по лучшему профилю; автоподбор обновляет профили на свежих данных с защитой от ухудшения.</li>
+          <li><b class="k4">Лимит маржи:</b> новые сделки отклоняются при превышении заданного % (1–100) от доступных средств.</li>
         </ol></div>
       </details>
     </div>
@@ -438,15 +476,20 @@ const el={dot:$('dot'),connTxt:$('connTxt'),hBal:$('hBal'),hEq:$('hEq'),hLoad:$(
  sl:$('sl'),size:$('size'),trailV:$('trailV'),trailU:$('trailU'),cool:$('cool'),
  margPct:$('margPct'),step:$('step'),bTake:$('bTake'),bStop:$('bStop'),guard:$('guard'),
  thr:$('thr'),emaF:$('emaF'),emaS:$('emaS'),
- btPeriod:$('btPeriod'),btDep:$('btDep'),btnBT:$('btnBT'),btSym:$('btSym'),btRes:$('btRes'),
- btPL:$('btPL'),btPCT:$('btPCT'),btEQ:$('btEQ'),btTr:$('btTr'),btWR:$('btWR'),btDD:$('btDD'),
- btCv:$('btCv'),btNote:$('btNote'),
+ btPeriod:$('btPeriod'),btDep:$('btDep'),btnBT:$('btnBT'),btnFit:$('btnFit'),
+ autoRefit:$('autoRefit'),fitEvery:$('fitEvery'),fitTime:$('fitTime'),fitSymLbl:$('fitSymLbl'),
+ fitRes:$('fitRes'),fitSym:$('fitSym'),btnProfRst:$('btnProfRst'),
+ fThr:$('fThr'),fSl:$('fSl'),fTr:$('fTr'),fSt:$('fSt'),fTk:$('fTk'),fPL:$('fPL'),fitNote:$('fitNote'),
+ btRes:$('btRes'),btPL:$('btPL'),btPCT:$('btPCT'),btEQ:$('btEQ'),btTr:$('btTr'),btWR:$('btWR'),
+ btDD:$('btDD'),btCv:$('btCv'),btNote:$('btNote'),
  btnStart:$('btnStart'),btnStop:$('btnStop'),btnAll:$('btnAll'),allPl:$('allPl'),
  footMeta:$('footMeta'),flash:$('flash')};
 
 const ALL=['btcusdt','ethusdt','solusdt','bnbusdt','xrpusdt','dogeusdt','adausdt','ltcusdt','avaxusdt','linkusdt'];
 const FB={btcusdt:.01,ethusdt:.01,solusdt:.001,bnbusdt:.01,xrpusdt:.0001,dogeusdt:.00001,adausdt:.0001,ltcusdt:.01,avaxusdt:.001,linkusdt:.001};
 const VOL_WIN=30000, CANDLE_MS=2000, MAX_AVG=5;
+const PERIODS={'6h':['1m',360,60],'1d':['5m',288,300],'1w':['15m',672,900],'1M':['1h',720,3600]};
+const FIT={busy:false};
 
 const S={sel:'btcusdt',run:false,pid:0,positions:[],balance:10000,startBal:10000,ws:null,dirty:true};
 const SYM=new Map();
@@ -465,7 +508,13 @@ const holdStr=ms=>{const s=Math.floor(ms/1000);return s<60?s+'с':Math.floor(s/6
 function setText(e,s){if(e&&e._t!==s){e._t=s;e.textContent=s}}
 function newSym(sym){return{sym,pip:FB[sym]||.01,price:0,prev:0,dayOpen:0,prices:[],qs:[],candles:[],
  vol:[],volB:0,volS:0,vwapPV:0,vwapV:0,chart:[],lastSample:0,sig:null,lastSig:0,
- active:true,bot:true,coolUntil:0,lastWarn:0,basketPeak:0}}
+ active:true,bot:true,coolUntil:0,lastWarn:0,basketPeak:0,
+ profile:null,fitFitness:undefined,fitInfo:null,fittedAt:0}}
+
+/* профиль пары: подобранный или ручной */
+const cfgOf=st=>st.profile?{...st.profile}:
+ {thr:+el.thr.value,sl:+el.sl.value,trailV:+el.trailV.value,trailU:el.trailU.value,
+  step:+el.step.value,bTake:+el.bTake.value};
 
 /* ================= MATH ================= */
 const sma=(a,n)=>{if(a.length<n)return null;let s=0;for(let i=a.length-n;i<a.length;i++)s+=a[i];return s/n};
@@ -591,7 +640,8 @@ const basketPL=list=>list.reduce((s,p)=>s+plOf(p),0);
 
 function engine(st){
  if(Date.now()<st.coolUntil||!st.sig||!st.sig.maxOn)return;
- const thr=+el.thr.value,sc=st.sig.score;
+ const cfg=cfgOf(st);
+ const thr=cfg.thr,sc=st.sig.score;
  if(Math.abs(sc)<thr)return;
  const side=sc>0?'LONG':'SHORT';
  const my=basketOf(st.sym);
@@ -614,7 +664,7 @@ function engine(st){
   const sp=my.filter(p=>p.side===domSide);
   if(sp.length<MAX_AVG){
    const last=sp.reduce((a,b)=>a.t>b.t?a:b);
-   const step=(+el.step.value)*(1+0.6*(sp.length-1));
+   const step=cfg.step*(1+0.6*(sp.length-1));
    const dist=domSide==='LONG'?(last.entry-st.price)/st.pip:(st.price-last.entry)/st.pip;
    if(dist>=step)openPos(st,domSide,'bot','усреднение #'+(sp.length+1)+' (шаг '+step.toFixed(0)+'п)');
   }
@@ -624,11 +674,12 @@ function engine(st){
 function manageSym(st){
  const bots=basketOf(st.sym);
  if(!bots.length){st.basketPeak=0;return}
+ const cfg=cfgOf(st);
 
  if(bots.length>=2){
   const pl=basketPL(bots);
   if(pl>st.basketPeak)st.basketPeak=pl;
-  const bTake=+el.bTake.value,bStop=+el.bStop.value;
+  const bTake=cfg.bTake,bStop=+el.bStop.value;
   if(pl>=bTake){closeBasket(st,'корзина: тейк +$'+pl.toFixed(2));return}
   if(pl>=0&&(st.basketPeak-pl)>=bTake*0.5){closeBasket(st,'корзина: фиксация у безубытка +$'+pl.toFixed(2));return}
   if(bStop>0&&pl<=-bStop){closeBasket(st,'корзина: макс. убыток −$'+Math.abs(pl).toFixed(2));return}
@@ -638,7 +689,7 @@ function manageSym(st){
  const d=dirOf(pos);
  const pips=d*(st.price-pos.entry)/st.pip,pl=d*(st.price-pos.entry)*pos.qty;
  if(pl>pos.peak){pos.peak=pl;pos.peakPips=pips}
- const SL=+el.sl.value,tU=el.trailU.value,tV=+el.trailV.value;
+ const SL=cfg.sl,tU=cfg.trailU,tV=cfg.trailV;
  if(pos.peak>0){
   const drop=tU==='usd'?pos.peak-pl:(pos.peakPips-pips);
   if(drop>=tV)closePos(pos,st.price,'откат от пика');
@@ -661,8 +712,7 @@ function openPos(st,side,origin,reason,sizeUsd){
  const cap=marginCapUsd();
  if(usedM()+size>cap){
   if(Date.now()-st.lastWarn>5000){st.lastWarn=Date.now();
-   jlog(st.sym,'лимит маржи '+el.margPct.value+'%: сделка отклонена (нужно $'+size.toFixed(0)+
-    ', доступно $'+Math.max(0,cap-usedM()).toFixed(0)+')','sys')}
+   jlog(st.sym,'лимит маржи '+el.margPct.value+'%: сделка отклонена','sys')}
   return;
  }
  if(el.guard.checked&&freeM()<size){
@@ -693,63 +743,33 @@ function closePos(pos,price,reason){
  el.flash.classList.add(pl>=0?'fGood':'fBad');
 }
 
-/* ================= BACKTEST ================= */
-const BT={run:false};
-async function runBacktest(){
- if(BT.run)return;
- BT.run=true;el.btnBT.disabled=true;
- setText(el.btnBT,'ЗАГРУЗКА ДАННЫХ…');
- const st=SYM.get(S.sel);
- const map={'6h':['1m',360,60],'1d':['5m',288,300],'1w':['15m',672,900],'1M':['1h',720,3600]};
- const cfg=map[el.btPeriod.value];
- try{
-  const r=await fetch('https://api.binance.com/api/v3/klines?symbol='+st.sym.toUpperCase()+'&interval='+cfg[0]+'&limit='+cfg[1]);
-  const k=await r.json();
-  if(!Array.isArray(k)||k.length<80)throw new Error('нет данных');
-  const cs=k.map(x=>({t:x[0],o:+x[1],h:+x[2],l:+x[3],c:+x[4],v:+x[5],bv:+x[9]}));
-  setText(el.btnBT,'РАСЧЁТ СТРАТЕГИИ…');
-  setTimeout(()=>{simulateBT(cs,st,cfg[2])},20);
- }catch(e){
-  BT.run=false;el.btnBT.disabled=false;setText(el.btnBT,'▶ ЗАПУСТИТЬ ТЕСТ');
-  jlog(st.sym,'backtest: не удалось загрузить историю','sys');
- }
+/* ================= BACKTEST / FIT CORE ================= */
+async function loadKlines(sym,intv,lim){
+ const r=await fetch('https://api.binance.com/api/v3/klines?symbol='+sym.toUpperCase()+'&interval='+intv+'&limit='+lim);
+ const k=await r.json();
+ if(!Array.isArray(k)||k.length<80)throw new Error('нет данных');
+ return k.map(x=>({t:x[0],o:+x[1],h:+x[2],l:+x[3],c:+x[4],v:+x[5],bv:+x[9]}));
 }
 
-function simulateBT(cs,st,intSec){
- const pip=st.pip;
- const size=+el.size.value,SL=+el.sl.value,tU=el.trailU.value,tV=+el.trailV.value,
-  stepP=+el.step.value,bTake=+el.bTake.value,bStop=+el.bStop.value,margPct=+el.margPct.value,
-  thr=+el.thr.value,eF=+el.emaF.value,eS=+el.emaS.value;
+/* серии голосов индикаторов по свечам (один раз на историю) */
+function buildScores(cs,pip){
  const on={};IND.forEach(i=>on[i.key]=i.on);
- const bal0=Math.max(100,+el.btDep.value||10000);
- let balance=bal0;
+ const eF=+el.emaF.value,eS=+el.emaS.value;
  const C=[],H=[],L=[],V=[],BV=[],CS=[];
  const push=(arr,x)=>{arr.push(x);if(arr.length>400)arr.shift()};
- let pos=[],basketPeak=0,cool=0,tpv=0,tv=0;
- const coolBars=Math.max(1,Math.ceil(+el.cool.value/intSec));
- const trades=[],eqCurve=[];
- const dirOfB=p=>p.side==='LONG'?1:-1;
- const plAt=(p,pr)=>dirOfB(p)*(pr-p.entry)*p.qty;
- const usedMB=()=>pos.reduce((s,p)=>s+p.qty*p.entry,0);
- const eqAt=pr=>balance+pos.reduce((s,p)=>s+plAt(p,pr),0);
+ let tpv=0,tv=0;
+ const scores=[];
  const hh=(a,n)=>{let m=-1e18;for(let i=Math.max(0,a.length-n);i<a.length;i++)if(a[i]>m)m=a[i];return m};
  const ll=(a,n)=>{let m=1e18;for(let i=Math.max(0,a.length-n);i<a.length;i++)if(a[i]<m)m=a[i];return m};
-
- const closeBT=(p,price)=>{
-  balance+=plAt(p,price);
-  trades.push({pl:plAt(p,price)});
-  pos=pos.filter(x=>x!==p);
- };
- const openBT=(side,price,usd)=>{
-  const s=usd||size;
-  if(usedMB()+s>eqAt(price)*margPct/100)return false;
-  pos.push({side,entry:price,qty:s/price,peak:0,peakPips:0});
-  cool=coolBars;
-  return true;
- };
- const btSig=()=>{
-  let score=0,maxOn=0;const n=C.length,price=C[n-1];
-  const add=(key,vote)=>{if(on[key]){maxOn++;score+=vote}};
+ for(let i=0;i<cs.length;i++){
+  const c=cs[i];
+  push(C,c.c);push(H,c.h);push(L,c.l);push(V,c.v);push(BV,c.bv);
+  CS.push({h:c.h,l:c.l,c:c.c});if(CS.length>300)CS.shift();
+  tpv+=(c.h+c.l+c.c)/3*c.v;tv+=c.v;
+  const n=C.length,price=C[n-1];
+  if(n<60){scores.push(null);continue}
+  let score=0;
+  const add=(key,vote)=>{if(on[key])score+=vote};
   if(n>=eS+2)add('ema',emaLast(C,eF)>emaLast(C,eS)?1:-1);
   if(n>=20)add('sma',sma(C,10)>sma(C,20)?1:-1);
   if(n>=35)add('macd',macdCalc(C).hist>=0?1:-1);
@@ -777,116 +797,173 @@ function simulateBT(cs,st,intSec){
    add('obv',o2>o1?1:-1)}
   {let b=0,s=0;for(let j=Math.max(0,n-15);j<n;j++){b+=BV[j];s+=V[j]-BV[j]}
    const tot=b+s;if(tot>0){const pc=(b-s)/tot*100;add('vol',pc>15?1:pc<-15?-1:0)}}
-  return{score,maxOn};
- };
+  scores.push(score);
+ }
+ return scores;
+}
 
+/* симуляция движка на готовых голосах */
+function simSeries(cs,pip,scores,cfg,bal0,intSec){
+ const size=+el.size.value,bStop=+el.bStop.value,margPct=+el.margPct.value;
+ const thr=cfg.thr,SL=cfg.sl,tU=cfg.trailU,tV=cfg.trailV,stepP=cfg.step,bTake=cfg.bTake;
+ const coolBars=Math.max(1,Math.ceil(+el.cool.value/intSec));
+ let balance=bal0,pos=[],basketPeak=0,cool=0;
+ const trades=[];const eq=[];let peakEq=bal0,dd=0;
+ const dir=p=>p.side==='LONG'?1:-1;
+ const plAt=(p,pr)=>dir(p)*(pr-p.entry)*p.qty;
+ const usedMB=()=>pos.reduce((s,p)=>s+p.qty*p.entry,0);
+ const eqAt=pr=>balance+pos.reduce((s,p)=>s+plAt(p,pr),0);
+ const openB=(side,price,usd)=>{const s=usd||size;
+  if(usedMB()+s>eqAt(price)*margPct/100)return false;
+  pos.push({side,entry:price,qty:s/price,peak:0,peakPips:0});cool=coolBars;return true};
+ const closeB=(p,price)=>{balance+=plAt(p,price);trades.push(plAt(p,price));pos=pos.filter(x=>x!==p)};
  for(let i=0;i<cs.length;i++){
-  const c=cs[i];
-  push(C,c.c);push(H,c.h);push(L,c.l);push(V,c.v);push(BV,c.bv);
-  CS.push({h:c.h,l:c.l,c:c.c});if(CS.length>300)CS.shift();
-  tpv+=(c.h+c.l+c.c)/3*c.v;tv+=c.v;
-  const n=C.length,price=c.c;
+  const c=cs[i],price=c.c;
   if(cool>0)cool--;
-
-  /* ведение позиций */
   if(pos.length){
-   for(const p of pos){
-    const best=p.side==='LONG'?c.h:c.l;
-    const pb=plAt(p,best);
-    if(pb>p.peak){p.peak=pb;p.peakPips=dirOfB(p)*(best-p.entry)/pip}
-   }
+   for(const p of pos){const best=p.side==='LONG'?c.h:c.l;const pb=plAt(p,best);
+    if(pb>p.peak){p.peak=pb;p.peakPips=dir(p)*(best-p.entry)/pip}}
    if(pos.length>=2){
     const pl=pos.reduce((s,p)=>s+plAt(p,price),0);
     if(pl>basketPeak)basketPeak=pl;
-    if(pl>=bTake){for(const p of[...pos])closeBT(p,price);basketPeak=0}
-    else if(pl>=0&&basketPeak-pl>=bTake*.5){for(const p of[...pos])closeBT(p,price);basketPeak=0}
-    else if(bStop>0&&pl<=-bStop){for(const p of[...pos])closeBT(p,price);basketPeak=0}
+    if(pl>=bTake||(pl>=0&&basketPeak-pl>=bTake*.5)||(bStop>0&&pl<=-bStop)){
+     for(const p of[...pos])closeB(p,price);basketPeak=0}
    }else{
-    const p=pos[0],d=dirOfB(p);
-    const worst=p.side==='LONG'?c.l:c.h;
-    if(p.peak<=0&&d*(worst-p.entry)/pip<=-SL){
-     closeBT(p,p.entry-d*SL*pip);
-    }else if(p.peak>0){
-     const pl=plAt(p,price),pips=d*(price-p.entry)/pip;
+    const p=pos[0],d=dir(p),worst=p.side==='LONG'?c.l:c.h;
+    if(p.peak<=0&&d*(worst-p.entry)/pip<=-SL)closeB(p,p.entry-d*SL*pip);
+    else if(p.peak>0){const pl=plAt(p,price),pips=d*(price-p.entry)/pip;
      const drop=tU==='usd'?p.peak-pl:(p.peakPips-pips);
-     if(drop>=tV)closeBT(p,price);
-    }
+     if(drop>=tV)closeB(p,price)}
    }
    if(!pos.length)basketPeak=0;
   }
-
-  /* решения движка по закрытию свечи */
-  if(n>=60&&cool===0){
-   const sg=btSig();
-   if(sg.maxOn&&Math.abs(sg.score)>=thr){
-    const side=sg.score>0?'LONG':'SHORT';
-    if(!pos.length){openBT(side,price)}
-    else{
-     const pl=pos.reduce((s,p)=>s+plAt(p,price),0);
-     if(pl<0){
-      const netQty=pos.reduce((s,p)=>s+dirOfB(p)*p.qty,0);
-      const domSide=netQty>=0?'LONG':'SHORT';
-      if(side!==domSide){const usd=Math.abs(netQty)*price;if(usd>=10)openBT(side,price,usd)}
-      else{
-       const sp=pos.filter(p=>p.side===domSide);
-       if(sp.length<5){
-        const last=sp[sp.length-1];
-        const stepX=stepP*(1+0.6*(sp.length-1));
-        const dist=domSide==='LONG'?(last.entry-price)/pip:(price-last.entry)/pip;
-        if(dist>=stepX)openBT(domSide,price);
-       }
-      }
-     }
+  const sc=scores[i];
+  if(sc!=null&&cool===0&&Math.abs(sc)>=thr){
+   const side=sc>0?'LONG':'SHORT';
+   if(!pos.length)openB(side,price);
+   else{
+    const pl=pos.reduce((s,p)=>s+plAt(p,price),0);
+    if(pl<0){
+     const netQty=pos.reduce((s,p)=>s+dir(p)*p.qty,0);
+     const domSide=netQty>=0?'LONG':'SHORT';
+     if(side!==domSide){const usd=Math.abs(netQty)*price;if(usd>=10)openB(side,price,usd)}
+     else{const sp=pos.filter(p=>p.side===domSide);
+      if(sp.length<5){const last=sp[sp.length-1];
+       const stepX=stepP*(1+0.6*(sp.length-1));
+       const dist=domSide==='LONG'?(last.entry-price)/pip:(price-last.entry)/pip;
+       if(dist>=stepX)openB(domSide,price)}}
     }
    }
   }
-  eqCurve.push(eqAt(price));
+  const e=eqAt(price);eq.push(e);
+  if(e>peakEq)peakEq=e;if(peakEq-e>dd)dd=peakEq-e;
  }
  const lastPx=cs[cs.length-1].c;
- for(const p of[...pos])closeBT(p,lastPx);
-
- /* результаты */
- const pl=balance-bal0;
- const wins=trades.filter(t=>t.pl>0).length;
- let peak=-1e18,dd=0;
- for(const e of eqCurve){if(e>peak)peak=e;if(peak-e>dd)dd=peak-e}
- el.btRes.classList.remove('hidden');
- setText(el.btPL,(pl>=0?'+':'−')+'$'+Math.abs(pl).toFixed(2));
- el.btPL.style.color=pl>=0?'var(--grn)':'var(--red)';
- setText(el.btPCT,(pl>=0?'+':'−')+Math.abs(pl/bal0*100).toFixed(2)+'%');
- el.btPCT.style.color=el.btPL.style.color;
- setText(el.btEQ,'$'+balance.toFixed(0));
- setText(el.btTr,String(trades.length));
- setText(el.btWR,trades.length?(wins/trades.length*100).toFixed(0)+'%':'—');
- setText(el.btDD,'−$'+dd.toFixed(2));
- const periodTxt={'6h':'6 часов · свечи 1м','1d':'1 день · свечи 5м','1w':'7 дней · свечи 15м','1M':'30 дней · свечи 1ч'}[el.btPeriod.value];
- setText(el.btNote,st.sym.toUpperCase()+' · '+periodTxt+' · свечей: '+cs.length+
-  ' · закрытий: '+trades.length+' · настройки текущие (индикаторы, движок, маржа '+margPct+'%)');
- drawBTCurve(eqCurve,bal0);
- BT.run=false;el.btnBT.disabled=false;setText(el.btnBT,'▶ ЗАПУСТИТЬ ТЕСТ');
- jlog(st.sym,'backtest '+periodTxt+': '+(pl>=0?'+':'−')+'$'+Math.abs(pl).toFixed(2)+' · сделок '+trades.length,'sys');
+ for(const p of[...pos])closeB(p,lastPx);
+ const wins=trades.filter(t=>t>0).length;
+ return{pl:balance-bal0,trades:trades.length,wins,dd,eq};
 }
 
-function drawBTCurve(eq,bal0){
- const cv=el.btCv,dpr=devicePixelRatio||1,w=cv.clientWidth,h=cv.clientHeight;
- if(!w||!h)return;
- cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);
- const c=cv.getContext('2d');c.setTransform(dpr,0,0,dpr,0,0);c.clearRect(0,0,w,h);
- let lo=bal0,hi=bal0;
- for(const e of eq){if(e<lo)lo=e;if(e>hi)hi=e}
- if(hi===lo){hi+=1;lo-=1}
- const pad=(hi-lo)*.1;lo-=pad;hi+=pad;
- const X=i=>i*(w/(eq.length-1)),Y=v=>h-((v-lo)/(hi-lo))*h;
- c.setLineDash([4,4]);c.strokeStyle='#3a4c6b';c.lineWidth=1;
- c.beginPath();c.moveTo(0,Y(bal0));c.lineTo(w,Y(bal0));c.stroke();c.setLineDash([]);
- const up=eq[eq.length-1]>=bal0;
- c.strokeStyle=up?'#3ce39a':'#ff5470';c.lineWidth=1.6;c.beginPath();
- eq.forEach((v,i)=>i?c.lineTo(X(i),Y(v)):c.moveTo(X(i),Y(v)));c.stroke();
- c.lineTo(w,h);c.lineTo(0,h);c.closePath();
- const g=c.createLinearGradient(0,0,0,h);
- g.addColorStop(0,up?'rgba(60,227,154,.2)':'rgba(255,84,112,.2)');g.addColorStop(1,'rgba(0,0,0,0)');
- c.fillStyle=g;c.fill();
+/* ================= TEST ================= */
+async function runBacktest(){
+ if(FIT.busy)return;FIT.busy=true;el.btnBT.disabled=true;setText(el.btnBT,'ЗАГРУЗКА…');
+ const st=SYM.get(S.sel);
+ const cfgP=PERIODS[el.btPeriod.value];
+ try{
+  const cs=await loadKlines(st.sym,cfgP[0],cfgP[1]);
+  setText(el.btnBT,'РАСЧЁТ…');
+  await new Promise(r=>setTimeout(r,20));
+  const scores=buildScores(cs,st.pip);
+  const cfg=cfgOf(st);
+  const bal0=Math.max(100,+el.btDep.value||10000);
+  const res=simSeries(cs,st.pip,scores,cfg,bal0,cfgP[2]);
+  el.btRes.classList.remove('hidden');
+  setText(el.btPL,(res.pl>=0?'+':'−')+'$'+Math.abs(res.pl).toFixed(2));
+  el.btPL.style.color=res.pl>=0?'var(--grn)':'var(--red)';
+  setText(el.btPCT,(res.pl>=0?'+':'−')+Math.abs(res.pl/bal0*100).toFixed(2)+'%');
+  el.btPCT.style.color=el.btPL.style.color;
+  setText(el.btEQ,'$'+(bal0+res.pl).toFixed(0));
+  setText(el.btTr,String(res.trades));
+  setText(el.btWR,res.trades?(res.wins/res.trades*100).toFixed(0)+'%':'—');
+  setText(el.btDD,'−$'+res.dd.toFixed(2));
+  const periodTxt={'6h':'6 часов · 1м','1d':'1 день · 5м','1w':'7 дней · 15м','1M':'30 дней · 1ч'}[el.btPeriod.value];
+  setText(el.btNote,st.sym.toUpperCase()+' · '+periodTxt+' · свечей: '+cs.length+
+   ' · настройки: '+(st.profile?'профиль пары ⚙':'ручные')+
+   ' · маржа '+el.margPct.value+'% · просадка пика к эквити учтена');
+  drawBTCurve(res.eq,bal0);
+  jlog(st.sym,'тест '+periodTxt+': '+(res.pl>=0?'+':'−')+'$'+Math.abs(res.pl).toFixed(2)+' · сделок '+res.trades,'sys');
+ }catch(e){jlog(st.sym,'тест: ошибка загрузки истории','sys')}
+ FIT.busy=false;el.btnBT.disabled=false;setText(el.btnBT,'▶ ТЕСТ ТЕКУЩЕЙ');
 }
+
+/* ================= FIT / OPTIMIZER ================= */
+async function fitPair(st,auto){
+ if(FIT.busy)return;FIT.busy=true;
+ el.btnFit.disabled=true;setText(el.btnFit,'ПОДБОР: '+st.sym.toUpperCase()+'…');
+ const cfgP=PERIODS[el.btPeriod.value];
+ try{
+  const cs=await loadKlines(st.sym,cfgP[0],cfgP[1]);
+  await new Promise(r=>setTimeout(r,20));
+  const scores=buildScores(cs,st.pip);
+  const bal0=10000;
+  const thrG=[5,6,7,8],slG=[30,50,80,120],trG=[1,3,6,10],stG=[20,40,70,110],tkG=[1,2,4,8];
+  let best=null,combos=0;const t0=performance.now();
+  for(const thr of thrG)for(const sl of slG)for(const trailV of trG)
+   for(const step of stG)for(const bTake of tkG){
+    const r=simSeries(cs,st.pip,scores,{thr,sl,trailV,trailU:'pips',step,bTake},bal0,cfgP[2]);
+    const fit=r.pl-r.dd*0.7-(r.trades<3?100:0);
+    combos++;
+    if(!best||fit>best.fit)best={fit,thr,sl,trailV,step,bTake,r};
+    if(combos%256===0)await new Promise(r=>setTimeout(r,0));
+  }
+  const ms=performance.now()-t0;
+  const prev=st.fitFitness;
+  if(auto&&st.profile&&prev>0&&best.fit<prev*1.1){
+   jlog(st.sym,'автоподбор: параметры сохранены (новый вариант не лучше)','sys');
+   st.fittedAt=Date.now();
+  }else{
+   st.profile={thr:best.thr,sl:best.sl,trailV:best.trailV,trailU:'pips',step:best.step,bTake:best.bTake};
+   st.fitFitness=best.fit;
+   st.fitInfo={pl:best.r.pl,dd:best.r.dd,trades:best.r.trades,wins:best.r.wins,combos,ms};
+   st.fittedAt=Date.now();
+   if(st._f)st._f.classList.remove('hidden');
+   jlog(st.sym,(auto?'автоподбор':'подбор')+': голоса '+best.thr+' · SL '+best.sl+'п · трейлинг '+best.trailV+
+    'п · шаг '+best.step+'п · тейк $'+best.bTake+' → '+(best.r.pl>=0?'+':'−')+'$'+Math.abs(best.r.pl).toFixed(2),
+    best.r.pl>=0?'win':'loss');
+   if(st.sym===S.sel)paintProfile(st);
+  }
+ }catch(e){jlog(st.sym,'подбор: ошибка загрузки истории','sys')}
+ FIT.busy=false;el.btnFit.disabled=false;setText(el.btnFit,'⚙ ПОДБОР ПАРАМЕТРОВ');
+ if(S.sel===st.sym)paintProfile(st);
+}
+
+function paintProfile(st){
+ setText(el.fitSymLbl,st.sym.toUpperCase());
+ setText(el.fitTime,st.fittedAt?('обновлён '+new Date(st.fittedAt).toLocaleTimeString('ru-RU',{hour12:false})):'не подобран');
+ if(!st.profile){el.fitRes.classList.add('hidden');return}
+ el.fitRes.classList.remove('hidden');
+ setText(el.fitSym,st.sym.toUpperCase());
+ setText(el.fThr,'≥ '+st.profile.thr);
+ setText(el.fSl,st.profile.sl);
+ setText(el.fTr,st.profile.trailV);
+ setText(el.fSt,st.profile.step);
+ setText(el.fTk,st.profile.bTake);
+ const fi=st.fitInfo;
+ setText(el.fPL,(fi.pl>=0?'+':'−')+'$'+Math.abs(fi.pl).toFixed(2));
+ el.fPL.style.color=fi.pl>=0?'var(--grn)':'var(--red)';
+ setText(el.fitNote,'перебрано '+fi.combos+' комбинаций за '+fi.ms.toFixed(0)+' мс · сделок '+fi.trades+
+  ' · winrate '+(fi.trades?(fi.wins/fi.trades*100).toFixed(0)+'%':'—')+
+  ' · просадка $'+fi.dd.toFixed(2)+' · профиль применён к живой торговле пары');
+}
+
+/* автоподбор в реальном времени */
+setInterval(()=>{
+ if(!el.autoRefit.checked||FIT.busy)return;
+ const now=Date.now(),every=+el.fitEvery.value*60000;
+ for(const st of SYM.values()){
+  if(st.active&&(now-(st.fittedAt||0))>every){fitPair(st,true);break}
+ }
+},30000);
 
 /* ================= ACCOUNT ================= */
 function saveBal(){try{localStorage.setItem('scBal',S.balance)}catch(e){}}
@@ -922,10 +999,12 @@ function renderWatch(){
   const r=document.createElement('div');
   r.className='wrow'+(st.sym===S.sel?' sel':'')+(st.active?'':' off');
   r.innerHTML='<span class="wname">'+st.sym.toUpperCase()+'</span>'+
+   '<i class="wfit'+(st.profile?'':' hidden')+'">⚙</i>'+
    '<span class="wprice">—</span><span class="wchg">—</span><i class="wdot"></i>'+
    '<button class="sw'+(st.active?' on':'')+'" title="вкл/выкл пару"></button>'+
    '<button class="wdel" title="убрать пару">✕</button>';
   st._p=r.querySelector('.wprice');st._c=r.querySelector('.wchg');st._d=r.querySelector('.wdot');
+  st._f=r.querySelector('.wfit');
   r.onclick=e=>{if(e.target.closest('button'))return;selectSym(st.sym)};
   r.querySelector('.sw').onclick=e=>{
    e.stopPropagation();
@@ -993,8 +1072,7 @@ function selectSym(sym){
  const st=SYM.get(sym);
  setText(el.selLbl,sym.toUpperCase()+' · BINANCE SPOT');
  setText(el.chartSym,'ГРАФИК · '+sym.toUpperCase()+' · 1п = '+st.pip);
- setText(el.btSym,sym.toUpperCase());
- paintSymHead(st);paintSelInfo(st);
+ paintSymHead(st);paintSelInfo(st);paintProfile(st);
  if(st.sig&&st.active)paintSignal(st);
  else{setText(el.verdict,st.active?'НАКОПЛЕНИЕ ДАННЫХ':'ПАРА ВЫКЛ');el.verdict.className='verdict'}
 }
@@ -1011,11 +1089,10 @@ function paintSymHead(st){
 function paintSelInfo(st){
  const my=basketOf(st.sym);
  const n=S.positions.filter(p=>p.sym===st.sym).length;
- let extra='';
+ let extra=st.profile?' · ⚙ профиль':'';
  if(my.length>=2){
   const pl=basketPL(my);
-  extra=' · корзина '+my.length+' шт · Σ '+(pl>=0?'+':'−')+'$'+Math.abs(pl).toFixed(2)+
-   ' · пик '+(st.basketPeak>=0?'+':'−')+'$'+Math.abs(st.basketPeak).toFixed(2);
+  extra+=' · корзина '+my.length+' шт · Σ '+(pl>=0?'+':'−')+'$'+Math.abs(pl).toFixed(2);
  }
  setText(el.selInfo,'1 пункт = '+st.pip+' · позиций: '+n+extra+(st.active?'':' · пара выкл'));
 }
@@ -1125,7 +1202,6 @@ setInterval(()=>{
  if(sel){paintSymHead(sel);paintSelInfo(sel)}
  updatePosRows();
  paintAccount();
- /* сумма на кнопке "закрыть всё" */
  const tot=S.positions.reduce((s,p)=>s+plOf(p),0);
  el.btnAll.disabled=!S.positions.length;
  setText(el.allPl,S.positions.length?((tot>=0?'+':'−')+'$'+Math.abs(tot).toFixed(2)):'');
@@ -1150,7 +1226,7 @@ function draw(){
  let lo=Infinity,hi=-Infinity;
  for(const p of d){if(p<lo)lo=p;if(p>hi)hi=p}
  const myPos=S.positions.filter(p=>p.sym===S.sel);
- const SL=+el.sl.value;
+ const SL=cfgOf(st).sl;
  const lastPos=myPos[myPos.length-1];
  if(lastPos){const dr=dirOf(lastPos);
   hi=Math.max(hi,lastPos.entry+dr*lastPos.peakPips*st.pip);
@@ -1191,13 +1267,36 @@ function draw(){
 }
 requestAnimationFrame(draw);
 
+function drawBTCurve(eq,bal0){
+ const cv=el.btCv,dpr=devicePixelRatio||1,w=cv.clientWidth,h=cv.clientHeight;
+ if(!w||!h||eq.length<2)return;
+ cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);
+ const c=cv.getContext('2d');c.setTransform(dpr,0,0,dpr,0,0);c.clearRect(0,0,w,h);
+ let lo=bal0,hi=bal0;
+ for(const e of eq){if(e<lo)lo=e;if(e>hi)hi=e}
+ if(hi===lo){hi+=1;lo-=1}
+ const pad=(hi-lo)*.1;lo-=pad;hi+=pad;
+ const X=i=>i*(w/(eq.length-1)),Y=v=>h-((v-lo)/(hi-lo))*h;
+ c.setLineDash([4,4]);c.strokeStyle='#3a4c6b';c.lineWidth=1;
+ c.beginPath();c.moveTo(0,Y(bal0));c.lineTo(w,Y(bal0));c.stroke();c.setLineDash([]);
+ const up=eq[eq.length-1]>=bal0;
+ c.strokeStyle=up?'#3ce39a':'#ff5470';c.lineWidth=1.6;c.beginPath();
+ eq.forEach((v,i)=>i?c.lineTo(X(i),Y(v)):c.moveTo(X(i),Y(v)));c.stroke();
+ c.lineTo(w,h);c.lineTo(0,h);c.closePath();
+ const g=c.createLinearGradient(0,0,0,h);
+ g.addColorStop(0,up?'rgba(60,227,154,.2)':'rgba(255,84,112,.2)');g.addColorStop(1,'rgba(0,0,0,0)');
+ c.fillStyle=g;c.fill();
+}
+
 /* ================= CONTROLS ================= */
 function uiRun(on){
  el.btnStart.classList.toggle('hidden',on);
  el.btnStop.classList.toggle('hidden',!on);
 }
 el.btnStart.onclick=()=>{S.run=true;uiRun(true);
- jlog('ALL','автопилот включён · лимит маржи '+el.margPct.value+'% средств','sys')};
+ const prof=[...SYM.values()].filter(s=>s.profile).length;
+ jlog('ALL','автопилот включён · пар с профилем: '+prof+'/'+SYM.size+
+  (el.autoRefit.checked?' · автоподбор вкл':''),'sys')};
 el.btnStop.onclick=()=>{S.run=false;uiRun(false);
  jlog('ALL','автопилот выключен · позиции остались открытыми','sys')};
 el.btnAll.onclick=()=>{for(const p of [...S.positions]){const st=SYM.get(p.sym);closePos(p,st?st.price:p.entry,'закрыто всё')}};
@@ -1211,6 +1310,12 @@ el.btnRst.onclick=()=>{if(S.positions.length){jlog('ALL','сначала зак�
  jlog('ALL','счёт сброшен на $10 000','sys')};
 el.btnAdd.onclick=()=>{if(el.addSel.value)addSym(el.addSel.value)};
 el.btnBT.onclick=runBacktest;
+el.btnFit.onclick=()=>fitPair(SYM.get(S.sel),false);
+el.btnProfRst.onclick=()=>{const st=SYM.get(S.sel);
+ st.profile=null;st.fitFitness=undefined;st.fitInfo=null;
+ if(st._f)st._f.classList.add('hidden');
+ paintProfile(st);paintSelInfo(st);
+ jlog(st.sym,'профиль сброшен — пара торгуется по ручным настройкам','sys')};
 el.sl.addEventListener('input',()=>S.dirty=true);
 document.querySelectorAll('.tbtn').forEach(b=>b.onclick=()=>{
  document.querySelectorAll('.tbtn').forEach(x=>x.classList.remove('on'));

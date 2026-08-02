@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="theme-color" content="#0a2f52"/>
+<title>С Днём ВДВ, Вася! 🪂</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link href="https://cdn.jsdelivr.net/npm/@fontsource/russo-one@5/cyrillic.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@fontsource/russo-one@5/index.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@fontsource/rubik@5/cyrillic.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@fontsource/rubik@5/index.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@fontsource/marck-script@5/cyrillic.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@fontsource/marck-script@5/index.css" rel="stylesheet">
+<style>
+:root{
+  --navy:#0d4c86; --navy-d:#0a2f52; --blue:#1668b0;
+  --red:#d6382f; --red-d:#a3221b; --gold:#ffd23f; --gold-d:#b8860b;
+  --paper:#fdf9ef; --ink:#123f6b;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Rubik',system-ui,sans-serif;color:var(--navy-d);
+  background:linear-gradient(180deg,#8fd0ff 0%,#b9e3ff 40%,#e6f6ff 75%,#f2fbff 100%);
+  min-height:100vh;overflow-x:hidden;
+}
+body.locked{overflow:hidden}
+.display{font-family:'Russo One','Rubik',sans-serif;font-weight:400}
+button{-webkit-tap-highlight-color:transparent}
+button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+
+/* ---------- СЕКРЕТНЫЙ ПАКЕТ ---------- */
+#overlay{
+  position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:26px;padding:20px;text-align:center;
+  background:radial-gradient(1100px 700px at 50% 28%,#155089,#0a2f52 72%);
+  transition:opacity .8s ease,visibility .8s;
+}
+#overlay::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:
+   repeating-linear-gradient(45deg,rgba(255,255,255,.035) 0 2px,transparent 2px 16px),
+   radial-gradient(2px 2px at 12% 20%,#fff 50%,transparent 51%),
+   radial-gradient(2px 2px at 84% 14%,#fff 50%,transparent 51%),
+   radial-gradient(2.5px 2.5px at 70% 78%,#ffd23f 50%,transparent 51%),
+   radial-gradient(2px 2px at 22% 82%,#fff 50%,transparent 51%),
+   radial-gradient(2px 2px at 48% 8%,#fff 50%,transparent 51%);
+  opacity:.8;}
+#overlay.bye{opacity:0;visibility:hidden}
+.ov-top{color:var(--gold);letter-spacing:.32em;font-size:.78rem;text-transform:uppercase;position:relative}
+.ov-top b{display:block;color:#fff;font-size:1.05rem;letter-spacing:.2em;margin-top:8px}
+.packet-wrap{perspective:1100px;position:relative}
+.env{position:relative;width:min(380px,88vw);aspect-ratio:8/5;background:#164a7d;
+  border:3px solid #071f38;box-shadow:12px 14px 0 rgba(0,0,0,.28);}
+.env .letter{position:absolute;left:7%;right:7%;top:10%;bottom:9%;background:#fdfbf2;z-index:2;
+  padding:14px;transition:transform .7s .35s cubic-bezier(.2,.9,.3,1);
+  background-image:repeating-linear-gradient(transparent 0 16px,rgba(13,76,134,.14) 16px 17px);}
+.env .letter .display{font-size:.8rem;color:var(--navy);letter-spacing:.08em}
+.packet-wrap.open .letter{transform:translateY(-52%)}
+.env .flap{position:absolute;left:0;right:0;top:0;height:56%;background:#1d5a94;z-index:3;
+  clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top center;
+  transition:transform .8s cubic-bezier(.6,0,.3,1);border-bottom:2px solid rgba(7,31,56,.4)}
+.packet-wrap.open .flap{transform:rotateX(180deg);z-index:1}
+.env .secret{position:absolute;top:64%;left:6%;z-index:4;transform:rotate(-9deg);
+  border:3px double #ff6b62;color:#ff6b62;padding:3px 10px;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase}
+.env .addr{position:absolute;left:50%;top:78%;transform:translate(-50%,-50%);z-index:4;
+  background:#fff;padding:8px 16px;font-size:.78rem;line-height:1.45;box-shadow:3px 3px 0 rgba(0,0,0,.25);white-space:nowrap}
+.env .addr b{color:var(--red)}
+.seal{position:absolute;left:50%;top:56%;transform:translate(-50%,-50%);z-index:5;
+  width:58px;height:58px;border-radius:50%;display:grid;place-items:center;color:#fff;
+  background:radial-gradient(circle at 35% 30%,#ff7a70,#c22e25 60%,#8c1d15);
+  box-shadow:inset 0 -4px 8px rgba(0,0,0,.35),0 4px 8px rgba(0,0,0,.35);
+  transition:transform .45s,opacity .45s}
+.seal svg{width:26px;height:26px;fill:#fff}
+.packet-wrap.open .seal{transform:translate(-50%,-50%) scale(0) rotate(200deg);opacity:0}
+#openBtn{font-size:1.15rem;letter-spacing:.08em;color:var(--navy-d);background:var(--gold);
+  border:3px solid var(--navy-d);padding:15px 30px;cursor:pointer;box-shadow:7px 7px 0 rgba(0,0,0,.35);
+  transition:transform .15s,box-shadow .15s;position:relative}
+#openBtn:hover{transform:translate(-2px,-2px);box-shadow:9px 9px 0 rgba(0,0,0,.35)}
+#openBtn:active{transform:translate(3px,3px);box-shadow:2px 2px 0 rgba(0,0,0,.35)}
+.ov-hint{color:#9cc4e8;font-size:.82rem;position:relative}
+
+/* ---------- ЛЕНТЫ ---------- */
+.stripebar{height:10px;background:repeating-linear-gradient(90deg,#fff 0 16px,var(--blue) 16px 32px)}
+.ribbon{background:var(--navy-d);color:#fff;overflow:hidden;border-block:2px solid #071f38}
+.ribbon-track{display:flex;gap:3rem;width:max-content;padding:.55rem 0;
+  font-size:.92rem;letter-spacing:.14em;animation:marquee 26s linear infinite;white-space:nowrap}
+.ribbon-track.rev{animation-direction:reverse}
+.ribbon-track span{display:flex;align-items:center;gap:3rem}
+@keyframes marquee{to{transform:translateX(-50%)}}
+
+/* ---------- НЕБО ---------- */
+#sky{position:relative;min-height:92vh;overflow:hidden;cursor:crosshair;user-select:none}
+.sun{position:absolute;top:-70px;right:-70px;width:250px;height:250px;border-radius:50%;z-index:0;
+  background:radial-gradient(circle at 42% 42%,#fff8dc,#ffd23f 52%,rgba(255,210,63,0) 72%)}
+.sun::after{content:'';position:absolute;inset:-46px;border-radius:50%;
+  background:repeating-conic-gradient(rgba(255,200,60,.3) 0deg 7deg,transparent 7deg 16deg);
+  -webkit-mask:radial-gradient(circle,transparent 44%,#000 46%,#000 66%,transparent 68%);
+          mask:radial-gradient(circle,transparent 44%,#000 46%,#000 66%,transparent 68%);
+  animation:spin 44s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#cloudLayer{position:absolute;inset:0;z-index:1;transition:transform .7s ease-out;pointer-events:none}
+.cloud{position:absolute;background:#fff;border-radius:50px;opacity:.92;
+  box-shadow:34px -20px 0 4px #fff,78px -12px 0 0 #fff;
+  filter:drop-shadow(0 8px 10px rgba(13,76,134,.1));animation:drift linear infinite}
+@keyframes drift{from{transform:translateX(-240px)}to{transform:translateX(calc(100vw + 240px))}}
+.c1{width:150px;height:46px;top:9%;animation-duration:75s;animation-delay:-18s}
+.c2{width:110px;height:36px;top:24%;animation-duration:100s;animation-delay:-55s;opacity:.8}
+.c3{width:180px;height:52px;top:44%;animation-duration:88s;animation-delay:-30s}
+.c4{width:90px;height:30px;top:62%;animation-duration:115s;animation-delay:-80s;opacity:.7}
+.plane{position:absolute;top:10%;left:0;z-index:4;pointer-events:none;
+  transform:translateX(-380px);animation:fly 27s linear infinite;animation-delay:2.5s}
+.plane svg{display:block;animation:pbob 3.4s ease-in-out infinite alternate}
+@keyframes fly{from{transform:translateX(-380px)}to{transform:translateX(calc(100vw + 80px))}}
+@keyframes pbob{from{transform:translateY(-7px)}to{transform:translateY(7px)}}
+#paraLayer{position:absolute;inset:0;z-index:2;pointer-events:none}
+.paratrooper{position:absolute;top:-115px;will-change:transform;animation:fall var(--fdur,7s) linear forwards}
+@keyframes fall{to{transform:translateY(var(--fd,900px))}}
+.sway{position:relative;width:64px;transform-origin:50% 0;
+  animation-name:swayK;animation-timing-function:ease-in-out;
+  animation-iteration-count:infinite;animation-direction:alternate}
+@keyframes swayK{from{transform:translateX(-14px) rotate(-6deg)}to{transform:translateX(14px) rotate(6deg)}}
+.psvg{display:block;color:var(--blue)}
+.psvg.p-red{color:var(--red)} .psvg.p-gold{color:#e8a020}
+.pflag{position:absolute;right:-15px;top:56px}
+.puff{position:absolute;width:48px;height:15px;border-radius:50%;background:rgba(255,255,255,.95);
+  z-index:2;pointer-events:none;animation:puffK .55s ease-out forwards}
+@keyframes puffK{to{transform:scale(2.4);opacity:0}}
+
+.sky-inner{position:relative;z-index:3;text-align:center;padding:11vh 20px 110px}
+.title .line1{display:block;font-size:clamp(1.5rem,4.6vw,2.8rem);color:var(--navy-d);
+  letter-spacing:.08em;text-shadow:0 2px 0 rgba(255,255,255,.65)}
+.title .line2{position:relative;display:inline-block;margin-top:6px;
+  font-size:clamp(3.4rem,12vw,7.6rem);color:#fff;letter-spacing:.03em;
+  -webkit-text-stroke:2.5px var(--navy);
+  text-shadow:0 5px 0 rgba(13,76,134,.55),7px 10px 0 rgba(13,76,134,.22)}
+.beret{position:absolute;top:-.46em;left:2%;width:1.15em;transform:rotate(-16deg);z-index:2;
+  animation:beretFloat 4s ease-in-out infinite alternate;filter:drop-shadow(3px 4px 0 rgba(13,76,134,.3))}
+@keyframes beretFloat{from{transform:rotate(-16deg) translateY(0)}to{transform:rotate(-11deg) translateY(-7px)}}
+.ch{display:inline-block;opacity:0;transform:translateY(-46px) rotate(-9deg)}
+.ch.sp{width:.42em}
+body.opened .ch{animation:chIn .6s cubic-bezier(.2,1.5,.4,1) forwards;
+  animation-delay:calc(var(--i)*.055s + .15s)}
+@keyframes chIn{to{opacity:1;transform:none}}
+.tagline{max-width:600px;margin:26px auto 0;color:var(--ink);font-size:clamp(.98rem,2.2vw,1.12rem);line-height:1.6}
+.badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+.badge{background:#fff;border:2px solid var(--navy);border-radius:999px;padding:6px 15px;
+  font-weight:600;font-size:.85rem;box-shadow:3px 3px 0 rgba(13,76,134,.85);
+  transition:transform .2s;cursor:default}
+.badge:hover{transform:translateY(-3px) rotate(-2deg)}
+.cd-title{margin:36px 0 12px;font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink);font-weight:700}
+.cd{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.cd-box{background:#fff;border:3px solid var(--navy);border-radius:10px;box-shadow:5px 5px 0 rgba(13,76,134,.9);
+  min-width:78px;padding:10px 8px 8px;text-align:center}
+.cd-num{font-size:2.1rem;line-height:1;color:var(--navy);font-variant-numeric:tabular-nums}
+.cd-num.pop{animation:cdPop .35s}
+@keyframes cdPop{40%{transform:scale(1.25);color:var(--red)}}
+.cd-lab{font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:#5b7d9e;margin-top:5px}
+.cd-today{background:var(--red);color:#fff;padding:14px 24px;border-radius:12px;
+  box-shadow:6px 6px 0 var(--navy-d);font-size:clamp(1rem,3vw,1.4rem);letter-spacing:.05em}
+.sky-hint{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:3;
+  background:rgba(255,255,255,.9);border:2px dashed var(--navy);border-radius:999px;
+  padding:8px 18px;font-size:.84rem;font-weight:600;color:var(--ink);white-space:nowrap;
+  animation:hintPulse 2.6s ease-in-out infinite}
+@keyframes hintPulse{50%{transform:translateX(-50%) translateY(-6px)}}
+
+/* ---------- СЕКЦИИ ---------- */
+.section{position:relative;padding:74px 20px;max-width:1150px;margin:0 auto}
+.sec-title{display:flex;align-items:center;justify-content:center;gap:16px;text-align:center;
+  font-size:clamp(1.35rem,3.6vw,2.1rem);color:var(--navy-d);letter-spacing:.06em;margin-bottom:40px}
+.sec-title svg{width:24px;height:24px;fill:var(--red);flex:none;filter:drop-shadow(0 2px 0 rgba(163,34,27,.35))}
+.fstar{position:absolute;width:26px;height:26px;fill:var(--gold);opacity:.55;pointer-events:none;
+  animation:bob 5s ease-in-out infinite alternate;filter:drop-shadow(0 2px 0 rgba(184,134,11,.4))}
+@keyframes bob{to{transform:translateY(-14px) rotate(14deg)}}
+.reveal{opacity:0;transform:translateY(38px);transition:opacity .7s,transform .7s cubic-bezier(.2,.8,.3,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* ---------- ПРИКАЗ ---------- */
+.order{position:relative;max-width:780px;margin:0 auto;background:var(--paper);
+  background-image:repeating-linear-gradient(transparent 0 27px,rgba(13,76,134,.07) 27px 28px);
+  border:2px solid #e0d2a8;padding:44px 48px;transform:rotate(-1.1deg);
+  box-shadow:14px 16px 0 rgba(13,76,134,.16);transition:transform .35s}
+.order:hover{transform:rotate(0deg)}
+.order-head{font-size:clamp(1.5rem,3.6vw,2.2rem);color:var(--navy-d);letter-spacing:.05em}
+.order-meta{color:#96854f;font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;margin:8px 0 20px}
+.order-lead{line-height:1.65;margin-bottom:8px}
+.order-list{list-style:none}
+.order-list li{position:relative;margin:13px 0;padding-left:30px;line-height:1.6}
+.order-list li::before{content:'★';position:absolute;left:2px;top:1px;color:var(--red);font-size:1.05rem}
+.order-sign{display:flex;align-items:flex-end;gap:18px;margin-top:30px;flex-wrap:wrap}
+.order-sign .role{font-size:.85rem;color:#5b7d9e}
+.sig{font-family:'Marck Script',cursive;font-size:2.3rem;color:var(--ink);transform:rotate(-5deg);line-height:1}
+.mp{width:66px;height:66px;border:3px solid rgba(214,56,47,.65);border-radius:50%;display:grid;place-items:center;
+  color:rgba(214,56,47,.75);font-size:.68rem;letter-spacing:.12em;transform:rotate(-9deg)}
+.stamp-secret{position:absolute;top:26px;right:24px;transform:rotate(10deg);
+  border:4px double var(--red);border-radius:4px;color:var(--red);padding:6px 13px;text-align:center;
+  font-size:.82rem;letter-spacing:.2em;text-transform:uppercase;opacity:.85;mix-blend-mode:multiply}
+.stamp-round{position:absolute;bottom:64px;right:44px;width:122px;opacity:.8;mix-blend-mode:multiply;transform:rotate(-14deg)}
+
+/* ---------- ПУЛЬТ ---------- */
+.play-grid{display:grid;grid-template-columns:minmax(300px,380px) 1fr;gap:28px;align-items:stretch}
+.panel{background:#fff;border:3px solid var(--navy);border-radius:14px;box-shadow:9px 9px 0 var(--navy)}
+.vasya-panel{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:30px 22px 24px;min-height:440px;background:linear-gradient(180deg,#dff2ff 0%,#fff 70%);overflow:hidden}
+.vasya-panel::before{content:'';position:absolute;top:24px;left:-30px;width:110px;height:34px;border-radius:40px;
+  background:#fff;box-shadow:26px -15px 0 2px #fff,60px -8px 0 -2px #fff;opacity:.8}
+.bubble{position:absolute;top:16px;left:50%;transform:translateX(-50%) scale(.6);opacity:0;z-index:3;
+  max-width:90%;text-align:center;background:#fff;border:3px solid var(--navy);border-radius:14px;
+  padding:10px 16px;font-weight:600;font-size:.95rem;box-shadow:5px 5px 0 rgba(13,76,134,.85);
+  transition:opacity .25s,transform .25s cubic-bezier(.2,1.4,.4,1);pointer-events:none}
+.bubble::after{content:'';position:absolute;bottom:-11px;left:50%;transform:translateX(-50%) rotate(45deg);
+  width:16px;height:16px;background:#fff;border-right:3px solid var(--navy);border-bottom:3px solid var(--navy)}
+.bubble.show{opacity:1;transform:translateX(-50%) scale(1)}
+.vasya-btn{background:none;border:none;cursor:pointer;padding:0;margin-top:34px;position:relative;z-index:2}
+.vasya-svg{width:min(250px,62vw);display:block;transition:transform .25s}
+.vasya-btn:hover .vasya-svg{transform:rotate(-2.5deg) scale(1.04)}
+.vasya-btn.jumping .vasya-svg{animation:vJump .65s cubic-bezier(.3,1.5,.4,1)}
+@keyframes vJump{0%,100%{transform:none}35%{transform:translateY(-32px) rotate(-4deg)}
+  62%{transform:translateY(0) scaleY(.9) scaleX(1.07)}82%{transform:translateY(-9px)}}
+.panel-cap{font-size:.84rem;color:#5b7d9e;margin-top:16px;text-align:center;position:relative;z-index:2}
+.controls{padding:28px;display:flex;flex-direction:column;gap:18px}
+.counter-row{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.counter{display:flex;align-items:center;gap:12px;background:var(--navy-d);color:#fff;
+  padding:10px 20px;border-radius:12px;box-shadow:5px 5px 0 rgba(10,47,82,.3)}
+#toastCount{font-size:2.4rem;line-height:1;color:var(--gold);min-width:1.3ch;text-align:center;display:inline-block}
+#toastCount.bump{animation:bumpK .45s}
+@keyframes bumpK{40%{transform:scale(1.5) rotate(-8deg)}}
+.counter-label{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;opacity:.85;line-height:1.35}
+.btn-main{position:relative;overflow:hidden;font-size:1.35rem;letter-spacing:.05em;color:#fff;
+  background:var(--red);border:3px solid var(--navy-d);padding:16px 30px;cursor:pointer;
+  box-shadow:6px 6px 0 var(--navy-d);transition:transform .15s,box-shadow .15s;flex:1;min-width:220px}
+.btn-main::after{content:'';position:absolute;top:0;left:-80%;width:45%;height:100%;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,.45),transparent);transition:left .5s}
+.btn-main:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 var(--navy-d)}
+.btn-main:hover::after{left:130%}
+.btn-main:active{transform:translate(3px,3px);box-shadow:2px 2px 0 var(--navy-d)}
+.btn{font-size:1rem;letter-spacing:.04em;color:var(--navy);background:#fff;border:3px solid var(--navy);
+  padding:13px 20px;cursor:pointer;box-shadow:5px 5px 0 var(--navy);
+  transition:transform .15s,box-shadow .15s;flex:1;min-width:190px}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--navy);background:#f2f9ff}
+.btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--navy)}
+.ticker{background:var(--navy-d);color:#eaf4ff;padding:15px 18px;border-radius:10px;border-left:8px solid var(--gold);
+  font-size:1rem;line-height:1.5;min-height:58px;display:flex;align-items:center}
+.ticker.tick{animation:tickIn .5s cubic-bezier(.2,1.2,.3,1)}
+@keyframes tickIn{from{opacity:0;transform:translateX(26px)}}
+.ctrl-row{display:flex;gap:14px;flex-wrap:wrap}
+.compl-box{border:3px dashed var(--blue);border-radius:12px;padding:16px 18px;min-height:88px;
+  font-size:1.02rem;line-height:1.55;color:var(--ink);background:#f4faff}
+.caret{display:inline-block;width:2px;height:1.1em;background:var(--blue);margin-left:2px;
+  vertical-align:-2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.melon-zone{position:relative;display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding-top:14px}
+.melon-btn{background:none;border:none;cursor:pointer;padding:0;transition:transform .2s}
+.melon-btn:hover{transform:rotate(-4deg) scale(1.07)}
+.melon-btn:active{transform:scale(.93)}
+.melon-btn svg{width:122px;display:block}
+.melon-say{position:absolute;left:30px;top:-6px;background:#fff;border:2px solid var(--navy);border-radius:10px;
+  padding:4px 12px;font-size:.8rem;font-weight:700;opacity:0;transform:translateY(8px);
+  transition:.3s;pointer-events:none;white-space:nowrap}
+.melon-say.show{opacity:1;transform:none}
+.slice{position:absolute;left:52px;top:16px;width:46px;pointer-events:none;
+  animation:sliceFly 1.05s ease-out forwards}
+@keyframes sliceFly{0%{transform:translate(0,0) rotate(0);opacity:1}
+  100%{transform:translate(var(--dx,0px),-155px) rotate(var(--rot,120deg));opacity:0}}
+
+/* ---------- ФУТЕР ---------- */
+.foot{text-align:center;padding:46px 20px 58px;background:linear-gradient(180deg,transparent,rgba(13,76,134,.09))}
+.foot-big{font-size:clamp(1.6rem,4.2vw,2.4rem);color:var(--navy-d);margin-bottom:12px;letter-spacing:.04em}
+.foot-small{color:#486d90;max-width:540px;margin:0 auto;line-height:1.65}
+#fx{position:fixed;inset:0;z-index:60;pointer-events:none}
+
+@media (max-width:860px){
+  .play-grid{grid-template-columns:1fr}
+  .order{padding:34px 24px}
+  .stamp-round{width:92px;bottom:88px;right:18px}
+  .stamp-secret{top:14px;right:12px;font-size:.68rem}
+  .plane svg{width:220px;height:auto}
+  .sky-hint{font-size:.74rem;padding:7px 12px}
+}
+@media (prefers-reduced-motion:reduce){
+  .plane,.cloud,.ribbon-track,.sun::after,.beret,.fstar,.sky-hint{animation:none!important}
+  .ch{opacity:1;transform:none}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body class="locked">
+
+<!-- общие SVG-заготовки -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <clipPath id="canopyClip"><path d="M4 36 A28 30 0 0 1 60 36 Z"/></clipPath>
+    <symbol id="star5" viewBox="0 0 24 24">
+      <path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.2 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8Z"/>
+    </symbol>
+    <symbol id="para" viewBox="0 0 64 92">
+      <g clip-path="url(#canopyClip)">
+        <rect x="4" y="2" width="56" height="36" fill="#fff"/>
+        <rect x="4" y="2" width="11.2" height="36" fill="currentColor"/>
+        <rect x="26.4" y="2" width="11.2" height="36" fill="currentColor"/>
+        <rect x="48.8" y="2" width="11.2" height="36" fill="currentColor"/>
+      </g>
+      <path d="M4 36 A28 30 0 0 1 60 36" fill="none" stroke="#0d4c86" stroke-width="2.5"/>
+      <path d="M6 36 L29 63 M58 36 L35 63 M32 36 L32 61" stroke="#0d4c86" stroke-width="1.6" fill="none"/>
+      <circle cx="32" cy="68" r="5.5" fill="#ffd9b3" stroke="#0d4c86" stroke-width="1.6"/>
+      <path d="M26.5 64 Q32 58.5 37.5 64 L37 66 Q32 61.5 27 66 Z" fill="currentColor"/>
+      <rect x="26" y="73" width="12" height="13" rx="4" fill="#fff" stroke="#0d4c86" stroke-width="1.6"/>
+      <rect x="26.8" y="76.5" width="10.4" height="2.6" fill="currentColor"/>
+      <rect x="26.8" y="81.5" width="10.4" height="2.6" fill="currentColor"/>
+      <path d="M28.5 86 l-2.5 5.5 M35.5 86 l2.5 5.5" stroke="#0d4c86" stroke-width="2.6" stroke-linecap="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<canvas id="fx"></canvas>
+
+<!-- СЕКРЕТНЫЙ ПАКЕТ -->
+<div id="overlay" role="dialog" aria-modal="true" aria-label="Секретный пакет для Василия">
+  <div class="ov-top display">Десантная почта • пакет № 0802/ВДВ<b>Адресату: Василию</b></div>
+  <div class="packet-wrap" id="packet">
+    <div class="env">
+      <div class="letter"><span class="display">ПРИКАЗ № 0802/ВДВ</span></div>
+      <div class="flap"></div>
+      <div class="secret display">Сов. секретно</div>
+      <div class="addr">Кому: <b>ВАСИЛИЮ</b> • главному крутому страны<br>От: Отдела Хорошего Настроения</div>
+      <div class="seal"><svg><use href="#star5"/></svg></div>
+    </div>
+  </div>
+  <button id="openBtn" class="display">✂ ВСКРЫТЬ ПАКЕТ</button>
+  <div class="ov-hint">Вскрыть немедленно. Медлить — неприлично.</div>
+</div>
+
+<div class="stripebar"></div>
+<div class="ribbon"><div class="ribbon-track display" id="ribTop">
+  <span>★ 2 АВГУСТА — ДЕНЬ ВДВ ★ НИКТО, КРОМЕ НАС ★ ЗА ВДВ! ★ ВАСЯ, ТЫ — ЛУЧШИЙ ★ УРА, ТОВАРИЩИ! ★ ПОЛОСАТЫЕ МАЙКИ, ГОЛУБЫЕ БЕРЕТЫ</span>
+  <span>★ 2 АВГУСТА — ДЕНЬ ВДВ ★ НИКТО, КРОМЕ НАС ★ ЗА ВДВ! ★ ВАСЯ, ТЫ — ЛУЧШИЙ ★ УРА, ТОВАРИЩИ! ★ ПОЛОСАТЫЕ МАЙКИ, ГОЛУБЫЕ БЕРЕТЫ</span>
+</div></div>
+
+<!-- НЕБО -->
+<header id="sky">
+  <div class="sun"></div>
+  <div id="cloudLayer">
+    <div class="cloud c1"></div><div class="cloud c2"></div>
+    <div class="cloud c3"></div><div class="cloud c4"></div>
+  </div>
+  <div class="plane" aria-hidden="true">
+    <svg viewBox="0 0 320 64" width="300">
+      <path d="M124 31 Q150 24 170 32" stroke="#7c4a21" stroke-width="2" fill="none"/>
+      <rect x="8" y="16" width="118" height="30" rx="4" fill="#d6382f" stroke="#a3221b" stroke-width="2"/>
+      <text x="67" y="37" text-anchor="middle" font-size="15" fill="#fff" font-family="'Russo One','Rubik',sans-serif">ЗА ВДВ! ★</text>
+      <path d="M168 28 h96 q22 3 22 8 q0 5 -22 8 h-96 q-11 -8 0 -16 Z" fill="#0d4c86"/>
+      <path d="M234 28 q9 -11 19 -3 l-3 5 Z" fill="#bfe3ff"/>
+      <path d="M170 28 l-15 -19 h11 l13 13 Z" fill="#d6382f"/>
+      <path d="M162 35 l-17 9 h15 l11 -7 Z" fill="#1668b0"/>
+      <path d="M218 37 l-21 21 h19 l17 -19 Z" fill="#1668b0"/>
+      <ellipse cx="289" cy="36" rx="3" ry="15" fill="#0a2f52" opacity=".65"/>
+      <circle cx="289" cy="36" r="3.4" fill="#0a2f52"/>
+      <use href="#star5" x="196" y="27" width="14" height="14" fill="#ffd23f"/>
+    </svg>
+  </div>
+  <div id="paraLayer"></div>
+
+  <div class="sky-inner">
+    <h1 class="title display">
+      <span class="line1"><span class="ch" style="--i:0">С</span><span class="ch sp" style="--i:1">&nbsp;</span><span class="ch" style="--i:2">Д</span><span class="ch" style="--i:3">Н</span><span class="ch" style="--i:4">Ё</span><span class="ch" style="--i:5">М</span><span class="ch sp" style="--i:6">&nbsp;</span><span class="ch" style="--i:7">В</span><span class="ch" style="--i:8">Д</span><span class="ch" style="--i:9">В</span><span class="ch" style="--i:10">,</span></span>
+      <span class="line2">
+        <svg class="beret" viewBox="0 0 100 60" aria-hidden="true">
+          <path d="M8 46 Q4 18 40 12 Q88 6 94 34 Q96 44 84 44 Q50 33 14 48 Z" fill="#1668b0" stroke="#0d4c86" stroke-width="3" stroke-linejoin="round"/>
+          <path d="M11 46 Q50 36 91 42" stroke="#0d4c86" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <use href="#star5" x="16" y="18" width="15" height="15" fill="#ffd23f" stroke="#b8860b" stroke-width="1"/>
+        </svg>
+        <span class="ch" style="--i:11">В</span><span class="ch" style="--i:12">А</span><span class="ch" style="--i:13">С</span><span class="ch" style="--i:14">Я</span><span class="ch" style="--i:15">!</span>
+      </span>
+    </h1>
+    <p class="tagline">Голубые береты, полосатые тельняшки, арбузы строго по уставу — и один очень крутой именинник. Всё это сегодня — в честь тебя!</p>
+    <div class="badges">
+      <span class="badge">🪂 Десант</span><span class="badge">🎖 Крутость</span>
+      <span class="badge">🍉 Арбуз</span><span class="badge">🥂 Тосты</span>
+    </div>
+    <div class="cd-title">⏳ До следующего Дня ВДВ:</div>
+    <div class="cd" id="cdWrap">
+      <div class="cd-box"><div class="cd-num display" id="cdD">—</div><div class="cd-lab">дней</div></div>
+      <div class="cd-box"><div class="cd-num display" id="cdH">—</div><div class="cd-lab">часов</div></div>
+      <div class="cd-box"><div class="cd-num display" id="cdM">—</div><div class="cd-lab">минут</div></div>
+      <div class="cd-box"><div class="cd-num display" id="cdS">—</div><div class="cd-lab">секунд</div></div>
+    </div>
+  </div>
+  <div class="sky-hint">☝ Кликай по небу — десантируем подкрепление!</div>
+</header>
+
+<!-- ПРИКАЗ -->
+<section class="section" id="orderSec">
+  <svg class="fstar" style="left:4%;top:60px"><use href="#star5"/></svg>
+  <svg class="fstar" style="right:6%;bottom:40px;animation-delay:-2.5s"><use href="#star5"/></svg>
+  <h2 class="sec-title display"><svg><use href="#star5"/></svg> БОЕВОЙ ПРИКАЗ <svg><use href="#star5"/></svg></h2>
+  <div class="order reveal">
+    <div class="order-head display">ПРИКАЗ № 0802/ВДВ</div>
+    <div class="order-meta">г. Праздничная Площадь • 2 августа 2026 г.</div>
+    <p class="order-lead">Во исполнение указа о хорошем настроении и в связи с Днём воздушно-десантных войск <b>приказываю:</b></p>
+    <ol class="order-list">
+      <li>Поздравить <b>Василия</b> с Днём ВДВ — громко, искренне и обязательно с арбузом.</li>
+      <li>Наградить Василия орденом <b>«Крутой Перчик» I степени</b> — за выдающуюся крутизну и верность дружбе.</li>
+      <li>Присвоить Василию почётное звание <b>«Генерал Улыбок и Хорошего Настроения»</b>.</li>
+      <li>Установить Василию пожизненный паёк: счастье — ежедневно, удача — по расписанию, арбузы — по праздникам.</li>
+      <li>Контроль за исполнением приказа возложить на тост <b>«За ВДВ!»</b>.</li>
+    </ol>
+    <div class="order-sign">
+      <div class="role">Командующий<br>праздником</div>
+      <div class="sig">Полковник Улыбков</div>
+      <div class="mp display">М.П.</div>
+    </div>
+    <div class="stamp-secret display">Совершенно<br>секретно</div>
+    <svg class="stamp-round" viewBox="0 0 120 120" aria-hidden="true">
+      <defs><path id="circPath" d="M60 60 m-42 0 a42 42 0 1 1 84 0 a42 42 0 1 1 -84 0"/></defs>
+      <circle cx="60" cy="60" r="52" fill="none" stroke="#d6382f" stroke-width="3"/>
+      <circle cx="60" cy="60" r="29" fill="none" stroke="#d6382f" stroke-width="2"/>
+      <text font-size="10.5" fill="#d6382f" font-family="'Russo One','Rubik',sans-serif" letter-spacing="1">
+        <textPath href="#circPath">★ ВДВ ★ ДЕСАНТНАЯ ПОЧТА ★ 2 АВГУСТА ★</textPath>
+      </text>
+      <use href="#star5" x="46" y="46" width="28" height="28" fill="#d6382f"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ПУЛЬТ -->
+<section class="section" id="playSec">
+  <svg class="fstar" style="right:4%;top:30px;animation-delay:-1.2s"><use href="#star5"/></svg>
+  <h2 class="sec-title display"><svg><use href="#star5"/></svg> ПУЛЬТ УПРАВЛЕНИЯ ПРАЗДНИКОМ <svg><use href="#star5"/></svg></h2>
+  <div class="play-grid">
+    <div class="panel vasya-panel reveal">
+      <div class="bubble" id="bubble">Ура-а-а!</div>
+      <button class="vasya-btn" id="vasyaBtn" aria-label="Нажми на Васю — он ответит">
+        <svg class="vasya-svg" viewBox="0 0 170 210">
+          <ellipse cx="85" cy="201" rx="48" ry="7" fill="rgba(13,76,134,.18)"/>
+          <rect x="63" y="148" width="17" height="42" rx="7" fill="#1f4e79"/>
+          <rect x="90" y="148" width="17" height="42" rx="7" fill="#1f4e79"/>
+          <rect x="55" y="184" width="28" height="14" rx="6" fill="#4a3223"/>
+          <rect x="88" y="184" width="28" height="14" rx="6" fill="#4a3223"/>
+          <path d="M62 104 Q48 118 46 136" stroke="#0d4c86" stroke-width="17" fill="none" stroke-linecap="round"/>
+          <path d="M62 104 Q48 118 46 136" stroke="#fff" stroke-width="11" fill="none" stroke-linecap="round"/>
+          <path d="M55 113 l-8 5 M50 124 l-6 6" stroke="#1668b0" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="45" cy="141" r="7.5" fill="#ffd9b3" stroke="#0d4c86" stroke-width="3"/>
+          <rect x="52" y="92" width="66" height="66" rx="16" fill="#fff" stroke="#0d4c86" stroke-width="3"/>
+          <clipPath id="bodyClip"><rect x="52" y="92" width="66" height="66" rx="16"/></clipPath>
+          <g clip-path="url(#bodyClip)">
+            <rect x="52" y="100" width="66" height="9" fill="#1668b0"/>
+            <rect x="52" y="118" width="66" height="9" fill="#1668b0"/>
+            <rect x="52" y="136" width="66" height="9" fill="#1668b0"/>
+            <rect x="52" y="154" width="66" height="9" fill="#1668b0"/>
+          </g>
+          <path d="M108 104 Q126 96 134 80" stroke="#0d4c86" stroke-width="17" fill="none" stroke-linecap="round"/>
+          <path d="M108 104 Q126 96 134 80" stroke="#fff" stroke-width="11" fill="none" stroke-linecap="round"/>
+          <path d="M116 100 l8 -4 M125 93 l7 -6" stroke="#1668b0" stroke-width="5" stroke-linecap="round"/>
+          <rect x="131" y="54" width="9" height="18" rx="4.5" fill="#ffd9b3" stroke="#0d4c86" stroke-width="3"/>
+          <circle cx="136" cy="76" r="9.5" fill="#ffd9b3" stroke="#0d4c86" stroke-width="3"/>
+          <rect x="63" y="96" width="16" height="7" rx="2" fill="#d6382f"/>
+          <circle cx="71" cy="111" r="8.5" fill="#ffd23f" stroke="#b8860b" stroke-width="2"/>
+          <use href="#star5" x="65.5" y="105.5" width="11" height="11" fill="#b8860b"/>
+          <circle cx="85" cy="58" r="30" fill="#ffd9b3" stroke="#0d4c86" stroke-width="3"/>
+          <circle cx="55" cy="61" r="5" fill="#ffd9b3" stroke="#0d4c86" stroke-width="3"/>
+          <circle cx="115" cy="61" r="5" fill="#ffd9b3" stroke="#0d4c86" stroke-width="3"/>
+          <g fill="#14263c">
+            <rect x="62" y="50" width="21" height="14" rx="6"/>
+            <rect x="87" y="50" width="21" height="14" rx="6"/>
+            <rect x="81" y="54" width="8" height="4"/>
+            <rect x="55" y="52" width="8" height="3"/><rect x="107" y="52" width="8" height="3"/>
+          </g>
+          <path d="M66 53 h6 l-4 8 h-5 Z" fill="#fff" opacity=".35"/>
+          <path d="M91 53 h6 l-4 8 h-5 Z" fill="#fff" opacity=".35"/>
+          <path d="M85 66 q3 4 0 7" stroke="#c98a5b" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M72 76 Q85 89 98 76" stroke="#8a4b23" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          <path d="M52 44 Q54 17 88 14 Q124 12 122 38 Q120 47 109 44 Q86 30 58 47 Z" fill="#1668b0" stroke="#0d4c86" stroke-width="3" stroke-linejoin="round"/>
+          <path d="M55 45 Q86 33 117 41" stroke="#0d4c86" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <use href="#star5" x="56" y="20" width="14" height="14" fill="#ffd23f" stroke="#b8860b" stroke-width="1"/>
+        </svg>
+      </button>
+      <p class="panel-cap">Это Вася. Жми на него — он отвечает!</p>
+    </div>
+
+    <div class="panel controls reveal">
+      <div class="counter-row">
+        <div class="counter">
+          <span class="display" id="toastCount">0</span>
+          <span class="counter-label">тостов<br>за ВДВ</span>
+        </div>
+        <button class="btn-main display" id="toastBtn">🥂 ЗА ВДВ!</button>
+      </div>
+      <div class="ticker" id="ticker">Нажми «За ВДВ!» — и первый тост прилетит сам…</div>
+      <div class="ctrl-row">
+        <button class="btn display" id="complBtn">⭐ ВДВ-комплимент Васе</button>
+        <button class="btn display" id="dropBtn">🪂 Сбросить десант ×5</button>
+      </div>
+      <div class="compl-box"><span id="complText">Здесь появится секретный комплимент…</span><span class="caret" id="caret"></span></div>
+      <div class="melon-zone">
+        <div class="melon-say" id="melonSay">Арбуз — по уставу! 🍉</div>
+        <button class="melon-btn" id="melonBtn" aria-label="Выдать арбуз">
+          <svg viewBox="0 0 130 96">
+            <path d="M65 18 q-2 -9 6 -13" stroke="#1c6b2b" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <path d="M71 7 q11 -5 13 4 q-8 7 -13 -4 Z" fill="#2f8f3e"/>
+            <ellipse cx="65" cy="58" rx="56" ry="37" fill="#2f8f3e"/>
+            <path d="M28 32 Q40 58 30 86" stroke="#1c6b2b" stroke-width="8" fill="none" stroke-linecap="round"/>
+            <path d="M52 24 Q60 58 52 93" stroke="#1c6b2b" stroke-width="8" fill="none" stroke-linecap="round"/>
+            <path d="M78 24 Q72 58 80 93" stroke="#1c6b2b" stroke-width="8" fill="none" stroke-linecap="round"/>
+            <path d="M102 32 Q92 58 102 84" stroke="#1c6b2b" stroke-width="8" fill="none" stroke-linecap="round"/>
+            <ellipse cx="44" cy="42" rx="14" ry="8" fill="#fff" opacity=".25"/>
+          </svg>
+        </button>
+        <p class="panel-cap">Арбуз по уставу — жми на полосатого!</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="stripebar"></div>
+  <div class="ribbon"><div class="ribbon-track display rev">
+    <span>★ НИКТО, КРОМЕ НАС ★ ЗА ВДВ! ★ С ДНЁМ ВОЗДУШНО-ДЕСАНТНЫХ ВОЙСК ★ ВАСЯ — ГОРДОСТЬ ДЕСАНТА</span>
+    <span>★ НИКТО, КРОМЕ НАС ★ ЗА ВДВ! ★ С ДНЁМ ВОЗДУШНО-ДЕСАНТНЫХ ВОЙСК ★ ВАСЯ — ГОРДОСТЬ ДЕСАНТА</span>
+  </div></div>
+  <div class="foot">
+    <p class="foot-big display">С Днём ВДВ, Вася! 🪂💙</p>
+    <p class="foot-small">Сделано с голубым беретом, полосатой тельняшкой и арбузным настроением. Никто, кроме нас!</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+const $ = id => document.getElementById(id);
+const pick = arr => arr[(Math.random()*arr.length)|0];
+let opened = false;
+
+/* ---------- ЗВУК ---------- */
+let AC = null;
+function ac(){ try{ if(!AC) AC = new (window.AudioContext||window.webkitAudioContext)();
+  if(AC.state==='suspended') AC.resume(); }catch(e){} return AC; }
+function note(f,t0,dur,type,vol){
+  const a = ac(); if(!a) return;
+  const o=a.createOscillator(), g=a.createGain();
+  o.type=type||'triangle'; o.frequency.value=f;
+  o.connect(g); g.connect(a.destination);
+  const t=a.currentTime+t0;
+  g.gain.setValueAtTime(0.0001,t);
+  g.gain.exponentialRampToValueAtTime(vol||0.12,t+0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+  o.start(t); o.stop(t+dur+0.05);
+}
+function fanfare(){ [392,523.25,659.25,783.99].forEach((f,i)=>note(f,i*0.11,0.3,'triangle',0.12));
+  note(1046.5,0.46,0.55,'triangle',0.14); note(523.25,0.46,0.55,'triangle',0.08); }
+function pop(){ note(520,0,0.09,'square',0.06); note(180,0.03,0.15,'sine',0.18); }
+function whoosh(){ const a=ac(); if(!a) return;
+  const o=a.createOscillator(), g=a.createGain();
+  o.type='sawtooth';
+  o.frequency.setValueAtTime(900,a.currentTime);
+  o.frequency.exponentialRampToValueAtTime(120,a.currentTime+0.35);
+  g.gain.setValueAtTime(0.07,a.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.4);
+  o.connect(g); g.connect(a.destination); o.start(); o.stop(a.currentTime+0.45); }
+
+/* ---------- КОНФЕТТИ ---------- */
+const cvs=$('fx'), ctx=cvs.getContext('2d');
+const COLORS=['#1668b0','#7ec8ff','#ffffff','#ffd23f','#e63946','#2f8f3e'];
+let parts=[];
+function resize(){ cvs.width=innerWidth; cvs.height=innerHeight; }
+addEventListener('resize',resize); resize();
+function burst(x,y,n,power){
+  n=n||120; power=power||9;
+  for(let i=0;i<n;i++){
+    const a=Math.random()*Math.PI*2, sp=(Math.random()*0.7+0.3)*power;
+    parts.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-3,
+      g:0.16+Math.random()*0.08,rot:Math.random()*6.28,vr:(Math.random()-0.5)*0.3,
+      s:5+Math.random()*6,c:pick(COLORS),sh:(Math.random()*3)|0,
+      life:1,dk:0.006+Math.random()*0.006});
+  }
+}
+function drawStar(x,y,r,rot){
+  ctx.beginPath();
+  for(let i=0;i<10;i++){
+    const a=rot+i*Math.PI/5, rr=i%2? r*0.45:r;
+    ctx.lineTo(x+Math.cos(a)*rr, y+Math.sin(a)*rr);
+  }
+  ctx.closePath(); ctx.fill();
+}
+(function tick(){
+  ctx.clearRect(0,0,cvs.width,cvs.height);
+  parts=parts.filter(p=>p.life>0 && p.y<cvs.height+50);
+  for(const p of parts){
+    p.vx*=0.99; p.vy+=p.g; p.x+=p.vx; p.y+=p.vy;
+    p.rot+=p.vr; p.life-=p.dk;
+    ctx.globalAlpha=Math.max(p.life,0); ctx.fillStyle=p.c;
+    if(p.sh===0){ ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
+      ctx.fillRect(-p.s/2,-p.s/3,p.s,p.s*0.66); ctx.restore(); }
+    else if(p.sh===1){ drawStar(p.x,p.y,p.s*0.7,p.rot); }
+    else { ctx.beginPath(); ctx.arc(p.x,p.y,p.s*0.42,0,6.29); ctx.fill(); }
+  }
+  ctx.globalAlpha=1;
+  requestAnimationFrame(tick);
+})();
+
+/* ---------- ДЕСАНТНИКИ ---------- */
+const sky=$('sky'), layer=$('paraLayer');
+function dropPara(x,opts){
+  opts=opts||{};
+  if(layer.childElementCount>9) return;
+  const h=sky.offsetHeight;
+  const el=document.createElement('div');
+  el.className='paratrooper';
+  const dur=opts.fast? 3.6+Math.random()*1.2 : 6+Math.random()*4;
+  el.style.left=(x-32)+'px';
+  el.style.setProperty('--fd',(h+190)+'px');
+  el.style.setProperty('--fdur',dur+'s');
+  const col=pick(['p-blue','p-blue','p-red','p-gold']);
+  const flag=Math.random()<0.3;
+  const sd=(1.5+Math.random()*1.3).toFixed(2);
+  el.innerHTML='<div class="sway" style="animation-duration:'+sd+'s">'
+    +'<svg class="psvg '+col+'" viewBox="0 0 64 92" width="64" height="92"><use href="#para"/></svg>'
+    +(flag?'<svg class="pflag" viewBox="0 0 22 30" width="22" height="30"><path d="M3 2 V28" stroke="#7c4a21" stroke-width="3" stroke-linecap="round"/><path d="M3 3 L20 8 L3 13 Z" fill="#d6382f"/></svg>':'')
+    +'</div>';
+  layer.appendChild(el);
+  el.addEventListener('animationend',function(ev){
+    if(ev.animationName==='fall'){
+      const puff=document.createElement('div');
+      puff.className='puff';
+      puff.style.left=(x-24)+'px'; puff.style.top=(h-18)+'px';
+      sky.appendChild(puff);
+      setTimeout(()=>puff.remove(),600);
+      el.remove();
+    }
+  });
+}
+sky.addEventListener('click',function(e){
+  if(!opened) return;
+  dropPara(e.clientX); pop();
+});
+sky.addEventListener('pointermove',function(e){
+  const dx=e.clientX/innerWidth-0.5;
+  $('cloudLayer').style.transform='translateX('+(dx*-26)+'px)';
+});
+setInterval(function(){
+  if(!opened||document.hidden) return;
+  if(Math.random()<0.8) dropPara(40+Math.random()*(innerWidth-80));
+},3400);
+
+/* ---------- ОТКРЫТИЕ ПАКЕТА ---------- */
+$('openBtn').addEventListener('click',function(){
+  if(opened) return; opened=true;
+  ac(); pop();
+  $('packet').classList.add('open');
+  setTimeout(function(){
+    document.body.classList.add('opened');
+    document.body.classList.remove('locked');
+    $('overlay').classList.add('bye');
+    fanfare();
+    burst(innerWidth/2, innerHeight*0.3, 170, 11);
+    setTimeout(function(){ dropPara(innerWidth*0.3); dropPara(innerWidth*0.7); },400);
+    setTimeout(function(){ dropPara(innerWidth*0.5); },900);
+  },900);
+  setTimeout(function(){ const o=$('overlay'); if(o) o.remove(); },1900);
+});
+
+/* ---------- ТЕКСТЫ ---------- */
+const toasts=[
+ "За ВДВ! За Васю! И за то, чтобы парашют всегда раскрывался, а холодильник никогда не закрывался!",
+ "Выпьем за Васю: он десантируется в любую проблему — и сразу в яблочко!",
+ "За ВДВ! Пусть у Васи всё будет по уставу: счастье — строевым шагом, удача — точно по расписанию!",
+ "Тост №{n}: за то, чтобы Вася приземлялся мягко, а проблемы — жёстко и очень далеко!",
+ "За Васю! Он не ищет лёгких путей — он сбрасывает их сверху вместе с десантом!",
+ "За ВДВ! За голубые береты, полосатые майки и за Васю, который круче всех беретов вместе взятых!",
+ "За то, чтобы у Васи всегда был запасной парашют, запасной план и запасной арбуз!"
+];
+const compliments=[
+ "Вася настолько крут, что голуби на площади отдают ему честь.",
+ "Вася десантируется в понедельник в 7 утра — и всё равно улыбается. Это сверхспособность.",
+ "У Васи берет голубее неба, а сердце — золотее всех медалей.",
+ "2 августа арбузы сами несут себя Васе в руки. Такой устав.",
+ "Если Вася сказал «приземлимся» — значит, приземлимся. Максимум — уточним куда.",
+ "Высота Васи не боится. Высота надеется оправдать его ожидания.",
+ "ВДВ расшифровывается как «Великолепный Дружище Вася». Мы проверяли. Официально.",
+ "Вася может починить что угодно. Кроме будильника — будильник сам виноват."
+];
+const vasyaSay=[
+ "Никто, кроме нас! И чуть-чуть — кроме меня 😎",
+ "За ВДВ, товарищи! Ура-а-а!",
+ "Вася на связи! Приём-приём!",
+ "Десантируемся, братцы! Внизу — праздник!",
+ "Арбуз уже в пути. По уставу! 🍉",
+ "Тост готов? Я — всегда готов!",
+ "Это не я такой крутой — это берет такой."
+];
+
+/* ---------- ТОСТ ---------- */
+let toastsN=0;
+const toastBtn=$('toastBtn'), toastCount=$('toastCount'), ticker=$('ticker');
+toastBtn.addEventListener('click',function(){
+  toastsN++;
+  toastCount.textContent=toastsN;
+  toastCount.classList.remove('bump'); void toastCount.offsetWidth;
+  toastCount.classList.add('bump');
+  ticker.textContent='🥂 '+pick(toasts).replace('{n}',toastsN);
+  ticker.classList.remove('tick'); void ticker.offsetWidth;
+  ticker.classList.add('tick');
+  fanfare();
+  const r=toastBtn.getBoundingClientRect();
+  burst(r.left+r.width/2, r.top+r.height/2, 130, 10);
+});
+
+/* ---------- КОМПЛИМЕНТ ---------- */
+let typeTimer=null;
+$('complBtn').addEventListener('click',function(){
+  pop();
+  const text=pick(compliments), el=$('complText');
+  clearInterval(typeTimer); el.textContent=''; let i=0;
+  typeTimer=setInterval(function(){
+    el.textContent=text.slice(0,++i);
+    if(i>=text.length) clearInterval(typeTimer);
+  },28);
+});
+
+/* ---------- ДЕСАНТ ×5 ---------- */
+$('dropBtn').addEventListener('click',function(){
+  whoosh();
+  for(let i=0;i<5;i++){
+    setTimeout(function(){ dropPara(60+Math.random()*(innerWidth-120),{fast:true}); },i*170);
+  }
+});
+
+/* ---------- ВАСЯ ---------- */
+const vasyaBtn=$('vasyaBtn'), bubble=$('bubble');
+let bubbleT=null;
+vasyaBtn.addEventListener('click',function(){
+  pop();
+  vasyaBtn.classList.remove('jumping'); void vasyaBtn.offsetWidth;
+  vasyaBtn.classList.add('jumping');
+  bubble.textContent=pick(vasyaSay);
+  bubble.classList.add('show');
+  clearTimeout(bubbleT);
+  bubbleT=setTimeout(()=>bubble.classList.remove('show'),2400);
+});
+
+/* ---------- АРБУЗ ---------- */
+const melonSay=$('melonSay'), melonZone=document.querySelector('.melon-zone');
+const sliceSVG='<svg viewBox="0 0 60 44"><path d="M4 4 L56 4 L30 42 Z" fill="#2f8f3e"/><path d="M8 7 L52 7 L30 38 Z" fill="#e8f7e0"/><path d="M11 9 L49 9 L30 35 Z" fill="#ff5148"/><ellipse cx="26" cy="15" rx="2" ry="3" fill="#20262b"/><ellipse cx="34" cy="15" rx="2" ry="3" fill="#20262b"/><ellipse cx="30" cy="23" rx="2" ry="3" fill="#20262b"/></svg>';
+let melonT=null;
+$('melonBtn').addEventListener('click',function(){
+  pop();
+  const s=document.createElement('div');
+  s.className='slice';
+  s.style.setProperty('--dx',((Math.random()*160)-80).toFixed(0)+'px');
+  s.style.setProperty('--rot',((Math.random()*260)-130).toFixed(0)+'deg');
+  s.innerHTML=sliceSVG;
+  melonZone.appendChild(s);
+  s.addEventListener('animationend',()=>s.remove());
+  melonSay.classList.add('show');
+  clearTimeout(melonT);
+  melonT=setTimeout(()=>melonSay.classList.remove('show'),1600);
+});
+
+/* ---------- ОБРАТНЫЙ ОТСЧЁТ ---------- */
+function cdSet(id,val){
+  const el=$(id), v=String(val).padStart(2,'0');
+  if(el.textContent!==v){
+    el.textContent=v;
+    el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
+  }
+}
+function cdTick(){
+  const now=new Date();
+  const wrap=$('cdWrap');
+  if(now.getMonth()===7 && now.getDate()===2){
+    wrap.innerHTML='<div class="cd-today display">🎉 СЕГОДНЯ ДЕНЬ ВДВ! УРА, ТОВАРИЩИ! 🎉</div>';
+    return;
+  }
+  let target=new Date(now.getFullYear(),7,2);
+  if(now>target) target=new Date(now.getFullYear()+1,7,2);
+  const diff=target-now;
+  cdSet('cdD',Math.floor(diff/864e5));
+  cdSet('cdH',Math.floor(diff/36e5)%24);
+  cdSet('cdM',Math.floor(diff/6e4)%60);
+  cdSet('cdS',Math.floor(diff/1e3)%60);
+}
+cdTick(); setInterval(cdTick,1000);
+
+/* ---------- ПОЯВЛЕНИЕ ПРИ СКРОЛЛЕ ---------- */
+const io=new IntersectionObserver(function(entries){
+  entries.forEach(function(en){
+    if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }
+  });
+},{threshold:0.15});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+})();
+</script>
+</body>
+</html>

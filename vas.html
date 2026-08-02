@@ -1,792 +1,947 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<meta name="theme-color" content="#0a2f52"/>
-<title>С Днём ВДВ, Вася! 🪂</title>
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link href="https://cdn.jsdelivr.net/npm/@fontsource/russo-one@5/cyrillic.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/@fontsource/russo-one@5/index.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/@fontsource/rubik@5/cyrillic.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/@fontsource/rubik@5/index.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/@fontsource/marck-script@5/cyrillic.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/@fontsource/marck-script@5/index.css" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>С Днём ВДВ, Василий! · 2 августа · Ильин день и именины Ильи</title>
+<meta name="description" content="Секретный праздничный пакет для Василия: поздравления десантом, колесо приказов, ордена, салют. А у сына Ильи сегодня ещё и именины.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/russo-one@latest/cyrillic-400-normal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/golos-text@latest/cyrillic-400-normal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/golos-text@latest/cyrillic-500-normal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/golos-text@latest/cyrillic-700-normal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/marck-script@latest/cyrillic-400-normal.css">
 <style>
 :root{
-  --navy:#0d4c86; --navy-d:#0a2f52; --blue:#1668b0;
-  --red:#d6382f; --red-d:#a3221b; --gold:#ffd23f; --gold-d:#b8860b;
-  --paper:#fdf9ef; --ink:#123f6b;
+  --sky1:#0a3a63;--sky2:#1573b4;--sky3:#4fb2e6;--sky4:#aee3f6;
+  --vdv:#009BDB;--vdv-d:#0079ad;--navy:#122a47;--navy-2:#0c1d33;
+  --khaki:#5a6b3b;--khaki-d:#3f4b29;--khaki-l:#77895a;
+  --red:#d42b2b;--red-d:#a31f1f;
+  --gold:#f2c94c;--gold-d:#c9a227;
+  --paper:#fdfcf6;--ink:#1d2733;--cream:#f6f1e2;
+  --disp:'Russo One',sans-serif;--body:'Golos Text',sans-serif;--script:'Marck Script',cursive;
 }
-*{margin:0;padding:0;box-sizing:border-box}
+*{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{
-  font-family:'Rubik',system-ui,sans-serif;color:var(--navy-d);
-  background:linear-gradient(180deg,#8fd0ff 0%,#b9e3ff 40%,#e6f6ff 75%,#f2fbff 100%);
-  min-height:100vh;overflow-x:hidden;
+  font-family:var(--body);color:var(--ink);background-color:#dcecf5;
+  background-image:repeating-linear-gradient(45deg,rgba(0,155,219,.035) 0 2px,transparent 2px 16px);
+  line-height:1.6;overflow-x:hidden;
 }
-body.locked{overflow:hidden}
-.display{font-family:'Russo One','Rubik',sans-serif;font-weight:400}
-button{-webkit-tap-highlight-color:transparent}
-button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+button{font-family:inherit}
+img,svg{display:block}
+.wrap{max-width:1060px;margin:0 auto;padding:0 16px}
+section{padding:60px 0;position:relative}
+@media(min-width:861px){section{padding:84px 0}}
 
-/* ---------- СЕКРЕТНЫЙ ПАКЕТ ---------- */
-#overlay{
-  position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;gap:26px;padding:20px;text-align:center;
-  background:radial-gradient(1100px 700px at 50% 28%,#155089,#0a2f52 72%);
-  transition:opacity .8s ease,visibility .8s;
-}
-#overlay::before{content:'';position:absolute;inset:0;pointer-events:none;
-  background:
-   repeating-linear-gradient(45deg,rgba(255,255,255,.035) 0 2px,transparent 2px 16px),
-   radial-gradient(2px 2px at 12% 20%,#fff 50%,transparent 51%),
-   radial-gradient(2px 2px at 84% 14%,#fff 50%,transparent 51%),
-   radial-gradient(2.5px 2.5px at 70% 78%,#ffd23f 50%,transparent 51%),
-   radial-gradient(2px 2px at 22% 82%,#fff 50%,transparent 51%),
-   radial-gradient(2px 2px at 48% 8%,#fff 50%,transparent 51%);
-  opacity:.8;}
-#overlay.bye{opacity:0;visibility:hidden}
-.ov-top{color:var(--gold);letter-spacing:.32em;font-size:.78rem;text-transform:uppercase;position:relative}
-.ov-top b{display:block;color:#fff;font-size:1.05rem;letter-spacing:.2em;margin-top:8px}
-.packet-wrap{perspective:1100px;position:relative}
-.env{position:relative;width:min(380px,88vw);aspect-ratio:8/5;background:#164a7d;
-  border:3px solid #071f38;box-shadow:12px 14px 0 rgba(0,0,0,.28);}
-.env .letter{position:absolute;left:7%;right:7%;top:10%;bottom:9%;background:#fdfbf2;z-index:2;
-  padding:14px;transition:transform .7s .35s cubic-bezier(.2,.9,.3,1);
-  background-image:repeating-linear-gradient(transparent 0 16px,rgba(13,76,134,.14) 16px 17px);}
-.env .letter .display{font-size:.8rem;color:var(--navy);letter-spacing:.08em}
-.packet-wrap.open .letter{transform:translateY(-52%)}
-.env .flap{position:absolute;left:0;right:0;top:0;height:56%;background:#1d5a94;z-index:3;
-  clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top center;
-  transition:transform .8s cubic-bezier(.6,0,.3,1);border-bottom:2px solid rgba(7,31,56,.4)}
-.packet-wrap.open .flap{transform:rotateX(180deg);z-index:1}
-.env .secret{position:absolute;top:64%;left:6%;z-index:4;transform:rotate(-9deg);
-  border:3px double #ff6b62;color:#ff6b62;padding:3px 10px;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase}
-.env .addr{position:absolute;left:50%;top:78%;transform:translate(-50%,-50%);z-index:4;
-  background:#fff;padding:8px 16px;font-size:.78rem;line-height:1.45;box-shadow:3px 3px 0 rgba(0,0,0,.25);white-space:nowrap}
-.env .addr b{color:var(--red)}
-.seal{position:absolute;left:50%;top:56%;transform:translate(-50%,-50%);z-index:5;
-  width:58px;height:58px;border-radius:50%;display:grid;place-items:center;color:#fff;
-  background:radial-gradient(circle at 35% 30%,#ff7a70,#c22e25 60%,#8c1d15);
-  box-shadow:inset 0 -4px 8px rgba(0,0,0,.35),0 4px 8px rgba(0,0,0,.35);
-  transition:transform .45s,opacity .45s}
-.seal svg{width:26px;height:26px;fill:#fff}
-.packet-wrap.open .seal{transform:translate(-50%,-50%) scale(0) rotate(200deg);opacity:0}
-#openBtn{font-size:1.15rem;letter-spacing:.08em;color:var(--navy-d);background:var(--gold);
-  border:3px solid var(--navy-d);padding:15px 30px;cursor:pointer;box-shadow:7px 7px 0 rgba(0,0,0,.35);
-  transition:transform .15s,box-shadow .15s;position:relative}
-#openBtn:hover{transform:translate(-2px,-2px);box-shadow:9px 9px 0 rgba(0,0,0,.35)}
-#openBtn:active{transform:translate(3px,3px);box-shadow:2px 2px 0 rgba(0,0,0,.35)}
-.ov-hint{color:#9cc4e8;font-size:.82rem;position:relative}
+/* ---------- TOPBAR ---------- */
+.topbar{position:sticky;top:0;z-index:70;background:var(--navy-2);border-bottom:3px solid var(--red);box-shadow:0 6px 18px rgba(10,30,50,.35)}
+.tb-in{display:flex;align-items:center;gap:10px;padding:9px 16px}
+.tb-star{color:var(--red);font-size:1.1rem;text-shadow:0 0 8px rgba(212,43,43,.7)}
+.topbar b{font-family:var(--disp);font-weight:400;font-size:.72rem;letter-spacing:.14em;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-right{margin-left:auto;display:flex;gap:8px;align-items:center}
+.tb-btn{background:transparent;border:1.5px solid rgba(255,255,255,.35);color:#fff;border-radius:6px;width:36px;height:36px;cursor:pointer;font-size:.95rem;transition:.2s}
+.tb-btn:hover{border-color:var(--gold);transform:translateY(-2px)}
+.tb-reset{width:auto;padding:0 12px;font-family:var(--disp);font-size:.62rem;letter-spacing:.1em}
 
-/* ---------- ЛЕНТЫ ---------- */
-.stripebar{height:10px;background:repeating-linear-gradient(90deg,#fff 0 16px,var(--blue) 16px 32px)}
-.ribbon{background:var(--navy-d);color:#fff;overflow:hidden;border-block:2px solid #071f38}
-.ribbon-track{display:flex;gap:3rem;width:max-content;padding:.55rem 0;
-  font-size:.92rem;letter-spacing:.14em;animation:marquee 26s linear infinite;white-space:nowrap}
-.ribbon-track.rev{animation-direction:reverse}
-.ribbon-track span{display:flex;align-items:center;gap:3rem}
-@keyframes marquee{to{transform:translateX(-50%)}}
+/* ---------- HERO SKY ---------- */
+.hero{position:relative;min-height:100svh;overflow:hidden;background:linear-gradient(180deg,var(--sky1) 0%,var(--sky2) 34%,var(--sky3) 68%,var(--sky4) 100%);display:flex;align-items:center;cursor:crosshair}
+.sun{position:absolute;top:-70px;right:-50px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,#fff8da 0%,rgba(255,248,218,.55) 38%,transparent 70%);pointer-events:none}
+.cloud{position:absolute;background:#fff;border-radius:60px;pointer-events:none;animation:cloudMove linear infinite;opacity:.92}
+.cloud::before,.cloud::after{content:"";position:absolute;background:#fff;border-radius:50%}
+.cloud::before{width:58%;height:170%;left:14%;bottom:18%}
+.cloud::after{width:42%;height:120%;right:12%;bottom:26%}
+@keyframes cloudMove{from{transform:translateX(-30vw)}to{transform:translateX(115vw)}}
+.sky-fall{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.para{position:absolute;top:-14%;animation:paraFall linear infinite}
+@keyframes paraFall{from{transform:translateY(-12vh)}to{transform:translateY(114vh)}}
+.para i{display:block;animation:sway 3.6s ease-in-out infinite alternate;font-style:normal}
+@keyframes sway{from{transform:translateX(-15px) rotate(-7deg)}to{transform:translateX(15px) rotate(7deg)}}
+.plane{position:absolute;top:15%;left:0;width:150px;animation:fly 17s linear infinite;pointer-events:none}
+@keyframes fly{0%{transform:translateX(-190px)}100%{transform:translateX(calc(100vw + 220px))}}
+.plane-bob{animation:bob 3.2s ease-in-out infinite alternate}
+@keyframes bob{from{transform:translateY(-6px)}to{transform:translateY(6px)}}
+.fly-plane{position:fixed;top:16vh;left:0;width:130px;z-index:75;pointer-events:none;animation:flyFast 2.4s linear forwards}
+@keyframes flyFast{from{transform:translateX(-170px)}to{transform:translateX(calc(100vw + 200px))}}
 
-/* ---------- НЕБО ---------- */
-#sky{position:relative;min-height:92vh;overflow:hidden;cursor:crosshair;user-select:none}
-.sun{position:absolute;top:-70px;right:-70px;width:250px;height:250px;border-radius:50%;z-index:0;
-  background:radial-gradient(circle at 42% 42%,#fff8dc,#ffd23f 52%,rgba(255,210,63,0) 72%)}
-.sun::after{content:'';position:absolute;inset:-46px;border-radius:50%;
-  background:repeating-conic-gradient(rgba(255,200,60,.3) 0deg 7deg,transparent 7deg 16deg);
-  -webkit-mask:radial-gradient(circle,transparent 44%,#000 46%,#000 66%,transparent 68%);
-          mask:radial-gradient(circle,transparent 44%,#000 46%,#000 66%,transparent 68%);
-  animation:spin 44s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-#cloudLayer{position:absolute;inset:0;z-index:1;transition:transform .7s ease-out;pointer-events:none}
-.cloud{position:absolute;background:#fff;border-radius:50px;opacity:.92;
-  box-shadow:34px -20px 0 4px #fff,78px -12px 0 0 #fff;
-  filter:drop-shadow(0 8px 10px rgba(13,76,134,.1));animation:drift linear infinite}
-@keyframes drift{from{transform:translateX(-240px)}to{transform:translateX(calc(100vw + 240px))}}
-.c1{width:150px;height:46px;top:9%;animation-duration:75s;animation-delay:-18s}
-.c2{width:110px;height:36px;top:24%;animation-duration:100s;animation-delay:-55s;opacity:.8}
-.c3{width:180px;height:52px;top:44%;animation-duration:88s;animation-delay:-30s}
-.c4{width:90px;height:30px;top:62%;animation-duration:115s;animation-delay:-80s;opacity:.7}
-.plane{position:absolute;top:10%;left:0;z-index:4;pointer-events:none;
-  transform:translateX(-380px);animation:fly 27s linear infinite;animation-delay:2.5s}
-.plane svg{display:block;animation:pbob 3.4s ease-in-out infinite alternate}
-@keyframes fly{from{transform:translateX(-380px)}to{transform:translateX(calc(100vw + 80px))}}
-@keyframes pbob{from{transform:translateY(-7px)}to{transform:translateY(7px)}}
-#paraLayer{position:absolute;inset:0;z-index:2;pointer-events:none}
-.paratrooper{position:absolute;top:-115px;will-change:transform;animation:fall var(--fdur,7s) linear forwards}
-@keyframes fall{to{transform:translateY(var(--fd,900px))}}
-.sway{position:relative;width:64px;transform-origin:50% 0;
-  animation-name:swayK;animation-timing-function:ease-in-out;
-  animation-iteration-count:infinite;animation-direction:alternate}
-@keyframes swayK{from{transform:translateX(-14px) rotate(-6deg)}to{transform:translateX(14px) rotate(6deg)}}
-.psvg{display:block;color:var(--blue)}
-.psvg.p-red{color:var(--red)} .psvg.p-gold{color:#e8a020}
-.pflag{position:absolute;right:-15px;top:56px}
-.puff{position:absolute;width:48px;height:15px;border-radius:50%;background:rgba(255,255,255,.95);
-  z-index:2;pointer-events:none;animation:puffK .55s ease-out forwards}
-@keyframes puffK{to{transform:scale(2.4);opacity:0}}
+.hero-in{position:relative;z-index:5;width:100%;padding:90px 0 70px}
+.packet{max-width:640px;background:rgba(12,29,51,.82);border:2px dashed rgba(255,255,255,.5);border-radius:10px;padding:26px 22px 28px;transform:rotate(-1.2deg);box-shadow:0 30px 60px rgba(6,24,44,.45)}
+@media(min-width:861px){.packet{padding:36px 34px 38px}}
+.p-top{font-family:var(--disp);font-size:.62rem;letter-spacing:.22em;color:var(--gold);text-align:center;border-bottom:1px solid rgba(255,255,255,.25);padding-bottom:12px;margin-bottom:18px}
+.packet h1{font-family:var(--disp);font-weight:400;font-size:clamp(2.3rem,9vw,4.4rem);line-height:1.02;color:#fff;text-shadow:0 4px 0 rgba(6,24,44,.55)}
+.packet h1 em{font-style:normal;color:var(--gold);text-shadow:4px 4px 0 var(--vdv-d),0 0 26px rgba(242,201,76,.45)}
+.p-date{display:inline-block;margin-top:16px;background:var(--vdv);color:#fff;font-family:var(--disp);font-size:.68rem;letter-spacing:.1em;padding:8px 14px;border-radius:4px;transform:rotate(.6deg)}
+.p-motto{margin-top:14px;color:#dceefb;font-size:1rem}
+.p-motto b{color:var(--gold);font-weight:700}
+.p-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+.btn-sky{font-family:var(--disp);font-weight:400;font-size:.86rem;color:#fff;background:linear-gradient(180deg,#e6483b,var(--red-d));border:2px solid var(--gold);border-radius:9px;padding:14px 20px;cursor:pointer;box-shadow:0 6px 0 #6d0d0d,0 12px 22px rgba(0,0,0,.35);transition:.12s}
+.btn-sky:active{transform:translateY(5px);box-shadow:0 1px 0 #6d0d0d}
+.btn-sky.alt{background:linear-gradient(180deg,#1d9be0,var(--vdv-d));box-shadow:0 6px 0 #045a83,0 12px 22px rgba(0,0,0,.35)}
+.btn-sky.alt:active{box-shadow:0 1px 0 #045a83}
+.p-hint{margin-top:16px;font-size:.74rem;color:#bcdcf2;opacity:.85}
 
-.sky-inner{position:relative;z-index:3;text-align:center;padding:11vh 20px 110px}
-.title .line1{display:block;font-size:clamp(1.5rem,4.6vw,2.8rem);color:var(--navy-d);
-  letter-spacing:.08em;text-shadow:0 2px 0 rgba(255,255,255,.65)}
-.title .line2{position:relative;display:inline-block;margin-top:6px;
-  font-size:clamp(3.4rem,12vw,7.6rem);color:#fff;letter-spacing:.03em;
-  -webkit-text-stroke:2.5px var(--navy);
-  text-shadow:0 5px 0 rgba(13,76,134,.55),7px 10px 0 rgba(13,76,134,.22)}
-.beret{position:absolute;top:-.46em;left:2%;width:1.15em;transform:rotate(-16deg);z-index:2;
-  animation:beretFloat 4s ease-in-out infinite alternate;filter:drop-shadow(3px 4px 0 rgba(13,76,134,.3))}
-@keyframes beretFloat{from{transform:rotate(-16deg) translateY(0)}to{transform:rotate(-11deg) translateY(-7px)}}
-.ch{display:inline-block;opacity:0;transform:translateY(-46px) rotate(-9deg)}
-.ch.sp{width:.42em}
-body.opened .ch{animation:chIn .6s cubic-bezier(.2,1.5,.4,1) forwards;
-  animation-delay:calc(var(--i)*.055s + .15s)}
-@keyframes chIn{to{opacity:1;transform:none}}
-.tagline{max-width:600px;margin:26px auto 0;color:var(--ink);font-size:clamp(.98rem,2.2vw,1.12rem);line-height:1.6}
-.badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px}
-.badge{background:#fff;border:2px solid var(--navy);border-radius:999px;padding:6px 15px;
-  font-weight:600;font-size:.85rem;box-shadow:3px 3px 0 rgba(13,76,134,.85);
-  transition:transform .2s;cursor:default}
-.badge:hover{transform:translateY(-3px) rotate(-2deg)}
-.cd-title{margin:36px 0 12px;font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink);font-weight:700}
-.cd{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.cd-box{background:#fff;border:3px solid var(--navy);border-radius:10px;box-shadow:5px 5px 0 rgba(13,76,134,.9);
-  min-width:78px;padding:10px 8px 8px;text-align:center}
-.cd-num{font-size:2.1rem;line-height:1;color:var(--navy);font-variant-numeric:tabular-nums}
-.cd-num.pop{animation:cdPop .35s}
-@keyframes cdPop{40%{transform:scale(1.25);color:var(--red)}}
-.cd-lab{font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:#5b7d9e;margin-top:5px}
-.cd-today{background:var(--red);color:#fff;padding:14px 24px;border-radius:12px;
-  box-shadow:6px 6px 0 var(--navy-d);font-size:clamp(1rem,3vw,1.4rem);letter-spacing:.05em}
-.sky-hint{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:3;
-  background:rgba(255,255,255,.9);border:2px dashed var(--navy);border-radius:999px;
-  padding:8px 18px;font-size:.84rem;font-weight:600;color:var(--ink);white-space:nowrap;
-  animation:hintPulse 2.6s ease-in-out infinite}
-@keyframes hintPulse{50%{transform:translateX(-50%) translateY(-6px)}}
+/* ---------- TICKER ---------- */
+.ticker{background:var(--vdv-d);overflow:hidden;white-space:nowrap;position:relative;padding:15px 0;border-top:1px solid #fff;border-bottom:1px solid #fff}
+.ticker::before,.ticker::after{content:"";position:absolute;left:0;right:0;height:7px;background:repeating-linear-gradient(90deg,#fff 0 16px,var(--vdv) 16px 32px);z-index:2}
+.ticker::before{top:0}.ticker::after{bottom:0}
+.ticker-track{display:inline-block;animation:marq 30s linear infinite;font-family:var(--disp);font-size:.72rem;letter-spacing:.12em;color:#fff}
+.ticker:hover .ticker-track{animation-play-state:paused}
+.ticker-track span{margin:0 20px}
+.ticker-track span::before{content:"★ ";color:var(--gold)}
+@keyframes marq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-/* ---------- СЕКЦИИ ---------- */
-.section{position:relative;padding:74px 20px;max-width:1150px;margin:0 auto}
-.sec-title{display:flex;align-items:center;justify-content:center;gap:16px;text-align:center;
-  font-size:clamp(1.35rem,3.6vw,2.1rem);color:var(--navy-d);letter-spacing:.06em;margin-bottom:40px}
-.sec-title svg{width:24px;height:24px;fill:var(--red);flex:none;filter:drop-shadow(0 2px 0 rgba(163,34,27,.35))}
-.fstar{position:absolute;width:26px;height:26px;fill:var(--gold);opacity:.55;pointer-events:none;
-  animation:bob 5s ease-in-out infinite alternate;filter:drop-shadow(0 2px 0 rgba(184,134,11,.4))}
-@keyframes bob{to{transform:translateY(-14px) rotate(14deg)}}
-.reveal{opacity:0;transform:translateY(38px);transition:opacity .7s,transform .7s cubic-bezier(.2,.8,.3,1)}
+/* ---------- SECTION HEADS ---------- */
+.shead{margin-bottom:30px}
+.s-plate{display:inline-flex;align-items:center;gap:12px;background:var(--khaki);color:#fff;padding:12px 20px;border-radius:6px;transform:rotate(-1deg);box-shadow:4px 5px 0 rgba(63,75,41,.55);border-left:6px solid var(--red)}
+.s-plate .st{color:var(--gold);font-size:1.15rem}
+.s-plate h2{font-family:var(--disp);font-weight:400;font-size:clamp(1.25rem,5.2vw,2rem);letter-spacing:.02em}
+.s-sub{display:block;margin-top:10px;font-size:.86rem;color:#41586b;max-width:62ch}
+
+/* ---------- RADIO CONSOLE ---------- */
+.radio{position:relative;background:linear-gradient(180deg,#74855080,#0000) ,linear-gradient(180deg,#6d7e4b,#4a5a30);border:4px solid #333f1e;border-radius:18px;padding:24px 18px 26px;box-shadow:inset 0 2px 0 rgba(255,255,255,.28),inset 0 -14px 26px rgba(0,0,0,.22),0 28px 54px rgba(18,42,71,.28)}
+@media(min-width:861px){.radio{padding:30px 28px 32px}}
+.rivet{position:absolute;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 34% 30%,#e8edf2,#8b95a1 55%,#3d454e);box-shadow:0 1px 2px rgba(0,0,0,.6)}
+.rv1{top:10px;left:10px}.rv2{top:10px;right:10px}.rv3{bottom:10px;left:10px}.rv4{bottom:10px;right:10px}
+.antenna{position:absolute;top:-46px;right:34px;width:4px;height:48px;background:linear-gradient(180deg,#2b3524,#4a5a30);border-radius:2px}
+.antenna::before{content:"";position:absolute;top:-10px;left:50%;transform:translateX(-50%);width:11px;height:11px;border-radius:50%;background:var(--red);box-shadow:0 0 10px rgba(212,43,43,.8);animation:blink 1.4s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.radio-top{display:flex;gap:16px;align-items:stretch;flex-wrap:wrap}
+.speaker{flex:0 0 92px;border-radius:10px;background:#39451f;background-image:radial-gradient(rgba(0,0,0,.55) 1.6px,transparent 1.7px);background-size:9px 9px;border:2px solid #2b3517;min-height:92px}
+.screen{flex:1;min-width:240px;background:#07130a;border:3px solid #23301a;border-radius:10px;padding:14px 16px;position:relative;overflow:hidden;box-shadow:inset 0 0 22px rgba(0,0,0,.9)}
+.screen::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(transparent 0 2px,rgba(0,0,0,.24) 2px 3px);pointer-events:none}
+.screen .sc-k{font-family:var(--disp);font-size:.56rem;letter-spacing:.2em;color:#3f8f5f;margin-bottom:9px}
+#radioHead{font-family:var(--disp);font-size:.66rem;letter-spacing:.14em;color:#b8ffcf;margin-bottom:8px;min-height:1.2em}
+#radioBody{font-weight:700;font-size:.92rem;line-height:1.75;color:#7dffa8;text-shadow:0 0 8px rgba(125,255,168,.55);text-transform:uppercase;min-height:5.2em}
+.launch-row{display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-top:22px}
+.launch{width:126px;height:126px;border-radius:50%;flex:0 0 auto;background:radial-gradient(circle at 32% 27%,#ff7a6d,#c81f1f 58%,#7e0f0f);border:5px solid var(--gold);color:#fff;font-family:var(--disp);font-size:1.25rem;letter-spacing:.06em;cursor:pointer;box-shadow:0 10px 0 #5c0a0a,0 18px 30px rgba(0,0,0,.4),inset 0 4px 10px rgba(255,255,255,.35);transition:.12s;text-shadow:0 2px 3px rgba(0,0,0,.5)}
+.launch:active:not(:disabled){transform:translateY(8px);box-shadow:0 2px 0 #5c0a0a,inset 0 4px 10px rgba(255,255,255,.35)}
+.launch:disabled{filter:grayscale(.4) brightness(.7);cursor:wait}
+.launch.idlepulse{animation:lp 2.2s infinite}
+@keyframes lp{0%,100%{box-shadow:0 10px 0 #5c0a0a,0 18px 30px rgba(0,0,0,.4),0 0 0 0 rgba(242,201,76,.55)}50%{box-shadow:0 10px 0 #5c0a0a,0 18px 30px rgba(0,0,0,.4),0 0 0 22px rgba(242,201,76,0)}}
+.counters{display:flex;gap:10px;flex-wrap:wrap}
+.cnt{background:#101820;border:2px solid #333f1e;border-radius:9px;padding:10px 14px;text-align:center;min-width:92px}
+.cnt small{display:block;font-size:.54rem;letter-spacing:.18em;text-transform:uppercase;color:#8fa06b;margin-bottom:6px;font-weight:700}
+.cnt b{font-family:var(--disp);font-weight:400;font-size:1.05rem;color:var(--gold)}
+.radio-note{margin-top:16px;font-size:.74rem;color:#e7ecd9;opacity:.75;font-style:italic}
+.drop{position:absolute;top:-110px;left:50%;z-index:8;pointer-events:none;animation:dropFall 3.1s cubic-bezier(.35,.35,.6,1) forwards}
+@keyframes dropFall{0%{transform:translate(-50%,-110px) rotate(-4deg)}30%{transform:translate(-46%,30px) rotate(5deg)}60%{transform:translate(-54%,120px) rotate(-5deg)}100%{transform:translate(-50%,260px) rotate(3deg);opacity:0}}
+.drop-flag{margin:-6px auto 0;width:max-content;background:var(--vdv);color:#fff;font-family:var(--disp);font-size:.6rem;letter-spacing:.14em;padding:5px 10px;border-radius:3px;box-shadow:0 4px 8px rgba(0,0,0,.3)}
+
+/* ---------- WHEEL ---------- */
+.wheel-panel{background:var(--navy);border-radius:18px;border:3px solid #2c4a72;padding:26px 18px;box-shadow:0 26px 50px rgba(12,29,51,.35);position:relative;overflow:hidden}
+.wheel-panel::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(79,178,230,.16),transparent 55%);pointer-events:none}
+.wheel-grid{display:grid;gap:30px;position:relative}
+@media(min-width:881px){.wheel-grid{grid-template-columns:1fr 1fr;align-items:center;gap:40px}}
+.wheel-zone{display:flex;flex-direction:column;align-items:center;gap:20px}
+.wheel-wrap{position:relative;--wr:142px;width:calc(var(--wr)*2);aspect-ratio:1}
+@media(min-width:861px){.wheel-wrap{--wr:168px}}
+.wheel{position:absolute;inset:0;border-radius:50%;border:6px solid var(--gold);box-shadow:0 0 0 6px rgba(242,201,76,.15),0 26px 54px rgba(0,0,0,.5),inset 0 0 26px rgba(0,0,0,.35);will-change:transform;background:conic-gradient(#009BDB 0 45deg,#fff 45deg 90deg,#0079ad 90deg 135deg,#fff 135deg 180deg,#f2c94c 180deg 225deg,#fff 225deg 270deg,#009BDB 270deg 315deg,#d42b2b 315deg 360deg)}
+.wlabel{position:absolute;left:50%;top:50%;font-family:var(--disp);font-size:.6rem;color:#fff;text-align:center;line-height:1.25;transform:translate(-50%,-50%) rotate(var(--a)) translateY(calc(var(--wr)*-0.64));white-space:nowrap;text-shadow:0 1px 3px rgba(0,0,0,.7)}
+.wlabel.dk{color:var(--ink);text-shadow:none}
+@media(min-width:861px){.wlabel{font-size:.7rem}}
+.wheel-hub{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:58px;height:58px;border-radius:50%;background:#fff;border:4px solid var(--vdv-d);display:grid;place-items:center;font-family:var(--disp);color:var(--vdv-d);font-size:.86rem;z-index:2;box-shadow:0 4px 10px rgba(0,0,0,.4)}
+@media(min-width:861px){.wheel-hub{width:66px;height:66px}}
+.wheel-pointer{position:absolute;top:-15px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:14px solid transparent;border-right:14px solid transparent;border-top:24px solid var(--red);z-index:3;filter:drop-shadow(0 3px 4px rgba(0,0,0,.5))}
+.order-card{position:relative;background:var(--paper);border:2px solid #c9c2a8;border-radius:8px;padding:22px 20px;min-height:130px;color:var(--ink);box-shadow:0 14px 30px rgba(0,0,0,.35)}
+.order-card .oc-k{font-family:var(--disp);font-size:.58rem;letter-spacing:.2em;color:var(--red);display:block;margin-bottom:10px}
+.order-card b{font-family:var(--disp);font-weight:400;font-size:1.05rem;line-height:1.5;display:block}
+.oc-stamp{position:absolute;right:14px;bottom:12px;border:2.5px solid var(--red);color:var(--red);font-family:var(--disp);font-size:.56rem;letter-spacing:.14em;padding:6px 10px;border-radius:4px;transform:rotate(-9deg) scale(0);transition:transform .35s cubic-bezier(.2,1.6,.4,1)}
+.order-card.stamped .oc-stamp{transform:rotate(-9deg) scale(1)}
+.order-card.pop{animation:pop .4s}
+@keyframes pop{0%{transform:scale(.94)}60%{transform:scale(1.03)}100%{transform:scale(1)}}
+.wheel-side p{color:#bcd4ea;font-size:.88rem;margin-top:16px}
+.wheel-side .btn-sky{margin-top:18px}
+
+/* ---------- MEDALS ---------- */
+.kitel{position:relative;background:linear-gradient(180deg,#5f7040,#43512c);border:4px solid #313d1d;border-radius:18px;padding:30px 18px 26px;box-shadow:inset 0 2px 0 rgba(255,255,255,.25),0 26px 50px rgba(18,42,71,.28)}
+.kitel::before,.kitel::after{content:"";position:absolute;top:0;width:52px;height:34px;background:#313d1d;clip-path:polygon(0 0,100% 0,18% 100%)}
+.kitel::before{left:24px}
+.kitel::after{right:24px;clip-path:polygon(0 0,100% 0,82% 100%)}
+.kitel-head{text-align:center;color:#fff}
+.kitel-head h3{font-family:var(--disp);font-weight:400;font-size:1.3rem;letter-spacing:.03em}
+.kitel-head p{font-size:.8rem;opacity:.8;margin-top:6px}
+.medals{display:grid;grid-template-columns:repeat(3,1fr);gap:26px 14px;max-width:430px;margin:26px auto 0}
+.m-slot{text-align:center}
+.medal{width:82px;height:82px;margin:0 auto;border-radius:50%;border:3px dashed rgba(255,255,255,.4);display:grid;place-items:center;transition:.4s;background:rgba(0,0,0,.14)}
+.medal .m-em{font-size:2rem;filter:grayscale(1);opacity:.35;transition:.4s}
+.medal.earned{border-style:solid;border-color:var(--gold);background:radial-gradient(circle at 34% 28%,#ffe9a8,#f2c94c 62%,#c9a227);box-shadow:0 0 20px rgba(242,201,76,.55)}
+.medal.earned .m-em{filter:none;opacity:1;animation:medalPop .55s cubic-bezier(.2,1.6,.4,1)}
+@keyframes medalPop{0%{transform:scale(0) rotate(-40deg)}100%{transform:scale(1) rotate(0)}}
+.m-nm{display:block;margin-top:9px;font-size:.62rem;letter-spacing:.06em;color:#e7ecd9;text-transform:uppercase;font-weight:700}
+.med-progress{text-align:center;margin-top:26px;color:#fff}
+.med-progress b{font-family:var(--disp);font-weight:400;font-size:1.5rem;color:var(--gold)}
+#medStatus{display:block;margin-top:6px;font-size:.82rem;opacity:.85}
+
+/* ---------- ILYA ---------- */
+.ilya-grid{display:grid;gap:20px}
+@media(min-width:761px){.ilya-grid{grid-template-columns:1fr 1fr}}
+.dossier{position:relative;background:var(--paper);border:2px solid #c9c2a8;border-radius:8px;padding:0 0 22px;box-shadow:0 16px 34px rgba(18,42,71,.18);transition:.3s;overflow:hidden}
+.dossier:hover{transform:translateY(-6px) rotate(-.6deg);box-shadow:0 26px 46px rgba(18,42,71,.26)}
+.d-head{background:var(--red);color:#fff;font-family:var(--disp);font-size:.62rem;letter-spacing:.18em;padding:10px 16px}
+.d-head.blue{background:var(--vdv-d)}
+.d-body{padding:20px 20px 0}
+.d-em{font-size:2.6rem}
+.dossier h3{font-family:var(--disp);font-weight:400;font-size:1.25rem;margin:8px 0 8px;color:var(--navy)}
+.dossier p{font-size:.9rem;color:#445261}
+.d-facts{list-style:none;margin-top:12px}
+.d-facts li{font-size:.84rem;color:#445261;padding:6px 0 6px 22px;border-bottom:1px dashed #ddd6bd;position:relative}
+.d-facts li::before{content:"⚡";position:absolute;left:0;font-size:.8rem}
+.d-stamp{position:absolute;right:12px;bottom:12px;border:2px solid rgba(0,121,173,.55);color:rgba(0,121,173,.75);font-family:var(--disp);font-size:.5rem;letter-spacing:.14em;padding:5px 9px;border-radius:4px;transform:rotate(7deg)}
+.d-stamp.red{border-color:rgba(212,43,43,.55);color:rgba(212,43,43,.75)}
+.ilya-ctrl{text-align:center;margin-top:26px}
+.ilya-msg{max-width:640px;margin:20px auto 0;background:var(--cream);border:2px solid var(--gold-d);border-radius:10px;padding:18px 20px;font-size:.95rem;display:none;transform:rotate(-.5deg)}
+.ilya-msg.show{display:block;animation:pop .45s}
+.ilya-msg b{color:var(--vdv-d)}
+
+/* ---------- QUIZ ---------- */
+.quiz-panel{background:var(--paper);border:2px solid #c9c2a8;border-radius:10px;padding:24px 20px;box-shadow:0 18px 40px rgba(18,42,71,.16);position:relative}
+.q-banner{background:var(--red);color:#fff;font-family:var(--disp);font-size:.66rem;letter-spacing:.22em;text-align:center;padding:9px;margin:-24px -20px 20px;border-radius:8px 8px 0 0}
+.q-top{display:flex;justify-content:space-between;align-items:center;font-family:var(--disp);font-size:.6rem;letter-spacing:.14em;color:#6b7a8a;margin-bottom:10px}
+.q-dots{display:flex;gap:6px}
+.q-dot{width:9px;height:9px;border-radius:50%;background:#d8d2bc;transition:.2s}
+.q-dot.on{background:var(--vdv)}
+.q-dot.done{background:var(--khaki)}
+.q-text{font-family:var(--disp);font-weight:400;font-size:1.1rem;color:var(--navy);margin:6px 0 18px;min-height:2.4em}
+.q-answers{display:grid;gap:9px}
+.q-ans{text-align:left;font-family:var(--body);font-weight:500;font-size:.9rem;padding:13px 15px;background:#fff;border:2px solid #d8d2bc;border-radius:6px;cursor:pointer;transition:.18s;color:var(--ink)}
+.q-ans:hover:not(:disabled){border-color:var(--vdv);transform:translateX(5px)}
+.q-ans.right{background:#e2efe0;border-color:#3f7a3f;color:#2c5c2c;font-weight:700}
+.q-ans.wrong{background:#f6dedc;border-color:var(--red);color:var(--red)}
+.q-ans:disabled{cursor:default}
+.q-ans.right::after{content:" ✔"}
+.q-ans.wrong::after{content:" ✖"}
+#qNext{margin-top:16px}
+.q-score{font-family:var(--disp);font-weight:400;font-size:2.2rem;color:var(--vdv-d);margin:6px 0}
+#quizResult p{color:#445261;margin-bottom:18px}
+.btn-quiz{font-family:var(--disp);font-weight:400;font-size:.8rem;background:var(--vdv);color:#fff;border:none;border-radius:7px;padding:13px 22px;cursor:pointer;box-shadow:0 5px 0 var(--vdv-d);transition:.12s}
+.btn-quiz:active{transform:translateY(4px);box-shadow:0 1px 0 var(--vdv-d)}
+
+/* ---------- TOASTS ---------- */
+.toast-grid{display:grid;gap:24px}
+@media(min-width:821px){.toast-grid{grid-template-columns:1.2fr .8fr;align-items:center}}
+.t-bubble{position:relative;background:var(--cream);border:2px solid var(--gold-d);border-radius:12px;padding:26px 24px;font-family:var(--script);font-size:clamp(1.35rem,4.5vw,1.7rem);color:#3c4a2a;line-height:1.35;transform:rotate(-.8deg);box-shadow:0 16px 34px rgba(18,42,71,.16);min-height:130px;display:grid;place-items:center;text-align:center}
+.t-bubble.pop{animation:pop .4s}
+.t-bubble::before{content:"«";position:absolute;top:2px;left:12px;font-size:2.6rem;color:var(--gold-d);opacity:.6}
+.toast-side p{font-size:.88rem;color:#41586b;margin-bottom:16px}
+.toast-actions{display:flex;gap:12px;flex-wrap:wrap}
+
+/* ---------- FOOTER ---------- */
+footer{background:var(--navy-2);color:#fff;padding:52px 0 40px;border-top:5px solid var(--vdv)}
+.foot-grid{display:grid;gap:26px}
+@media(min-width:761px){.foot-grid{grid-template-columns:1.2fr .8fr}}
+.foot-big{font-family:var(--disp);font-weight:400;font-size:clamp(1.5rem,5.5vw,2.3rem);line-height:1.15}
+.foot-big em{font-style:normal;color:var(--gold)}
+.foot-motto{margin-top:12px;color:#9fd8ef;font-size:.95rem}
+.foot-legal{font-size:.78rem;color:#bcd4ea;opacity:.8}
+.foot-legal p{margin-bottom:9px}
+.foot-bottom{margin-top:30px;padding-top:16px;border-top:1px solid rgba(255,255,255,.15);font-size:.68rem;color:#7fa3c4;text-align:center;letter-spacing:.05em}
+
+/* ---------- FX ---------- */
+#fx{position:fixed;inset:0;z-index:90;pointer-events:none}
+#toasts{position:fixed;right:12px;left:12px;bottom:14px;z-index:95;display:flex;flex-direction:column;gap:9px;pointer-events:none}
+@media(min-width:700px){#toasts{left:auto;max-width:340px}}
+.toastn{background:var(--navy);color:#fff;border-left:4px solid var(--gold);padding:12px 15px;font-size:.84rem;border-radius:8px;box-shadow:0 14px 30px rgba(0,0,0,.4);transform:translateY(120%);opacity:0;transition:.4s cubic-bezier(.2,.9,.3,1)}
+.toastn.show{transform:translateY(0);opacity:1}
+.toastn b{font-family:var(--disp);font-weight:400;color:var(--gold);display:block;font-size:.78rem;margin-bottom:3px;letter-spacing:.04em}
+
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease;transition-delay:var(--d,0s)}
 .reveal.in{opacity:1;transform:none}
-
-/* ---------- ПРИКАЗ ---------- */
-.order{position:relative;max-width:780px;margin:0 auto;background:var(--paper);
-  background-image:repeating-linear-gradient(transparent 0 27px,rgba(13,76,134,.07) 27px 28px);
-  border:2px solid #e0d2a8;padding:44px 48px;transform:rotate(-1.1deg);
-  box-shadow:14px 16px 0 rgba(13,76,134,.16);transition:transform .35s}
-.order:hover{transform:rotate(0deg)}
-.order-head{font-size:clamp(1.5rem,3.6vw,2.2rem);color:var(--navy-d);letter-spacing:.05em}
-.order-meta{color:#96854f;font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;margin:8px 0 20px}
-.order-lead{line-height:1.65;margin-bottom:8px}
-.order-list{list-style:none}
-.order-list li{position:relative;margin:13px 0;padding-left:30px;line-height:1.6}
-.order-list li::before{content:'★';position:absolute;left:2px;top:1px;color:var(--red);font-size:1.05rem}
-.order-sign{display:flex;align-items:flex-end;gap:18px;margin-top:30px;flex-wrap:wrap}
-.order-sign .role{font-size:.85rem;color:#5b7d9e}
-.sig{font-family:'Marck Script',cursive;font-size:2.3rem;color:var(--ink);transform:rotate(-5deg);line-height:1}
-.mp{width:66px;height:66px;border:3px solid rgba(214,56,47,.65);border-radius:50%;display:grid;place-items:center;
-  color:rgba(214,56,47,.75);font-size:.68rem;letter-spacing:.12em;transform:rotate(-9deg)}
-.stamp-secret{position:absolute;top:26px;right:24px;transform:rotate(10deg);
-  border:4px double var(--red);border-radius:4px;color:var(--red);padding:6px 13px;text-align:center;
-  font-size:.82rem;letter-spacing:.2em;text-transform:uppercase;opacity:.85;mix-blend-mode:multiply}
-.stamp-round{position:absolute;bottom:64px;right:44px;width:122px;opacity:.8;mix-blend-mode:multiply;transform:rotate(-14deg)}
-
-/* ---------- ПУЛЬТ ---------- */
-.play-grid{display:grid;grid-template-columns:minmax(300px,380px) 1fr;gap:28px;align-items:stretch}
-.panel{background:#fff;border:3px solid var(--navy);border-radius:14px;box-shadow:9px 9px 0 var(--navy)}
-.vasya-panel{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:30px 22px 24px;min-height:440px;background:linear-gradient(180deg,#dff2ff 0%,#fff 70%);overflow:hidden}
-.vasya-panel::before{content:'';position:absolute;top:24px;left:-30px;width:110px;height:34px;border-radius:40px;
-  background:#fff;box-shadow:26px -15px 0 2px #fff,60px -8px 0 -2px #fff;opacity:.8}
-.bubble{position:absolute;top:16px;left:50%;transform:translateX(-50%) scale(.6);opacity:0;z-index:3;
-  max-width:90%;text-align:center;background:#fff;border:3px solid var(--navy);border-radius:14px;
-  padding:10px 16px;font-weight:600;font-size:.95rem;box-shadow:5px 5px 0 rgba(13,76,134,.85);
-  transition:opacity .25s,transform .25s cubic-bezier(.2,1.4,.4,1);pointer-events:none}
-.bubble::after{content:'';position:absolute;bottom:-11px;left:50%;transform:translateX(-50%) rotate(45deg);
-  width:16px;height:16px;background:#fff;border-right:3px solid var(--navy);border-bottom:3px solid var(--navy)}
-.bubble.show{opacity:1;transform:translateX(-50%) scale(1)}
-.vasya-btn{background:none;border:none;cursor:pointer;padding:0;margin-top:34px;position:relative;z-index:2}
-.vasya-svg{width:min(250px,62vw);display:block;transition:transform .25s}
-.vasya-btn:hover .vasya-svg{transform:rotate(-2.5deg) scale(1.04)}
-.vasya-btn.jumping .vasya-svg{animation:vJump .65s cubic-bezier(.3,1.5,.4,1)}
-@keyframes vJump{0%,100%{transform:none}35%{transform:translateY(-32px) rotate(-4deg)}
-  62%{transform:translateY(0) scaleY(.9) scaleX(1.07)}82%{transform:translateY(-9px)}}
-.panel-cap{font-size:.84rem;color:#5b7d9e;margin-top:16px;text-align:center;position:relative;z-index:2}
-.controls{padding:28px;display:flex;flex-direction:column;gap:18px}
-.counter-row{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
-.counter{display:flex;align-items:center;gap:12px;background:var(--navy-d);color:#fff;
-  padding:10px 20px;border-radius:12px;box-shadow:5px 5px 0 rgba(10,47,82,.3)}
-#toastCount{font-size:2.4rem;line-height:1;color:var(--gold);min-width:1.3ch;text-align:center;display:inline-block}
-#toastCount.bump{animation:bumpK .45s}
-@keyframes bumpK{40%{transform:scale(1.5) rotate(-8deg)}}
-.counter-label{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;opacity:.85;line-height:1.35}
-.btn-main{position:relative;overflow:hidden;font-size:1.35rem;letter-spacing:.05em;color:#fff;
-  background:var(--red);border:3px solid var(--navy-d);padding:16px 30px;cursor:pointer;
-  box-shadow:6px 6px 0 var(--navy-d);transition:transform .15s,box-shadow .15s;flex:1;min-width:220px}
-.btn-main::after{content:'';position:absolute;top:0;left:-80%;width:45%;height:100%;
-  background:linear-gradient(105deg,transparent,rgba(255,255,255,.45),transparent);transition:left .5s}
-.btn-main:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 var(--navy-d)}
-.btn-main:hover::after{left:130%}
-.btn-main:active{transform:translate(3px,3px);box-shadow:2px 2px 0 var(--navy-d)}
-.btn{font-size:1rem;letter-spacing:.04em;color:var(--navy);background:#fff;border:3px solid var(--navy);
-  padding:13px 20px;cursor:pointer;box-shadow:5px 5px 0 var(--navy);
-  transition:transform .15s,box-shadow .15s;flex:1;min-width:190px}
-.btn:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--navy);background:#f2f9ff}
-.btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--navy)}
-.ticker{background:var(--navy-d);color:#eaf4ff;padding:15px 18px;border-radius:10px;border-left:8px solid var(--gold);
-  font-size:1rem;line-height:1.5;min-height:58px;display:flex;align-items:center}
-.ticker.tick{animation:tickIn .5s cubic-bezier(.2,1.2,.3,1)}
-@keyframes tickIn{from{opacity:0;transform:translateX(26px)}}
-.ctrl-row{display:flex;gap:14px;flex-wrap:wrap}
-.compl-box{border:3px dashed var(--blue);border-radius:12px;padding:16px 18px;min-height:88px;
-  font-size:1.02rem;line-height:1.55;color:var(--ink);background:#f4faff}
-.caret{display:inline-block;width:2px;height:1.1em;background:var(--blue);margin-left:2px;
-  vertical-align:-2px;animation:blink 1s steps(1) infinite}
-@keyframes blink{50%{opacity:0}}
-.melon-zone{position:relative;display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding-top:14px}
-.melon-btn{background:none;border:none;cursor:pointer;padding:0;transition:transform .2s}
-.melon-btn:hover{transform:rotate(-4deg) scale(1.07)}
-.melon-btn:active{transform:scale(.93)}
-.melon-btn svg{width:122px;display:block}
-.melon-say{position:absolute;left:30px;top:-6px;background:#fff;border:2px solid var(--navy);border-radius:10px;
-  padding:4px 12px;font-size:.8rem;font-weight:700;opacity:0;transform:translateY(8px);
-  transition:.3s;pointer-events:none;white-space:nowrap}
-.melon-say.show{opacity:1;transform:none}
-.slice{position:absolute;left:52px;top:16px;width:46px;pointer-events:none;
-  animation:sliceFly 1.05s ease-out forwards}
-@keyframes sliceFly{0%{transform:translate(0,0) rotate(0);opacity:1}
-  100%{transform:translate(var(--dx,0px),-155px) rotate(var(--rot,120deg));opacity:0}}
-
-/* ---------- ФУТЕР ---------- */
-.foot{text-align:center;padding:46px 20px 58px;background:linear-gradient(180deg,transparent,rgba(13,76,134,.09))}
-.foot-big{font-size:clamp(1.6rem,4.2vw,2.4rem);color:var(--navy-d);margin-bottom:12px;letter-spacing:.04em}
-.foot-small{color:#486d90;max-width:540px;margin:0 auto;line-height:1.65}
-#fx{position:fixed;inset:0;z-index:60;pointer-events:none}
-
-@media (max-width:860px){
-  .play-grid{grid-template-columns:1fr}
-  .order{padding:34px 24px}
-  .stamp-round{width:92px;bottom:88px;right:18px}
-  .stamp-secret{top:14px;right:12px;font-size:.68rem}
-  .plane svg{width:220px;height:auto}
-  .sky-hint{font-size:.74rem;padding:7px 12px}
-}
-@media (prefers-reduced-motion:reduce){
-  .plane,.cloud,.ribbon-track,.sun::after,.beret,.fstar,.sky-hint{animation:none!important}
-  .ch{opacity:1;transform:none}
-  .reveal{opacity:1;transform:none}
-}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
 </style>
 </head>
-<body class="locked">
-
-<!-- общие SVG-заготовки -->
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <defs>
-    <clipPath id="canopyClip"><path d="M4 36 A28 30 0 0 1 60 36 Z"/></clipPath>
-    <symbol id="star5" viewBox="0 0 24 24">
-      <path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.2 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8Z"/>
-    </symbol>
-    <symbol id="para" viewBox="0 0 64 92">
-      <g clip-path="url(#canopyClip)">
-        <rect x="4" y="2" width="56" height="36" fill="#fff"/>
-        <rect x="4" y="2" width="11.2" height="36" fill="currentColor"/>
-        <rect x="26.4" y="2" width="11.2" height="36" fill="currentColor"/>
-        <rect x="48.8" y="2" width="11.2" height="36" fill="currentColor"/>
-      </g>
-      <path d="M4 36 A28 30 0 0 1 60 36" fill="none" stroke="#0d4c86" stroke-width="2.5"/>
-      <path d="M6 36 L29 63 M58 36 L35 63 M32 36 L32 61" stroke="#0d4c86" stroke-width="1.6" fill="none"/>
-      <circle cx="32" cy="68" r="5.5" fill="#ffd9b3" stroke="#0d4c86" stroke-width="1.6"/>
-      <path d="M26.5 64 Q32 58.5 37.5 64 L37 66 Q32 61.5 27 66 Z" fill="currentColor"/>
-      <rect x="26" y="73" width="12" height="13" rx="4" fill="#fff" stroke="#0d4c86" stroke-width="1.6"/>
-      <rect x="26.8" y="76.5" width="10.4" height="2.6" fill="currentColor"/>
-      <rect x="26.8" y="81.5" width="10.4" height="2.6" fill="currentColor"/>
-      <path d="M28.5 86 l-2.5 5.5 M35.5 86 l2.5 5.5" stroke="#0d4c86" stroke-width="2.6" stroke-linecap="round"/>
-    </symbol>
-  </defs>
-</svg>
+<body>
 
 <canvas id="fx"></canvas>
 
-<!-- СЕКРЕТНЫЙ ПАКЕТ -->
-<div id="overlay" role="dialog" aria-modal="true" aria-label="Секретный пакет для Василия">
-  <div class="ov-top display">Десантная почта • пакет № 0802/ВДВ<b>Адресату: Василию</b></div>
-  <div class="packet-wrap" id="packet">
-    <div class="env">
-      <div class="letter"><span class="display">ПРИКАЗ № 0802/ВДВ</span></div>
-      <div class="flap"></div>
-      <div class="secret display">Сов. секретно</div>
-      <div class="addr">Кому: <b>ВАСИЛИЮ</b> • главному крутому страны<br>От: Отдела Хорошего Настроения</div>
-      <div class="seal"><svg><use href="#star5"/></svg></div>
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="wrap tb-in" style="padding-left:16px;padding-right:16px">
+    <span class="tb-star">★</span>
+    <b>СЕКРЕТНЫЙ ПАКЕТ · ПОЛУЧАТЕЛЬ: ВАСИЛИЙ</b>
+    <div class="tb-right">
+      <button class="tb-btn" id="sndBtn" aria-label="Звук">🔊</button>
+      <button class="tb-btn tb-reset" id="resetBtn">ДЕМБЕЛЬ</button>
     </div>
   </div>
-  <button id="openBtn" class="display">✂ ВСКРЫТЬ ПАКЕТ</button>
-  <div class="ov-hint">Вскрыть немедленно. Медлить — неприлично.</div>
 </div>
 
-<div class="stripebar"></div>
-<div class="ribbon"><div class="ribbon-track display" id="ribTop">
-  <span>★ 2 АВГУСТА — ДЕНЬ ВДВ ★ НИКТО, КРОМЕ НАС ★ ЗА ВДВ! ★ ВАСЯ, ТЫ — ЛУЧШИЙ ★ УРА, ТОВАРИЩИ! ★ ПОЛОСАТЫЕ МАЙКИ, ГОЛУБЫЕ БЕРЕТЫ</span>
-  <span>★ 2 АВГУСТА — ДЕНЬ ВДВ ★ НИКТО, КРОМЕ НАС ★ ЗА ВДВ! ★ ВАСЯ, ТЫ — ЛУЧШИЙ ★ УРА, ТОВАРИЩИ! ★ ПОЛОСАТЫЕ МАЙКИ, ГОЛУБЫЕ БЕРЕТЫ</span>
-</div></div>
-
-<!-- НЕБО -->
-<header id="sky">
+<!-- HERO SKY -->
+<section class="hero" id="hero" style="padding:0">
   <div class="sun"></div>
-  <div id="cloudLayer">
-    <div class="cloud c1"></div><div class="cloud c2"></div>
-    <div class="cloud c3"></div><div class="cloud c4"></div>
-  </div>
-  <div class="plane" aria-hidden="true">
-    <svg viewBox="0 0 320 64" width="300">
-      <path d="M124 31 Q150 24 170 32" stroke="#7c4a21" stroke-width="2" fill="none"/>
-      <rect x="8" y="16" width="118" height="30" rx="4" fill="#d6382f" stroke="#a3221b" stroke-width="2"/>
-      <text x="67" y="37" text-anchor="middle" font-size="15" fill="#fff" font-family="'Russo One','Rubik',sans-serif">ЗА ВДВ! ★</text>
-      <path d="M168 28 h96 q22 3 22 8 q0 5 -22 8 h-96 q-11 -8 0 -16 Z" fill="#0d4c86"/>
-      <path d="M234 28 q9 -11 19 -3 l-3 5 Z" fill="#bfe3ff"/>
-      <path d="M170 28 l-15 -19 h11 l13 13 Z" fill="#d6382f"/>
-      <path d="M162 35 l-17 9 h15 l11 -7 Z" fill="#1668b0"/>
-      <path d="M218 37 l-21 21 h19 l17 -19 Z" fill="#1668b0"/>
-      <ellipse cx="289" cy="36" rx="3" ry="15" fill="#0a2f52" opacity=".65"/>
-      <circle cx="289" cy="36" r="3.4" fill="#0a2f52"/>
-      <use href="#star5" x="196" y="27" width="14" height="14" fill="#ffd23f"/>
+  <div class="cloud" style="top:12%;width:150px;height:44px;animation-duration:75s;animation-delay:-20s"></div>
+  <div class="cloud" style="top:30%;width:110px;height:34px;animation-duration:95s;animation-delay:-60s;opacity:.75"></div>
+  <div class="cloud" style="top:52%;width:190px;height:52px;animation-duration:110s;animation-delay:-35s;opacity:.6"></div>
+  <div class="cloud" style="top:70%;width:130px;height:38px;animation-duration:85s;animation-delay:-75s;opacity:.5"></div>
+  <div class="sky-fall" id="skyFall"></div>
+  <div class="plane"><div class="plane-bob">
+    <svg viewBox="0 0 160 52" width="150" height="49">
+      <path d="M4 28 Q8 20 30 19 L120 14 Q142 13 152 21 L152 26 Q136 31 106 31 L28 33 Q10 33 4 28 Z" fill="#22303e"/>
+      <path d="M26 19 L14 4 L26 4 L40 18 Z" fill="#1a2530"/>
+      <path d="M84 17 L58 3 L46 3 L68 17 Z" fill="#1a2530"/>
+      <path d="M134 17 Q143 16 149 20 L138 22 Z" fill="#9fd8ef"/>
+      <circle cx="22" cy="10" r="4" fill="#d42b2b"/>
+      <circle cx="70" cy="26" r="2.6" fill="#0e161f"/><circle cx="84" cy="25.4" r="2.6" fill="#0e161f"/><circle cx="98" cy="24.8" r="2.6" fill="#0e161f"/>
     </svg>
-  </div>
-  <div id="paraLayer"></div>
-
-  <div class="sky-inner">
-    <h1 class="title display">
-      <span class="line1"><span class="ch" style="--i:0">С</span><span class="ch sp" style="--i:1">&nbsp;</span><span class="ch" style="--i:2">Д</span><span class="ch" style="--i:3">Н</span><span class="ch" style="--i:4">Ё</span><span class="ch" style="--i:5">М</span><span class="ch sp" style="--i:6">&nbsp;</span><span class="ch" style="--i:7">В</span><span class="ch" style="--i:8">Д</span><span class="ch" style="--i:9">В</span><span class="ch" style="--i:10">,</span></span>
-      <span class="line2">
-        <svg class="beret" viewBox="0 0 100 60" aria-hidden="true">
-          <path d="M8 46 Q4 18 40 12 Q88 6 94 34 Q96 44 84 44 Q50 33 14 48 Z" fill="#1668b0" stroke="#0d4c86" stroke-width="3" stroke-linejoin="round"/>
-          <path d="M11 46 Q50 36 91 42" stroke="#0d4c86" stroke-width="5" fill="none" stroke-linecap="round"/>
-          <use href="#star5" x="16" y="18" width="15" height="15" fill="#ffd23f" stroke="#b8860b" stroke-width="1"/>
-        </svg>
-        <span class="ch" style="--i:11">В</span><span class="ch" style="--i:12">А</span><span class="ch" style="--i:13">С</span><span class="ch" style="--i:14">Я</span><span class="ch" style="--i:15">!</span>
-      </span>
-    </h1>
-    <p class="tagline">Голубые береты, полосатые тельняшки, арбузы строго по уставу — и один очень крутой именинник. Всё это сегодня — в честь тебя!</p>
-    <div class="badges">
-      <span class="badge">🪂 Десант</span><span class="badge">🎖 Крутость</span>
-      <span class="badge">🍉 Арбуз</span><span class="badge">🥂 Тосты</span>
-    </div>
-    <div class="cd-title">⏳ До следующего Дня ВДВ:</div>
-    <div class="cd" id="cdWrap">
-      <div class="cd-box"><div class="cd-num display" id="cdD">—</div><div class="cd-lab">дней</div></div>
-      <div class="cd-box"><div class="cd-num display" id="cdH">—</div><div class="cd-lab">часов</div></div>
-      <div class="cd-box"><div class="cd-num display" id="cdM">—</div><div class="cd-lab">минут</div></div>
-      <div class="cd-box"><div class="cd-num display" id="cdS">—</div><div class="cd-lab">секунд</div></div>
-    </div>
-  </div>
-  <div class="sky-hint">☝ Кликай по небу — десантируем подкрепление!</div>
-</header>
-
-<!-- ПРИКАЗ -->
-<section class="section" id="orderSec">
-  <svg class="fstar" style="left:4%;top:60px"><use href="#star5"/></svg>
-  <svg class="fstar" style="right:6%;bottom:40px;animation-delay:-2.5s"><use href="#star5"/></svg>
-  <h2 class="sec-title display"><svg><use href="#star5"/></svg> БОЕВОЙ ПРИКАЗ <svg><use href="#star5"/></svg></h2>
-  <div class="order reveal">
-    <div class="order-head display">ПРИКАЗ № 0802/ВДВ</div>
-    <div class="order-meta">г. Праздничная Площадь • 2 августа 2026 г.</div>
-    <p class="order-lead">Во исполнение указа о хорошем настроении и в связи с Днём воздушно-десантных войск <b>приказываю:</b></p>
-    <ol class="order-list">
-      <li>Поздравить <b>Василия</b> с Днём ВДВ — громко, искренне и обязательно с арбузом.</li>
-      <li>Наградить Василия орденом <b>«Крутой Перчик» I степени</b> — за выдающуюся крутизну и верность дружбе.</li>
-      <li>Присвоить Василию почётное звание <b>«Генерал Улыбок и Хорошего Настроения»</b>.</li>
-      <li>Установить Василию пожизненный паёк: счастье — ежедневно, удача — по расписанию, арбузы — по праздникам.</li>
-      <li>Контроль за исполнением приказа возложить на тост <b>«За ВДВ!»</b>.</li>
-    </ol>
-    <div class="order-sign">
-      <div class="role">Командующий<br>праздником</div>
-      <div class="sig">Полковник Улыбков</div>
-      <div class="mp display">М.П.</div>
-    </div>
-    <div class="stamp-secret display">Совершенно<br>секретно</div>
-    <svg class="stamp-round" viewBox="0 0 120 120" aria-hidden="true">
-      <defs><path id="circPath" d="M60 60 m-42 0 a42 42 0 1 1 84 0 a42 42 0 1 1 -84 0"/></defs>
-      <circle cx="60" cy="60" r="52" fill="none" stroke="#d6382f" stroke-width="3"/>
-      <circle cx="60" cy="60" r="29" fill="none" stroke="#d6382f" stroke-width="2"/>
-      <text font-size="10.5" fill="#d6382f" font-family="'Russo One','Rubik',sans-serif" letter-spacing="1">
-        <textPath href="#circPath">★ ВДВ ★ ДЕСАНТНАЯ ПОЧТА ★ 2 АВГУСТА ★</textPath>
-      </text>
-      <use href="#star5" x="46" y="46" width="28" height="28" fill="#d6382f"/>
-    </svg>
-  </div>
-</section>
-
-<!-- ПУЛЬТ -->
-<section class="section" id="playSec">
-  <svg class="fstar" style="right:4%;top:30px;animation-delay:-1.2s"><use href="#star5"/></svg>
-  <h2 class="sec-title display"><svg><use href="#star5"/></svg> ПУЛЬТ УПРАВЛЕНИЯ ПРАЗДНИКОМ <svg><use href="#star5"/></svg></h2>
-  <div class="play-grid">
-    <div class="panel vasya-panel reveal">
-      <div class="bubble" id="bubble">Ура-а-а!</div>
-      <button class="vasya-btn" id="vasyaBtn" aria-label="Нажми на Васю — он ответит">
-        <svg class="vasya-svg" viewBox="0 0 170 210">
-          <ellipse cx="85" cy="201" rx="48" ry="7" fill="rgba(13,76,134,.18)"/>
-          <rect x="63" y="148" width="17" height="42" rx="7" fill="#1f4e79"/>
-          <rect x="90" y="148" width="17" height="42" rx="7" fill="#1f4e79"/>
-          <rect x="55" y="184" width="28" height="14" rx="6" fill="#4a3223"/>
-          <rect x="88" y="184" width="28" height="14" rx="6" fill="#4a3223"/>
-          <path d="M62 104 Q48 118 46 136" stroke="#0d4c86" stroke-width="17" fill="none" stroke-linecap="round"/>
-          <path d="M62 104 Q48 118 46 136" stroke="#fff" stroke-width="11" fill="none" stroke-linecap="round"/>
-          <path d="M55 113 l-8 5 M50 124 l-6 6" stroke="#1668b0" stroke-width="5" stroke-linecap="round"/>
-          <circle cx="45" cy="141" r="7.5" fill="#ffd9b3" stroke="#0d4c86" stroke-width="3"/>
-          <rect x="52" y="92" width="66" height="66" rx="16" fill="#fff" stroke="#0d4c86" stroke-width="3"/>
-          <clipPath id="bodyClip"><rect x="52" y="92" width="66" height="66" rx="16"/></clipPath>
-          <g clip-path="url(#bodyClip)">
-            <rect x="52" y="100" width="66" height="9" fill="#1668b0"/>
-            <rect x="52" y="118" width="66" height="9" fill="#1668b0"/>
-            <rect x="52" y="136" width="66" height="9" fill="#1668b0"/>
-            <rect x="52" y="154" width="66" height="9" fill="#1668b0"/>
-          </g>
-          <path d="M108 104 Q126 96 134 80" stroke="#0d4c86" stroke-width="17" fill="none" stroke-linecap="round"/>
-          <path d="M108 104 Q126 96 134 80" stroke="#fff" stroke-width="11" fill="none" stroke-linecap="round"/>
-          <path d="M116 100 l8 -4 M125 93 l7 -6" stroke="#1668b0" stroke-width="5" stroke-linecap="round"/>
-          <rect x="131" y="54" width="9" height="18" rx="4.5" fill="#ffd9b3" stroke="#0d4c86" stroke-width="3"/>
-          <circle cx="136" cy="76" r="9.5" fill="#ffd9b3" stroke="#0d4c86" stroke-width="3"/>
-          <rect x="63" y="96" width="16" height="7" rx="2" fill="#d6382f"/>
-          <circle cx="71" cy="111" r="8.5" fill="#ffd23f" stroke="#b8860b" stroke-width="2"/>
-          <use href="#star5" x="65.5" y="105.5" width="11" height="11" fill="#b8860b"/>
-          <circle cx="85" cy="58" r="30" fill="#ffd9b3" stroke="#0d4c86" stroke-width="3"/>
-          <circle cx="55" cy="61" r="5" fill="#ffd9b3" stroke="#0d4c86" stroke-width="3"/>
-          <circle cx="115" cy="61" r="5" fill="#ffd9b3" stroke="#0d4c86" stroke-width="3"/>
-          <g fill="#14263c">
-            <rect x="62" y="50" width="21" height="14" rx="6"/>
-            <rect x="87" y="50" width="21" height="14" rx="6"/>
-            <rect x="81" y="54" width="8" height="4"/>
-            <rect x="55" y="52" width="8" height="3"/><rect x="107" y="52" width="8" height="3"/>
-          </g>
-          <path d="M66 53 h6 l-4 8 h-5 Z" fill="#fff" opacity=".35"/>
-          <path d="M91 53 h6 l-4 8 h-5 Z" fill="#fff" opacity=".35"/>
-          <path d="M85 66 q3 4 0 7" stroke="#c98a5b" stroke-width="3" fill="none" stroke-linecap="round"/>
-          <path d="M72 76 Q85 89 98 76" stroke="#8a4b23" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-          <path d="M52 44 Q54 17 88 14 Q124 12 122 38 Q120 47 109 44 Q86 30 58 47 Z" fill="#1668b0" stroke="#0d4c86" stroke-width="3" stroke-linejoin="round"/>
-          <path d="M55 45 Q86 33 117 41" stroke="#0d4c86" stroke-width="5" fill="none" stroke-linecap="round"/>
-          <use href="#star5" x="56" y="20" width="14" height="14" fill="#ffd23f" stroke="#b8860b" stroke-width="1"/>
-        </svg>
-      </button>
-      <p class="panel-cap">Это Вася. Жми на него — он отвечает!</p>
-    </div>
-
-    <div class="panel controls reveal">
-      <div class="counter-row">
-        <div class="counter">
-          <span class="display" id="toastCount">0</span>
-          <span class="counter-label">тостов<br>за ВДВ</span>
-        </div>
-        <button class="btn-main display" id="toastBtn">🥂 ЗА ВДВ!</button>
-      </div>
-      <div class="ticker" id="ticker">Нажми «За ВДВ!» — и первый тост прилетит сам…</div>
-      <div class="ctrl-row">
-        <button class="btn display" id="complBtn">⭐ ВДВ-комплимент Васе</button>
-        <button class="btn display" id="dropBtn">🪂 Сбросить десант ×5</button>
-      </div>
-      <div class="compl-box"><span id="complText">Здесь появится секретный комплимент…</span><span class="caret" id="caret"></span></div>
-      <div class="melon-zone">
-        <div class="melon-say" id="melonSay">Арбуз — по уставу! 🍉</div>
-        <button class="melon-btn" id="melonBtn" aria-label="Выдать арбуз">
-          <svg viewBox="0 0 130 96">
-            <path d="M65 18 q-2 -9 6 -13" stroke="#1c6b2b" stroke-width="5" fill="none" stroke-linecap="round"/>
-            <path d="M71 7 q11 -5 13 4 q-8 7 -13 -4 Z" fill="#2f8f3e"/>
-            <ellipse cx="65" cy="58" rx="56" ry="37" fill="#2f8f3e"/>
-            <path d="M28 32 Q40 58 30 86" stroke="#1c6b2b" stroke-width="8" fill="none" stroke-linecap="round"/>
-            <path d="M52 24 Q60 58 52 93" stroke="#1c6b2b" stroke-width="8" fill="none" stroke-linecap="round"/>
-            <path d="M78 24 Q72 58 80 93" stroke="#1c6b2b" stroke-width="8" fill="none" stroke-linecap="round"/>
-            <path d="M102 32 Q92 58 102 84" stroke="#1c6b2b" stroke-width="8" fill="none" stroke-linecap="round"/>
-            <ellipse cx="44" cy="42" rx="14" ry="8" fill="#fff" opacity=".25"/>
-          </svg>
-        </button>
-        <p class="panel-cap">Арбуз по уставу — жми на полосатого!</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<footer>
-  <div class="stripebar"></div>
-  <div class="ribbon"><div class="ribbon-track display rev">
-    <span>★ НИКТО, КРОМЕ НАС ★ ЗА ВДВ! ★ С ДНЁМ ВОЗДУШНО-ДЕСАНТНЫХ ВОЙСК ★ ВАСЯ — ГОРДОСТЬ ДЕСАНТА</span>
-    <span>★ НИКТО, КРОМЕ НАС ★ ЗА ВДВ! ★ С ДНЁМ ВОЗДУШНО-ДЕСАНТНЫХ ВОЙСК ★ ВАСЯ — ГОРДОСТЬ ДЕСАНТА</span>
   </div></div>
-  <div class="foot">
-    <p class="foot-big display">С Днём ВДВ, Вася! 🪂💙</p>
-    <p class="foot-small">Сделано с голубым беретом, полосатой тельняшкой и арбузным настроением. Никто, кроме нас!</p>
+
+  <div class="wrap hero-in">
+    <div class="packet reveal">
+      <div class="p-top">★ СОВ. СЕКРЕТНО · ПАКЕТ № 0802 · ВСКРЫТЬ 2 АВГУСТА ★</div>
+      <h1>С ДНЁМ ВДВ,<br><em>ВАСИЛИЙ!</em></h1>
+      <span class="p-date">2 августа · Ильин день · у Ильи — именины · голубые береты</span>
+      <p class="p-motto">Девиз дня: <b>«Никто, кроме нас!»</b> — и это, Василий, про тебя.</p>
+      <div class="p-actions">
+        <button class="btn-sky" id="goDrop">🪂 Десантировать поздравления</button>
+        <button class="btn-sky alt" id="saluteBtn">🎆 Салют в честь героя</button>
+      </div>
+      <p class="p-hint">Подсказка: тыкни пальцем в небо — будет салют. Небо сегодня наше.</p>
+    </div>
   </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track" id="tickerTrack">
+    <span>НИКТО, КРОМЕ НАС!</span>
+    <span>С ДНЁМ ВДВ, ВАСИЛИЙ!</span>
+    <span>У ИЛЬИ СЕГОДНЯ ИМЕНИНЫ</span>
+    <span>ИЛЬЯ — СЫН ГЕРОЯ</span>
+    <span>ЗА ВДВ! ЗА ВАСИЛИЯ!</span>
+    <span>КУПОЛ РАСКРЫТ — ПРИКАЗЫ ПРИНИМАЮТСЯ</span>
+  </div>
+</div>
+
+<!-- RADIO -->
+<section id="radio">
+  <div class="wrap">
+    <div class="shead reveal">
+      <span class="s-plate"><span class="st">★</span><h2>Радиостанция «Василий-1»</h2></span>
+      <span class="s-sub">Приём поздравлений открыт без очереди. Жми «Пуск» — поздравление десантируется прямо на экран. Каждое — именное, каждое — в точку.</span>
+    </div>
+
+    <div class="radio reveal" style="--d:.1s" id="radioBox">
+      <span class="rivet rv1"></span><span class="rivet rv2"></span><span class="rivet rv3"></span><span class="rivet rv4"></span>
+      <div class="antenna"></div>
+      <div class="radio-top">
+        <div class="speaker" aria-hidden="true"></div>
+        <div class="screen">
+          <div class="sc-k">▚▞ РАДИОГРАММА · КАНАЛ «ПРАЗДНИК»</div>
+          <div id="radioHead">НА СТРАНЕ ВАСИЛИЯ</div>
+          <div id="radioBody">ПРИЁМ ПОЗДРАВЛЕНИЙ ОТКРЫТ. ЖМИ ПУСК, ГВАРДЕЕЦ.</div>
+        </div>
+      </div>
+      <div class="launch-row">
+        <button class="launch idlepulse" id="launchBtn">ПУСК</button>
+        <div class="counters">
+          <div class="cnt"><small>Десантировано</small><b id="cntDrops">0</b></div>
+          <div class="cnt"><small>Приказов</small><b id="cntOrders">0</b></div>
+          <div class="cnt"><small>Салютов</small><b id="cntSalutes">0</b></div>
+        </div>
+      </div>
+      <p class="radio-note">* Поздравления сбрасываются с высоты 1000 метров. Точность попадания — 146%. Как у Василия.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WHEEL -->
+<section id="orders">
+  <div class="wrap">
+    <div class="shead reveal">
+      <span class="s-plate"><span class="st">★</span><h2>Колесо приказов на день</h2></span>
+      <span class="s-sub">2 августа приказы не обсуждаются. Они выполняются. С удовольствием. Крути — и узнай, что обязан сделать Василий сегодня.</span>
+    </div>
+
+    <div class="wheel-panel reveal" style="--d:.1s">
+      <div class="wheel-grid">
+        <div class="wheel-zone">
+          <div class="wheel-wrap">
+            <div class="wheel-pointer"></div>
+            <div class="wheel" id="wheel">
+              <span class="wlabel" style="--a:22.5deg">🥂<br>за ВДВ</span>
+              <span class="wlabel dk" style="--a:67.5deg">🤗<br>Илью</span>
+              <span class="wlabel" style="--a:112.5deg">🍖<br>шашлык</span>
+              <span class="wlabel dk" style="--a:157.5deg">📞<br>сослуживцам</span>
+              <span class="wlabel dk" style="--a:202.5deg">🎶<br>спеть</span>
+              <span class="wlabel dk" style="--a:247.5deg">🍉<br>арбуз</span>
+              <span class="wlabel" style="--a:292.5deg">😴<br>отоспаться</span>
+              <span class="wlabel" style="--a:337.5deg">★<br>НИКТО<br>КРОМЕ НАС</span>
+            </div>
+            <div class="wheel-hub">ВДВ</div>
+          </div>
+        </div>
+        <div class="wheel-side">
+          <div class="order-card" id="orderCard">
+            <span class="oc-k">ПРИКАЗ НЕ ПОЛУЧЕН</span>
+            <b>Крути колесо, гвардеец. День сам себя не отпразднует.</b>
+            <i class="oc-stamp">К ИСПОЛНЕНИЮ</i>
+          </div>
+          <button class="btn-sky" id="wheelBtn">🎡 Крутить колесо приказов</button>
+          <p>Приказы выдаются штабом праздника. Обжалованию не подлежат. Выполнение — с улыбкой и по полной программе.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MEDALS -->
+<section id="medals">
+  <div class="wrap">
+    <div class="shead reveal">
+      <span class="s-plate"><span class="st">★</span><h2>Парадный китель Василия</h2></span>
+      <span class="s-sub">Каждое действие на этом сайте — орден на китель. Собери все шесть — и будет полный иконостас, как у настоящего героя.</span>
+    </div>
+
+    <div class="kitel reveal" style="--d:.1s">
+      <div class="kitel-head">
+        <h3>ГВАРДЕЕЦ ВАСИЛИЙ</h3>
+        <p>награждается за праздник, смелость и отличное настроение</p>
+      </div>
+      <div class="medals">
+        <div class="m-slot"><div class="medal" id="md0"><span class="m-em">🪂</span></div><span class="m-nm">За первый десант</span></div>
+        <div class="m-slot"><div class="medal" id="md1"><span class="m-em">🎖️</span></div><span class="m-nm">За приказ</span></div>
+        <div class="m-slot"><div class="medal" id="md2"><span class="m-em">🧠</span></div><span class="m-nm">За смекалку</span></div>
+        <div class="m-slot"><div class="medal" id="md3"><span class="m-em">🥂</span></div><span class="m-nm">За тост</span></div>
+        <div class="m-slot"><div class="medal" id="md4"><span class="m-em">🎆</span></div><span class="m-nm">За салют</span></div>
+        <div class="m-slot"><div class="medal" id="md5"><span class="m-em">💙</span></div><span class="m-nm">За Илью</span></div>
+      </div>
+      <div class="med-progress">
+        <b>Орденов: <span id="medCount">0/6</span></b>
+        <span id="medStatus">Китель пока пустоват. Выполняй приказы, герой!</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ILYA -->
+<section id="ilya">
+  <div class="wrap">
+    <div class="shead reveal">
+      <span class="s-plate"><span class="st">★</span><h2>Ильин день — именины Ильи</h2></span>
+      <span class="s-sub">Илья в семье один — сын Василия. Зато какой повод: именины выпадают прямо на 2 августа. Назван в честь пророка — и праздник у него свой собственный, личный.</span>
+    </div>
+
+    <div class="ilya-grid">
+      <div class="dossier reveal">
+        <div class="d-head blue">НЕБЕСНЫЙ АЛЬМАНАХ · 2 АВГУСТА</div>
+        <div class="d-body">
+          <div class="d-em">⚡</div>
+          <h3>Ильин день</h3>
+          <p>День пророка Ильи — громовержца и главного по погоде. По старой традиции — покровитель десантников: голубые береты гуляют именно в его день.</p>
+          <ul class="d-facts">
+            <li>С 2 августа лето поворачивает к осени</li>
+            <li>Купаться после Ильина дня — только для самых смелых</li>
+            <li>Дождь в этот день — к удаче. Гром — к салюту</li>
+          </ul>
+        </div>
+        <span class="d-stamp">НЕБЕСНАЯ КАНЦЕЛЯРИЯ</span>
+      </div>
+      <div class="dossier reveal" style="--d:.1s">
+        <div class="d-head">ДОСЬЕ · ИЛЬЯ — ЕДИНСТВЕННЫЙ</div>
+        <div class="d-body">
+          <div class="d-em">🧒</div>
+          <h3>Илья Васильевич</h3>
+          <p>Сын Василия. Сегодня — его именины: назван в честь самого пророка. Главный повод для гордости, будущий командир и человек, у которого 2 августа официально праздник.</p>
+          <ul class="d-facts">
+            <li>Позывной: «Пап, а пап!»</li>
+            <li>Уже командует папой — растёт командир</li>
+            <li>2 августа имеет право на любые капризы</li>
+          </ul>
+        </div>
+        <span class="d-stamp red">ИМЕНИННИК · 02.08</span>
+      </div>
+    </div>
+
+    <div class="ilya-ctrl reveal" style="--d:.15s">
+      <button class="btn-sky" id="ilyaBtn">🎂 Поздравить Илью с именинами</button>
+      <div class="ilya-msg" id="ilyaMsg">🎉 <b>С именинами, Илья!</b> Назван в честь самого пророка — это серьёзная заявка на успех. Погода 2 августа теперь по его части, а настроение — по части папы Василия. <b>Расти командиром! Семья гордится.</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz">
+  <div class="wrap">
+    <div class="shead reveal">
+      <span class="s-plate"><span class="st">★</span><h2>Проверка боеготовности</h2></span>
+      <span class="s-sub">Короткий тест: насколько ты десантник, Василий. Отвечай честно — небо всё видит.</span>
+    </div>
+
+    <div class="quiz-panel reveal" style="--d:.1s">
+      <div class="q-banner">БОЕВОЙ ЛИСТОК · ЭКЗАМЕН</div>
+      <div id="quizBox">
+        <div class="q-top"><span id="qNum">ВОПРОС 1/5</span><span class="q-dots" id="qDots"></span></div>
+        <p class="q-text" id="qText"></p>
+        <div class="q-answers" id="qAnswers"></div>
+        <button class="btn-quiz" id="qNext" style="display:none">Далее →</button>
+      </div>
+      <div id="quizResult" style="display:none">
+        <div class="q-top"><span>РЕЗУЛЬТАТ ПРОВЕРКИ</span></div>
+        <div class="q-score" id="qScore"></div>
+        <p id="qVerdict"></p>
+        <button class="btn-quiz" id="qRestart">Пересдать</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOASTS -->
+<section id="toastsSec">
+  <div class="wrap">
+    <div class="shead reveal">
+      <span class="s-plate"><span class="st">★</span><h2>Фронтовые тосты</h2></span>
+      <span class="s-sub">Генератор тостов для застолья. Жми «Ещё тост», пока не попадётся тот самый. Потом — произнести вслух. Громко.</span>
+    </div>
+
+    <div class="toast-grid">
+      <div class="t-bubble reveal" id="tBubble">За голубые береты и стальные характеры! За Василия!»</div>
+      <div class="toast-side reveal" style="--d:.1s">
+        <p>Тосты одобрены дегустационной комиссией штаба. Произносить стоя, глядя в небо. Илья-пророк слышит.</p>
+        <div class="toast-actions">
+          <button class="btn-sky alt" id="tGen">🎲 Ещё тост</button>
+          <button class="btn-sky" id="tSend">🥂 Произнести</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap foot-grid">
+    <div>
+      <div class="foot-big">С праздником, <em>Василий!</em><br>Небо — дома.</div>
+      <p class="foot-motto">У Василия — день ВДВ. У Ильи — именины. Одна семья — два праздника. «Никто, кроме нас!»</p>
+    </div>
+    <div class="foot-legal">
+      <p>Секретный пакет № 0802 доставлен точно в срок. Точность десантирования — 146%.</p>
+      <p>Все ордена, салюты и приказы Василия сохраняются в localStorage — как положено, навсегда. Кнопка «Дембель» обнуляет заслуги (но не уважение).</p>
+      <p>Сделано с уважением к голубым беретам. За ВДВ! ★</p>
+    </div>
+  </div>
+  <div class="wrap foot-bottom">★ ВАСИЛИЙ · ИЛЬЯ · ИМЕНИНЫ · ВДВ · НИКТО, КРОМЕ НАС ★</div>
 </footer>
+
+<div id="toasts" aria-live="polite"></div>
 
 <script>
 (function(){
-"use strict";
-const $ = id => document.getElementById(id);
-const pick = arr => arr[(Math.random()*arr.length)|0];
-let opened = false;
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
 
-/* ---------- ЗВУК ---------- */
-let AC = null;
-function ac(){ try{ if(!AC) AC = new (window.AudioContext||window.webkitAudioContext)();
-  if(AC.state==='suspended') AC.resume(); }catch(e){} return AC; }
-function note(f,t0,dur,type,vol){
-  const a = ac(); if(!a) return;
-  const o=a.createOscillator(), g=a.createGain();
-  o.type=type||'triangle'; o.frequency.value=f;
-  o.connect(g); g.connect(a.destination);
-  const t=a.currentTime+t0;
-  g.gain.setValueAtTime(0.0001,t);
-  g.gain.exponentialRampToValueAtTime(vol||0.12,t+0.02);
-  g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
-  o.start(t); o.stop(t+dur+0.05);
-}
-function fanfare(){ [392,523.25,659.25,783.99].forEach((f,i)=>note(f,i*0.11,0.3,'triangle',0.12));
-  note(1046.5,0.46,0.55,'triangle',0.14); note(523.25,0.46,0.55,'triangle',0.08); }
-function pop(){ note(520,0,0.09,'square',0.06); note(180,0.03,0.15,'sine',0.18); }
-function whoosh(){ const a=ac(); if(!a) return;
-  const o=a.createOscillator(), g=a.createGain();
-  o.type='sawtooth';
-  o.frequency.setValueAtTime(900,a.currentTime);
-  o.frequency.exponentialRampToValueAtTime(120,a.currentTime+0.35);
-  g.gain.setValueAtTime(0.07,a.currentTime);
-  g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.4);
-  o.connect(g); g.connect(a.destination); o.start(); o.stop(a.currentTime+0.45); }
+  /* ---------- STATE / LOCALSTORAGE ---------- */
+  var KEY='vasiliy_vdv_v1';
+  function fresh(){return{drops:0,orders:0,salutes:0,toasts:0,quizDone:0,quizBest:0,ilya:0,celebrated:0};}
+  var S=fresh();
+  try{var d=JSON.parse(localStorage.getItem(KEY));if(d&&typeof d==='object'){for(var k in S){if(typeof d[k]!=='undefined')S[k]=d[k];}}}catch(e){}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 
-/* ---------- КОНФЕТТИ ---------- */
-const cvs=$('fx'), ctx=cvs.getContext('2d');
-const COLORS=['#1668b0','#7ec8ff','#ffffff','#ffd23f','#e63946','#2f8f3e'];
-let parts=[];
-function resize(){ cvs.width=innerWidth; cvs.height=innerHeight; }
-addEventListener('resize',resize); resize();
-function burst(x,y,n,power){
-  n=n||120; power=power||9;
-  for(let i=0;i<n;i++){
-    const a=Math.random()*Math.PI*2, sp=(Math.random()*0.7+0.3)*power;
-    parts.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-3,
-      g:0.16+Math.random()*0.08,rot:Math.random()*6.28,vr:(Math.random()-0.5)*0.3,
-      s:5+Math.random()*6,c:pick(COLORS),sh:(Math.random()*3)|0,
-      life:1,dk:0.006+Math.random()*0.006});
+  /* ---------- SOUND ---------- */
+  var AC=null,sndOn=true;
+  function ac(){AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();return AC;}
+  function tone(f,dt,dur,type,vol){
+    if(!sndOn)return;
+    try{
+      var a=ac(),t=a.currentTime+dt;
+      var o=a.createOscillator(),g=a.createGain();
+      o.type=type||'sine';o.frequency.value=f;
+      g.gain.setValueAtTime(0.0001,t);
+      g.gain.exponentialRampToValueAtTime(vol||.15,t+.02);
+      g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+      o.connect(g);g.connect(a.destination);
+      o.start(t);o.stop(t+dur+.05);
+    }catch(e){}
   }
-}
-function drawStar(x,y,r,rot){
-  ctx.beginPath();
-  for(let i=0;i<10;i++){
-    const a=rot+i*Math.PI/5, rr=i%2? r*0.45:r;
-    ctx.lineTo(x+Math.cos(a)*rr, y+Math.sin(a)*rr);
+  function tick(){tone(1250,0,.03,'square',.035);}
+  function clickS(){tone(760,0,.05,'square',.05);}
+  function whoosh(){
+    if(!sndOn)return;
+    try{
+      var a=ac(),t=a.currentTime;
+      var o=a.createOscillator(),g=a.createGain();
+      o.type='sawtooth';
+      o.frequency.setValueAtTime(950,t);
+      o.frequency.exponentialRampToValueAtTime(110,t+.7);
+      g.gain.setValueAtTime(.001,t);
+      g.gain.exponentialRampToValueAtTime(.11,t+.06);
+      g.gain.exponentialRampToValueAtTime(.001,t+.75);
+      o.connect(g);g.connect(a.destination);
+      o.start(t);o.stop(t+.8);
+    }catch(e){}
   }
-  ctx.closePath(); ctx.fill();
-}
-(function tick(){
-  ctx.clearRect(0,0,cvs.width,cvs.height);
-  parts=parts.filter(p=>p.life>0 && p.y<cvs.height+50);
-  for(const p of parts){
-    p.vx*=0.99; p.vy+=p.g; p.x+=p.vx; p.y+=p.vy;
-    p.rot+=p.vr; p.life-=p.dk;
-    ctx.globalAlpha=Math.max(p.life,0); ctx.fillStyle=p.c;
-    if(p.sh===0){ ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
-      ctx.fillRect(-p.s/2,-p.s/3,p.s,p.s*0.66); ctx.restore(); }
-    else if(p.sh===1){ drawStar(p.x,p.y,p.s*0.7,p.rot); }
-    else { ctx.beginPath(); ctx.arc(p.x,p.y,p.s*0.42,0,6.29); ctx.fill(); }
-  }
-  ctx.globalAlpha=1;
-  requestAnimationFrame(tick);
-})();
+  function boom(){tone(92,0,.42,'sine',.34);tone(62,.05,.36,'sine',.24);}
+  function fanfare(){[523,659,784,1047,784,1047,1319].forEach(function(f,i){tone(f,i*.12,.26,'triangle',.15);});}
+  function stampS(){tone(210,0,.09,'square',.14);}
 
-/* ---------- ДЕСАНТНИКИ ---------- */
-const sky=$('sky'), layer=$('paraLayer');
-function dropPara(x,opts){
-  opts=opts||{};
-  if(layer.childElementCount>9) return;
-  const h=sky.offsetHeight;
-  const el=document.createElement('div');
-  el.className='paratrooper';
-  const dur=opts.fast? 3.6+Math.random()*1.2 : 6+Math.random()*4;
-  el.style.left=(x-32)+'px';
-  el.style.setProperty('--fd',(h+190)+'px');
-  el.style.setProperty('--fdur',dur+'s');
-  const col=pick(['p-blue','p-blue','p-red','p-gold']);
-  const flag=Math.random()<0.3;
-  const sd=(1.5+Math.random()*1.3).toFixed(2);
-  el.innerHTML='<div class="sway" style="animation-duration:'+sd+'s">'
-    +'<svg class="psvg '+col+'" viewBox="0 0 64 92" width="64" height="92"><use href="#para"/></svg>'
-    +(flag?'<svg class="pflag" viewBox="0 0 22 30" width="22" height="30"><path d="M3 2 V28" stroke="#7c4a21" stroke-width="3" stroke-linecap="round"/><path d="M3 3 L20 8 L3 13 Z" fill="#d6382f"/></svg>':'')
-    +'</div>';
-  layer.appendChild(el);
-  el.addEventListener('animationend',function(ev){
-    if(ev.animationName==='fall'){
-      const puff=document.createElement('div');
-      puff.className='puff';
-      puff.style.left=(x-24)+'px'; puff.style.top=(h-18)+'px';
-      sky.appendChild(puff);
-      setTimeout(()=>puff.remove(),600);
-      el.remove();
+  /* ---------- TOASTS UI ---------- */
+  var toastBox=$('#toasts');
+  function toast(msg,tag){
+    var d=document.createElement('div');
+    d.className='toastn';
+    d.innerHTML='<b>'+(tag||'Штаб праздника')+'</b>'+msg;
+    toastBox.appendChild(d);
+    requestAnimationFrame(function(){d.classList.add('show');});
+    setTimeout(function(){
+      d.classList.remove('show');
+      setTimeout(function(){if(d.parentNode)d.parentNode.removeChild(d);},450);
+    },3600);
+    while(toastBox.children.length>3)toastBox.removeChild(toastBox.firstChild);
+  }
+
+  /* ---------- FIREWORKS ---------- */
+  var cv=$('#fx'),cx2=cv.getContext('2d');
+  function sizeCv(){cv.width=innerWidth;cv.height=innerHeight;}
+  sizeCv();addEventListener('resize',sizeCv);
+  var parts=[],fxOn=false;
+  var FCOLS=['#4fb2e6','#ffffff','#f2c94c','#ff6b5e','#9fd8ef','#009BDB'];
+  function burst(x,y,n){
+    n=n||46;
+    for(var i=0;i<n;i++){
+      var a=Math.random()*Math.PI*2,sp=1.5+Math.random()*4.6;
+      parts.push({x:x,y:y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:1,c:FCOLS[Math.floor(Math.random()*FCOLS.length)],r:1.6+Math.random()*2.4});
     }
-  });
-}
-sky.addEventListener('click',function(e){
-  if(!opened) return;
-  dropPara(e.clientX); pop();
-});
-sky.addEventListener('pointermove',function(e){
-  const dx=e.clientX/innerWidth-0.5;
-  $('cloudLayer').style.transform='translateX('+(dx*-26)+'px)';
-});
-setInterval(function(){
-  if(!opened||document.hidden) return;
-  if(Math.random()<0.8) dropPara(40+Math.random()*(innerWidth-80));
-},3400);
+    if(!fxOn){fxOn=true;requestAnimationFrame(fxLoop);}
+  }
+  function fxLoop(){
+    cx2.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){
+      p.x+=p.vx;p.y+=p.vy;p.vy+=0.045;p.vx*=0.985;p.life-=0.013;
+      cx2.globalAlpha=Math.max(p.life,0);
+      cx2.fillStyle=p.c;
+      cx2.beginPath();cx2.arc(p.x,p.y,p.r,0,7);cx2.fill();
+    });
+    cx2.globalAlpha=1;
+    parts=parts.filter(function(p){return p.life>0;});
+    if(parts.length){requestAnimationFrame(fxLoop);}else{fxOn=false;cx2.clearRect(0,0,cv.width,cv.height);}
+  }
+  function burstAt(el){
+    var r=el.getBoundingClientRect();
+    burst(r.left+r.width/2,r.top+r.height/2,40);
+  }
 
-/* ---------- ОТКРЫТИЕ ПАКЕТА ---------- */
-$('openBtn').addEventListener('click',function(){
-  if(opened) return; opened=true;
-  ac(); pop();
-  $('packet').classList.add('open');
-  setTimeout(function(){
-    document.body.classList.add('opened');
-    document.body.classList.remove('locked');
-    $('overlay').classList.add('bye');
+  /* ---------- AMBIENT PARATROOPERS ---------- */
+  var PARA_SVG='<svg viewBox="0 0 60 74" width="44" height="54"><path d="M4 32 A26 26 0 0 1 56 32 Z" fill="#009BDB"/><path d="M22 32 Q24 10 30 8 Q36 10 38 32 Z" fill="#ffffff"/><path d="M6 32 L28 56 M18 32 L29 56 M42 32 L31 56 M54 32 L32 56" stroke="#6b5b3a" stroke-width="1.4" fill="none"/><circle cx="30" cy="59" r="4.5" fill="#f0c9a0"/><rect x="25" y="62" width="10" height="9" rx="3" fill="#3f4b29"/></svg>';
+  var skyFall=$('#skyFall');
+  for(var pi=0;pi<5;pi++){
+    var sp=document.createElement('span');
+    sp.className='para';
+    sp.style.left=(6+Math.random()*86)+'%';
+    sp.style.animationDuration=(15+Math.random()*13)+'s';
+    sp.style.animationDelay=(-Math.random()*20)+'s';
+    sp.style.opacity=(0.55+Math.random()*0.4).toFixed(2);
+    sp.style.transform='scale('+(0.6+Math.random()*0.6).toFixed(2)+')';
+    sp.innerHTML='<i>'+PARA_SVG+'</i>';
+    skyFall.appendChild(sp);
+  }
+
+  /* ---------- MEDALS ---------- */
+  var MEDALS=[
+    {id:'drop',nm:'За первый десант'},
+    {id:'order',nm:'За приказ'},
+    {id:'quiz',nm:'За смекалку'},
+    {id:'toast',nm:'За тост'},
+    {id:'salute',nm:'За салют'},
+    {id:'ilya',nm:'За Илью'}
+  ];
+  var booted=false;
+  function hasMedal(m){
+    switch(m.id){
+      case 'drop':return S.drops>0;
+      case 'order':return S.orders>0;
+      case 'quiz':return S.quizDone>0;
+      case 'toast':return S.toasts>0;
+      case 'salute':return S.salutes>0;
+      case 'ilya':return S.ilya>0;
+    }
+    return false;
+  }
+  function renderMedals(){
+    var count=0;
+    MEDALS.forEach(function(m,i){
+      var el=$('#md'+i);
+      var got=hasMedal(m);
+      if(got)count++;
+      var was=el.classList.contains('earned');
+      el.classList.toggle('earned',got);
+      if(got&&!was&&booted){
+        toast('🎖️ Орден «'+m.nm+'» вручён Василию! Так держать, гвардеец.','Награда');
+        fanfare();burstAt(el);
+      }
+    });
+    $('#medCount').textContent=count+'/6';
+    $('#medStatus').textContent=
+      count===6?'ПОЛНЫЙ ИКОНОСТАС! ВАСИЛИЙ — ГЕРОЙ ПРАЗДНИКА!':
+      count>=3?'Отличный парадный вид. Так держать, гвардеец!':
+      'Китель пока пустоват. Выполняй приказы, герой!';
+    if(count===6&&S.celebrated===0){
+      S.celebrated=1;save();
+      toast('🏆 ВСЕ ШЕСТЬ ОРДЕНОВ! Небо салютует Василию!','Полный иконостас');
+      fanfare();
+      [0.2,0.6,1.0,1.4].forEach(function(dl,i){
+        setTimeout(function(){burst(innerWidth*(0.2+i*0.2),innerHeight*0.3,60);boom();},dl*1000);
+      });
+    }
+  }
+
+  /* ---------- COUNTERS ---------- */
+  function renderCounters(){
+    $('#cntDrops').textContent=S.drops;
+    $('#cntOrders').textContent=S.orders;
+    $('#cntSalutes').textContent=S.salutes;
+  }
+
+  /* ---------- RADIO / LAUNCH ---------- */
+  var POOL=[
+    'ВАСИЛИЙ! ТЫ КАК ХОРОШИЙ ПРЫЖОК: ВСЕГДА ТОЧНО В ЦЕЛЬ. С ДНЁМ ВДВ, ГВАРДЕЕЦ!',
+    'РАДИОГРАММА: ВАСИЛИЙ НАДЁЖЕН, КАК АВТОМАТ КАЛАШНИКОВА. НИКТО, КРОМЕ НАС!',
+    'ПРИКАЗ ПО СТАРШИНЕ: ВАСИЛИЮ — ОТДЫХАТЬ, ИЛЬЕ — ПОМОГАТЬ. С ПРАЗДНИКОМ!',
+    'КРЕПОСТЬ ТВОИХ НЕРВОВ — КАК КУПОЛ: НИКОГДА НЕ ПОДВОДИТ. С ДНЁМ ВДВ, ВАСИЛИЙ!',
+    'СВОДКА ДНЯ: У ВАСИЛИЯ — ДЕНЬ ВДВ, У ИЛЬИ — ИМЕНИНЫ. ОДНА СЕМЬЯ — ДВА ПРАЗДНИКА. ВЕЗЁТ ЖЕ!',
+    'ПУСТЬ ЗДОРОВЬЕ БУДЕТ КРЕПКИМ, КАК БЕРЦЫ, А НАСТРОЕНИЕ — ЛЁГКИМ, КАК КУПОЛ!',
+    'ГВАРДЕЕЦ ВАСИЛИЙ! СЕГОДНЯ ТВОЙ ДЕНЬ. ПРИКАЗ: БЫТЬ СЧАСТЛИВЫМ. ОБЖАЛОВАНИЮ НЕ ПОДЛЕЖИТ.',
+    'ВДВ — ЭТО НЕ ВОЙСКА, ЭТО ДИАГНОЗ НАВСЕГДА. И ДИАГНОЗ У ТЕБЯ ОТЛИЧНЫЙ, ВАСИЛИЙ!',
+    'ТЫ ДЕСАНТНИК: УПАЛ, ОТЖАЛСЯ, ПОШЁЛ ДАЛЬШЕ. ТАК ДЕРЖАТЬ, ВАСИЛИЙ!',
+    'С ДНЁМ ВДВ! ПУСТЬ КУПОЛ ВСЕГДА РАСКРЫВАЕТСЯ, А ХОЛОДИЛЬНИК НИКОГДА НЕ ПУСТЕЕТ.',
+    'ВАСИЛИЙ, ЗА ТОБОЙ — КАК ЗА КУПОЛОМ: СПОКОЙНО, НАДЁЖНО И ВЫСОКО. С ПРАЗДНИКОМ!'
+  ];
+  var typeTimer=null,launching=false;
+  function typeRadio(head,body){
+    clearInterval(typeTimer);
+    $('#radioHead').textContent=head;
+    var el=$('#radioBody');el.textContent='';
+    var i=0;
+    typeTimer=setInterval(function(){
+      el.textContent=body.slice(0,++i);
+      if(i%2===0)tick();
+      if(i>=body.length)clearInterval(typeTimer);
+    },26);
+  }
+  function flyPlane(){
+    var p=document.createElement('div');
+    p.className='fly-plane';
+    p.innerHTML='<svg viewBox="0 0 160 52" width="130" height="42"><path d="M4 28 Q8 20 30 19 L120 14 Q142 13 152 21 L152 26 Q136 31 106 31 L28 33 Q10 33 4 28 Z" fill="#22303e"/><path d="M26 19 L14 4 L26 4 L40 18 Z" fill="#1a2530"/><path d="M84 17 L58 3 L46 3 L68 17 Z" fill="#1a2530"/><path d="M134 17 Q143 16 149 20 L138 22 Z" fill="#9fd8ef"/><circle cx="22" cy="10" r="4" fill="#d42b2b"/></svg>';
+    document.body.appendChild(p);
+    setTimeout(function(){if(p.parentNode)p.parentNode.removeChild(p);},2500);
+  }
+  function spawnDrop(){
+    var box=$('#radioBox');
+    var d=document.createElement('div');
+    d.className='drop';
+    d.innerHTML=PARA_SVG+'<div class="drop-flag">С ДНЁМ ВДВ!</div>';
+    box.appendChild(d);
+    setTimeout(function(){if(d.parentNode)d.parentNode.removeChild(d);},3200);
+  }
+  function launch(){
+    if(launching)return;
+    launching=true;
+    var btn=$('#launchBtn');
+    btn.disabled=true;btn.classList.remove('idlepulse');
+    S.drops++;save();
+    whoosh();flyPlane();spawnDrop();
+    var msg=POOL[Math.floor(Math.random()*POOL.length)];
+    setTimeout(function(){typeRadio('РАДИОГРАММА № '+S.drops+' · ДЛЯ ВАСИЛИЯ',msg);},900);
+    renderCounters();renderMedals();
+    setTimeout(function(){
+      launching=false;
+      btn.disabled=false;btn.classList.add('idlepulse');
+    },3300);
+  }
+  $('#launchBtn').addEventListener('click',launch);
+  $('#goDrop').addEventListener('click',function(){
+    document.getElementById('radio').scrollIntoView({behavior:'smooth'});
+    setTimeout(launch,650);
+  });
+
+  /* ---------- WHEEL ---------- */
+  var ORDERS=[
+    {e:'🥂',t:'Выпить за ВДВ. Немедленно и с удовольствием.'},
+    {e:'🤗',t:'Обнять сына Илью. Крепко-крепко. У него, между прочим, именины.'},
+    {e:'🍖',t:'Съесть шашлык. Без разговоров.'},
+    {e:'📞',t:'Позвонить сослуживцам. Вспомнить службу.'},
+    {e:'🎶',t:'Спеть «Расплескалась синева». Громко.'},
+    {e:'🍉',t:'Съесть арбуз. Август обязывает.'},
+    {e:'😴',t:'Отоспаться. Приказ по гарнизону.'},
+    {e:'★',t:'НИКТО, КРОМЕ НАС! Праздновать до заката.'}
+  ];
+  var wheel=$('#wheel'),wheelAngle=0,wheelBusy=false;
+  $('#wheelBtn').addEventListener('click',function(){
+    if(wheelBusy)return;
+    wheelBusy=true;
+    clickS();
+    wheelAngle+=1440+Math.floor(Math.random()*360);
+    wheel.style.transition='transform 3.8s cubic-bezier(.12,.85,.15,1)';
+    wheel.style.transform='rotate('+wheelAngle+'deg)';
+    setTimeout(function(){
+      wheelBusy=false;
+      var norm=((360-(wheelAngle%360))%360);
+      var idx=Math.floor(norm/45)%8;
+      var o=ORDERS[idx];
+      S.orders++;save();
+      var card=$('#orderCard');
+      card.classList.remove('stamped','pop');
+      card.innerHTML='<span class="oc-k">ПРИКАЗ № '+S.orders+' · 2 АВГУСТА</span><b>'+o.e+' '+o.t+'</b><i class="oc-stamp">К ИСПОЛНЕНИЮ</i>';
+      void card.offsetWidth;
+      card.classList.add('pop');
+      setTimeout(function(){card.classList.add('stamped');stampS();},350);
+      renderCounters();renderMedals();
+      toast('Приказ № '+S.orders+' доведён до Василия. Не выполнить нельзя.','Колесо приказов');
+    },3900);
+  });
+
+  /* ---------- QUIZ ---------- */
+  var quizData=[
+    {q:'Что кричит десантник перед прыжком?',a:['«За ВДВ!»','«Мамочка!»','«Кто последний?»','«Ааааа!»'],c:0},
+    {q:'Какого цвета берет у десантника?',a:['Зелёного','Голубого','Какой нашли в каптёрке','Цвета неба над Ильёй'],c:1},
+    {q:'Илья — сын Василия. Что в нём особенного 2 августа?',a:['У него именины — Ильин день','Назван в честь пророка','Будущий командир семьи','Всё перечисленное'],c:3},
+    {q:'Девиз ВДВ?',a:['«Кто, если не мы?»','«За шашлыком!»','«Никто, кроме нас!»','«Василий, кроме нас!»'],c:2},
+    {q:'Что делает Василий 2 августа?',a:['Работает','Спит','Всё сразу, кроме работы','Празднует ВДВ и именины сына'],c:2}
+  ];
+  var qIdx=0,qScore=0,qLock=false;
+  var qDots=$('#qDots');
+  function buildDots(){
+    qDots.innerHTML='';
+    for(var i=0;i<quizData.length;i++){var s=document.createElement('span');s.className='q-dot';qDots.appendChild(s);}
+  }
+  function renderQ(){
+    qLock=false;
+    $('#qNum').textContent='ВОПРОС '+(qIdx+1)+'/'+quizData.length;
+    $('#qText').textContent=quizData[qIdx].q;
+    var box=$('#qAnswers');box.innerHTML='';
+    quizData[qIdx].a.forEach(function(txt,ai){
+      var b=document.createElement('button');
+      b.className='q-ans';b.textContent=txt;
+      b.addEventListener('click',function(){pickAns(ai,b);});
+      box.appendChild(b);
+    });
+    $('#qNext').style.display='none';
+    var dots=qDots.children;
+    for(var i=0;i<dots.length;i++){dots[i].className='q-dot'+(i<qIdx?' done':(i===qIdx?' on':''));}
+  }
+  function pickAns(ai,btn){
+    if(qLock)return;qLock=true;
+    var correct=quizData[qIdx].c;
+    var btns=$('#qAnswers').children;
+    for(var i=0;i<btns.length;i++){btns[i].disabled=true;if(i===correct)btns[i].classList.add('right');}
+    if(ai===correct){qScore++;tick();}else{btn.classList.add('wrong');}
+    $('#qNext').textContent=(qIdx===quizData.length-1)?'Вердикт →':'Далее →';
+    $('#qNext').style.display='inline-block';
+  }
+  $('#qNext').addEventListener('click',function(){
+    qIdx++;
+    if(qIdx<quizData.length){renderQ();}else{showResult();}
+  });
+  function showResult(){
+    $('#quizBox').style.display='none';
+    $('#quizResult').style.display='block';
+    $('#qScore').textContent=qScore+'/'+quizData.length;
+    var v;
+    if(qScore===5)v='146% ГВАРДЕЕЦ. Василий, ты легенда ВДВ. Даже Илья-пророк аплодирует с небес.';
+    else if(qScore===4)v='Отличный десантник! Один промах — и тот из-за волнения. Ильин день гордится.';
+    else if(qScore===3)v='Крепкий боец. Но приказ есть приказ: праздновать дальше!';
+    else v='Пока гражданский. Срочно налить за ВДВ и пересдать. Василий, мы в тебя верим.';
+    $('#qVerdict').textContent=v;
+    S.quizDone=1;
+    if(qScore>S.quizBest)S.quizBest=qScore;
+    save();renderMedals();
+    if(qScore>=4){fanfare();burst(innerWidth/2,innerHeight*0.35,50);}
+    toast('Экзамен сдан: '+qScore+'/5. '+v,'Боевой листок');
+  }
+  $('#qRestart').addEventListener('click',function(){
+    qIdx=0;qScore=0;
+    $('#quizResult').style.display='none';
+    $('#quizBox').style.display='block';
+    renderQ();
+  });
+  buildDots();renderQ();
+
+  /* ---------- TOASTS GEN ---------- */
+  var TOASTS=[
+    'За голубые береты и стальные характеры! За Василия!',
+    'За то, чтобы купол всегда раскрывался, а удача приземлялась рядом!',
+    'За Василия-отца и за Илью-именинника — двойной салют в один день!',
+    'За тех, кто в небе, и за тех, кто ждёт их на земле!',
+    'За ВДВ! Никто, кроме нас!',
+    'За то, что у Василия есть Илья, а у Ильи — такой отец!',
+    'За крепкую дружбу, точные прыжки и полный холодильник!'
+  ];
+  var lastToast='';
+  $('#tGen').addEventListener('click',function(){
+    var t;do{t=TOASTS[Math.floor(Math.random()*TOASTS.length)];}while(t===lastToast&&TOASTS.length>1);
+    lastToast=t;
+    var b=$('#tBubble');
+    b.textContent=t+'»';
+    b.classList.remove('pop');void b.offsetWidth;b.classList.add('pop');
+    clickS();
+  });
+  $('#tSend').addEventListener('click',function(){
+    var t=lastToast||TOASTS[0];
+    S.toasts++;save();
     fanfare();
-    burst(innerWidth/2, innerHeight*0.3, 170, 11);
-    setTimeout(function(){ dropPara(innerWidth*0.3); dropPara(innerWidth*0.7); },400);
-    setTimeout(function(){ dropPara(innerWidth*0.5); },900);
-  },900);
-  setTimeout(function(){ const o=$('overlay'); if(o) o.remove(); },1900);
-});
-
-/* ---------- ТЕКСТЫ ---------- */
-const toasts=[
- "За ВДВ! За Васю! И за то, чтобы парашют всегда раскрывался, а холодильник никогда не закрывался!",
- "Выпьем за Васю: он десантируется в любую проблему — и сразу в яблочко!",
- "За ВДВ! Пусть у Васи всё будет по уставу: счастье — строевым шагом, удача — точно по расписанию!",
- "Тост №{n}: за то, чтобы Вася приземлялся мягко, а проблемы — жёстко и очень далеко!",
- "За Васю! Он не ищет лёгких путей — он сбрасывает их сверху вместе с десантом!",
- "За ВДВ! За голубые береты, полосатые майки и за Васю, который круче всех беретов вместе взятых!",
- "За то, чтобы у Васи всегда был запасной парашют, запасной план и запасной арбуз!"
-];
-const compliments=[
- "Вася настолько крут, что голуби на площади отдают ему честь.",
- "Вася десантируется в понедельник в 7 утра — и всё равно улыбается. Это сверхспособность.",
- "У Васи берет голубее неба, а сердце — золотее всех медалей.",
- "2 августа арбузы сами несут себя Васе в руки. Такой устав.",
- "Если Вася сказал «приземлимся» — значит, приземлимся. Максимум — уточним куда.",
- "Высота Васи не боится. Высота надеется оправдать его ожидания.",
- "ВДВ расшифровывается как «Великолепный Дружище Вася». Мы проверяли. Официально.",
- "Вася может починить что угодно. Кроме будильника — будильник сам виноват."
-];
-const vasyaSay=[
- "Никто, кроме нас! И чуть-чуть — кроме меня 😎",
- "За ВДВ, товарищи! Ура-а-а!",
- "Вася на связи! Приём-приём!",
- "Десантируемся, братцы! Внизу — праздник!",
- "Арбуз уже в пути. По уставу! 🍉",
- "Тост готов? Я — всегда готов!",
- "Это не я такой крутой — это берет такой."
-];
-
-/* ---------- ТОСТ ---------- */
-let toastsN=0;
-const toastBtn=$('toastBtn'), toastCount=$('toastCount'), ticker=$('ticker');
-toastBtn.addEventListener('click',function(){
-  toastsN++;
-  toastCount.textContent=toastsN;
-  toastCount.classList.remove('bump'); void toastCount.offsetWidth;
-  toastCount.classList.add('bump');
-  ticker.textContent='🥂 '+pick(toasts).replace('{n}',toastsN);
-  ticker.classList.remove('tick'); void ticker.offsetWidth;
-  ticker.classList.add('tick');
-  fanfare();
-  const r=toastBtn.getBoundingClientRect();
-  burst(r.left+r.width/2, r.top+r.height/2, 130, 10);
-});
-
-/* ---------- КОМПЛИМЕНТ ---------- */
-let typeTimer=null;
-$('complBtn').addEventListener('click',function(){
-  pop();
-  const text=pick(compliments), el=$('complText');
-  clearInterval(typeTimer); el.textContent=''; let i=0;
-  typeTimer=setInterval(function(){
-    el.textContent=text.slice(0,++i);
-    if(i>=text.length) clearInterval(typeTimer);
-  },28);
-});
-
-/* ---------- ДЕСАНТ ×5 ---------- */
-$('dropBtn').addEventListener('click',function(){
-  whoosh();
-  for(let i=0;i<5;i++){
-    setTimeout(function(){ dropPara(60+Math.random()*(innerWidth-120),{fast:true}); },i*170);
-  }
-});
-
-/* ---------- ВАСЯ ---------- */
-const vasyaBtn=$('vasyaBtn'), bubble=$('bubble');
-let bubbleT=null;
-vasyaBtn.addEventListener('click',function(){
-  pop();
-  vasyaBtn.classList.remove('jumping'); void vasyaBtn.offsetWidth;
-  vasyaBtn.classList.add('jumping');
-  bubble.textContent=pick(vasyaSay);
-  bubble.classList.add('show');
-  clearTimeout(bubbleT);
-  bubbleT=setTimeout(()=>bubble.classList.remove('show'),2400);
-});
-
-/* ---------- АРБУЗ ---------- */
-const melonSay=$('melonSay'), melonZone=document.querySelector('.melon-zone');
-const sliceSVG='<svg viewBox="0 0 60 44"><path d="M4 4 L56 4 L30 42 Z" fill="#2f8f3e"/><path d="M8 7 L52 7 L30 38 Z" fill="#e8f7e0"/><path d="M11 9 L49 9 L30 35 Z" fill="#ff5148"/><ellipse cx="26" cy="15" rx="2" ry="3" fill="#20262b"/><ellipse cx="34" cy="15" rx="2" ry="3" fill="#20262b"/><ellipse cx="30" cy="23" rx="2" ry="3" fill="#20262b"/></svg>';
-let melonT=null;
-$('melonBtn').addEventListener('click',function(){
-  pop();
-  const s=document.createElement('div');
-  s.className='slice';
-  s.style.setProperty('--dx',((Math.random()*160)-80).toFixed(0)+'px');
-  s.style.setProperty('--rot',((Math.random()*260)-130).toFixed(0)+'deg');
-  s.innerHTML=sliceSVG;
-  melonZone.appendChild(s);
-  s.addEventListener('animationend',()=>s.remove());
-  melonSay.classList.add('show');
-  clearTimeout(melonT);
-  melonT=setTimeout(()=>melonSay.classList.remove('show'),1600);
-});
-
-/* ---------- ОБРАТНЫЙ ОТСЧЁТ ---------- */
-function cdSet(id,val){
-  const el=$(id), v=String(val).padStart(2,'0');
-  if(el.textContent!==v){
-    el.textContent=v;
-    el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
-  }
-}
-function cdTick(){
-  const now=new Date();
-  const wrap=$('cdWrap');
-  if(now.getMonth()===7 && now.getDate()===2){
-    wrap.innerHTML='<div class="cd-today display">🎉 СЕГОДНЯ ДЕНЬ ВДВ! УРА, ТОВАРИЩИ! 🎉</div>';
-    return;
-  }
-  let target=new Date(now.getFullYear(),7,2);
-  if(now>target) target=new Date(now.getFullYear()+1,7,2);
-  const diff=target-now;
-  cdSet('cdD',Math.floor(diff/864e5));
-  cdSet('cdH',Math.floor(diff/36e5)%24);
-  cdSet('cdM',Math.floor(diff/6e4)%60);
-  cdSet('cdS',Math.floor(diff/1e3)%60);
-}
-cdTick(); setInterval(cdTick,1000);
-
-/* ---------- ПОЯВЛЕНИЕ ПРИ СКРОЛЛЕ ---------- */
-const io=new IntersectionObserver(function(entries){
-  entries.forEach(function(en){
-    if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }
+    burstAt($('#tBubble'));
+    toast('Тост произнесён: «'+t+'» Небо услышало. Василий растроган.','Фронтовые тосты');
+    renderMedals();
   });
-},{threshold:0.15});
-document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  /* ---------- ILYA ---------- */
+  $('#ilyaBtn').addEventListener('click',function(){
+    S.ilya=1;save();
+    var m=$('#ilyaMsg');
+    m.classList.remove('show');void m.offsetWidth;m.classList.add('show');
+    fanfare();
+    burstAt($('#ilyaBtn'));
+    setTimeout(function(){burst(innerWidth*0.3,innerHeight*0.3,40);},300);
+    setTimeout(function(){burst(innerWidth*0.7,innerHeight*0.3,40);},600);
+    toast('Именины Ильи отмечены! Пророк Илья уведомлён, погода обещана.','Ильин день');
+    renderMedals();
+  });
+
+  /* ---------- SALUTES ---------- */
+  function countSalute(){
+    S.salutes++;save();
+    renderCounters();renderMedals();
+  }
+  $('#saluteBtn').addEventListener('click',function(e){
+    e.stopPropagation();
+    countSalute();
+    boom();
+    burst(e.clientX||innerWidth/2,e.clientY||innerHeight*0.3,60);
+    [0.35,0.7,1.05].forEach(function(dl,i){
+      setTimeout(function(){
+        burst(innerWidth*(0.25+i*0.25),innerHeight*(0.18+Math.random()*0.2),55);
+        boom();
+      },dl*1000);
+    });
+    toast('🎆 Салют в честь Василия! Небо одобряет. Илья-пророк — тоже.','Салют');
+  });
+  $('#hero').addEventListener('click',function(e){
+    countSalute();
+    boom();
+    burst(e.clientX,e.clientY,44);
+  });
+
+  /* ---------- SOUND TOGGLE / RESET ---------- */
+  $('#sndBtn').addEventListener('click',function(){
+    sndOn=!sndOn;
+    $('#sndBtn').textContent=sndOn?'🔊':'🔇';
+    if(sndOn)clickS();
+  });
+  $('#resetBtn').addEventListener('click',function(){
+    try{localStorage.removeItem(KEY);}catch(e){}
+    S=fresh();
+    renderCounters();renderMedals();
+    toast('Заслуги обнулены. Как после дембеля — но уважение осталось навсегда.','Дембель');
+  });
+
+  /* ---------- TICKER DUP / REVEAL ---------- */
+  var tt=$('#tickerTrack');
+  tt.innerHTML+=tt.innerHTML;
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(en){if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}});
+  },{threshold:.15});
+  document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+
+  /* ---------- INIT ---------- */
+  renderCounters();
+  renderMedals();
+  booted=true;
 })();
 </script>
 </body>

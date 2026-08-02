@@ -3,429 +3,323 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>КОРЗИНА·СКАЛЬП — автокомпенсационный бот · Binance Live</title>
+<title>КОРЗИНА·СКАЛЬП — ускорение к цели · Binance Live</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='5' y='10' width='6' height='14' fill='%23ff5062'/><rect x='7.5' y='5' width='1' height='24' fill='%23ff5062'/><rect x='20' y='6' width='6' height='16' fill='%233ee08c'/><rect x='22.5' y='2' width='1' height='26' fill='%233ee08c'/></svg>">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config={theme:{extend:{
+  colors:{ink:'#0a0e13',panel:'#10161f',panel2:'#0c1219',line:'#1c2735',line2:'#2b3b4f',
+          grn:'#3ee08c',red2:'#ff5062',amb:'#ffb224',cyn:'#4cc9f0',mut:'#7d8ca0',dim2:'#546478'},
+  fontFamily:{mono:['JetBrains Mono','monospace'],disp:['Unbounded','sans-serif'],sans:['IBM Plex Sans','sans-serif']}
+}}}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#0a0e13; --panel:#10161f; --panel2:#0c1219; --line:#1c2735; --line2:#28374b;
-  --txt:#d9e4f0; --dim:#7d8ca0; --dim2:#546478;
-  --green:#3ee08c; --red:#ff5062; --amber:#ffb224; --cyan:#4cc9f0;
-}
-*{margin:0;padding:0;box-sizing:border-box}
-html{scrollbar-color:#2a3a4d #0a0e13}
-body{
-  font-family:'IBM Plex Sans',sans-serif;font-size:14px;color:var(--txt);background:var(--bg);
-  background-image:
-    radial-gradient(1100px 520px at 88% -8%, rgba(255,80,98,.075), transparent 60%),
-    radial-gradient(900px 460px at 8% -8%, rgba(62,224,140,.07), transparent 60%);
-  min-height:100vh;
-}
-body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
-  background-image:linear-gradient(rgba(255,255,255,.024) 1px,transparent 1px),
-                   linear-gradient(90deg,rgba(255,255,255,.024) 1px,transparent 1px);
-  background-size:44px 44px;}
-::selection{background:rgba(76,201,240,.3)}
-.mono{font-family:'JetBrains Mono',monospace;font-variant-numeric:tabular-nums}
-
-/* ── topbar ─────────────────────────────── */
-.topbar{position:relative;z-index:2;display:flex;align-items:center;gap:22px;flex-wrap:wrap;
-  padding:14px 20px;border-bottom:1px solid var(--line);
-  background:linear-gradient(180deg,#111927,#0c1219)}
-.logo{font-family:'Unbounded';font-weight:900;font-size:17px;letter-spacing:.04em;display:flex;align-items:center;gap:10px;white-space:nowrap}
-.logo em{font-style:normal;color:var(--green)}
-.logo .ver{font-family:'JetBrains Mono';font-weight:400;font-size:10px;color:var(--dim);border:1px solid var(--line2);padding:2px 7px;border-radius:4px;letter-spacing:.1em}
-.led{width:9px;height:9px;border-radius:50%;background:var(--dim2);flex:none}
-.led.ok{background:var(--green);animation:pulse 1.6s infinite}
-.led.warn{background:var(--amber);animation:pulse 1s infinite}
-.led.err{background:var(--red);animation:pulse .7s infinite}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(62,224,140,.5)}50%{box-shadow:0 0 0 6px rgba(62,224,140,0)}}
-.ws-block{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--dim)}
-select,input{background:#0d1420;border:1px solid var(--line2);color:var(--txt);border-radius:5px;
-  font-family:'JetBrains Mono';font-size:13px;padding:7px 9px;outline:none;transition:border-color .2s, box-shadow .2s}
-select:focus,input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(76,201,240,.12)}
-.quote{display:flex;align-items:baseline;gap:14px}
-#price{font-family:'JetBrains Mono';font-weight:800;font-size:42px;line-height:1;letter-spacing:-.01em;transition:color .18s, text-shadow .18s;color:var(--txt)}
-#price.up{color:var(--green);text-shadow:0 0 22px rgba(62,224,140,.5)}
-#price.down{color:var(--red);text-shadow:0 0 22px rgba(255,80,98,.5)}
-.daystat{display:flex;gap:16px;font-size:11.5px;color:var(--dim)}
-.daystat b{display:block;font-family:'JetBrains Mono';font-weight:600;font-size:12.5px;color:var(--txt)}
-.daystat .chg.plus{color:var(--green)} .daystat .chg.minus{color:var(--red)}
-.hspace{flex:1}
-.clock{font-family:'JetBrains Mono';font-size:13px;color:var(--dim)}
-.badge{font-family:'Unbounded';font-size:9.5px;letter-spacing:.16em;padding:6px 10px;border-radius:4px;
-  background:rgba(255,178,36,.1);border:1px solid rgba(255,178,36,.45);color:var(--amber);white-space:nowrap}
-
-/* ── ticker tape ────────────────────────── */
-.tape{position:relative;z-index:1;overflow:hidden;border-bottom:1px solid var(--line);background:#0b1118}
-.tape-track{display:flex;gap:38px;width:max-content;padding:7px 0;animation:mq 55s linear infinite;font-family:'JetBrains Mono';font-size:12px}
-.tape:hover .tape-track{animation-play-state:paused}
-@keyframes mq{to{transform:translateX(-50%)}}
-.tp-item{display:flex;gap:8px;white-space:nowrap;color:var(--dim)}
-.tp-item .s{color:var(--txt);font-weight:600}
-.tp-item .p{color:var(--txt)}
-.tp-item .c.plus{color:var(--green)} .tp-item .c.minus{color:var(--red)}
-
-/* ── layout ─────────────────────────────── */
-.wrap{position:relative;z-index:1;display:grid;grid-template-columns:300px minmax(0,1fr) 336px;gap:14px;
-  padding:14px 16px 26px;max-width:1760px;margin:0 auto;align-items:start}
-.col{display:flex;flex-direction:column;gap:14px;min-width:0}
-.card{background:linear-gradient(180deg,#121924,#0d131c);border:1px solid var(--line);border-radius:8px;
-  box-shadow:0 12px 34px rgba(0,0,0,.35);transition:transform .25s, border-color .25s;position:relative}
-.card:hover{transform:translateY(-2px);border-color:var(--line2)}
-.card::before{content:'';position:absolute;top:-1px;left:14px;width:34px;height:2px;background:var(--acc,var(--cyan));border-radius:2px}
-.card h2{font-family:'Unbounded';font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--dim);padding:13px 16px 11px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px}
-.card h2::before{content:'';width:7px;height:7px;background:var(--acc,var(--cyan));flex:none}
-.card .bd{padding:14px 16px}
-
-/* controls */
-.ctl{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.ctl label{display:flex;flex-direction:column;gap:4px;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim)}
-.ctl label.full{grid-column:1/-1}
-.ctl input,.ctl select{width:100%;padding:7px 8px;font-size:12.5px}
-.btnrow{display:flex;gap:8px;margin-top:12px}
-.btn{flex:1;font-family:'Unbounded';font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
-  padding:12px 8px;border-radius:6px;border:1px solid var(--line2);background:#141c28;color:var(--txt);
-  cursor:pointer;transition:transform .15s, box-shadow .2s, border-color .2s, background .2s}
-.btn:hover{transform:translateY(-1px);border-color:var(--cyan)}
-.btn:active{transform:translateY(1px)}
-.btn.primary{background:linear-gradient(180deg,#22c27a,#128254);border-color:#3ee08c;color:#04140b}
-.btn.primary:hover{box-shadow:0 6px 20px rgba(62,224,140,.28)}
-.btn.stop{background:linear-gradient(180deg,#d8404f,#9c2531);border-color:#ff5062;color:#fff}
-.btn.stop:hover{box-shadow:0 6px 20px rgba(255,80,98,.28)}
-.btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
-.rules{margin-top:13px;padding-top:12px;border-top:1px dashed var(--line2);font-size:11.5px;line-height:1.55;color:var(--dim)}
-.rules b{color:var(--txt)} .rules .n1{color:var(--cyan)} .rules .n2{color:var(--green)} .rules .n3{color:var(--red)}
-.chk{display:flex;align-items:center;gap:8px;margin-top:11px;font-size:12px;color:var(--dim);cursor:pointer}
-.api{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line2);display:flex;flex-direction:column;gap:8px}
-.api input{font-size:11px}
-.api .note{font-size:10.5px;color:var(--dim2);line-height:1.5}
-
-/* basket summary */
-.basket-state{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.chip{font-family:'Unbounded';font-size:9.5px;font-weight:700;letter-spacing:.14em;padding:6px 11px;border-radius:4px;border:1px solid var(--line2);color:var(--dim)}
-.chip.long{border-color:rgba(62,224,140,.5);color:var(--green);background:rgba(62,224,140,.08)}
-.chip.short{border-color:rgba(255,80,98,.5);color:var(--red);background:rgba(255,80,98,.08)}
-.chip.pulse{animation:blink 1s infinite}
-@keyframes blink{50%{opacity:.55}}
-#sU{font-family:'JetBrains Mono';font-weight:800;font-size:34px;line-height:1;transition:color .15s}
-#sU.plus{color:var(--green)} #sU.minus{color:var(--red)}
-.ulabel{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:4px}
-.kv{display:flex;justify-content:space-between;gap:10px;padding:6.5px 0;border-top:1px solid rgba(28,39,53,.7);font-size:12px}
-.kv span{color:var(--dim)} .kv b{font-family:'JetBrains Mono';font-weight:600;font-size:12px}
-.kv b.red{color:var(--red)} .kv b.grn{color:var(--green)} .kv b.amb{color:var(--amber)} .kv b.cyn{color:var(--cyan)}
-.meter{height:7px;background:#0b1119;border:1px solid var(--line);border-radius:4px;overflow:hidden;margin-top:6px}
-.meter i{display:block;height:100%;width:0%;background:linear-gradient(90deg,#128254,var(--green));transition:width .25s;border-radius:3px}
-.meter i.hot{background:linear-gradient(90deg,#9c2531,var(--red))}
-
-/* chart + table */
-#chart{width:100%;height:330px;display:block;cursor:crosshair}
-.legend{display:flex;gap:16px;padding:9px 16px;border-top:1px solid var(--line);font-size:11px;color:var(--dim);flex-wrap:wrap}
-.legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:-1px}
-table{width:100%;border-collapse:collapse;font-size:12px}
-thead th{position:sticky;top:0;background:#0e1520;font-family:'Unbounded';font-size:9px;font-weight:700;letter-spacing:.13em;
-  text-transform:uppercase;color:var(--dim);text-align:right;padding:9px 10px;border-bottom:1px solid var(--line)}
-thead th:nth-child(-n+2){text-align:left}
-tbody td{padding:7px 10px;border-bottom:1px solid rgba(28,39,53,.55);text-align:right;font-family:'JetBrains Mono';font-size:12px}
-tbody td:nth-child(-n+2){text-align:left;font-family:'IBM Plex Sans'}
-tbody tr{animation:rowin .7s}
-tbody tr:hover{background:rgba(76,201,240,.05)}
-@keyframes rowin{from{background:rgba(76,201,240,.16)}}
-.side-b{color:var(--green);font-weight:600} .side-s{color:var(--red);font-weight:600}
-tfoot td{padding:9px 10px;text-align:right;font-family:'JetBrains Mono';font-weight:800;border-top:1px solid var(--line2);font-size:12.5px}
-tfoot td:nth-child(-n+2){text-align:left;font-family:'IBM Plex Sans';font-weight:600;color:var(--dim)}
-.twrap{max-height:250px;overflow:auto}
-.empty{padding:26px;text-align:center;color:var(--dim2);font-size:12.5px}
-
-/* right column */
-#eqCanvas{width:100%;height:74px;display:block}
-.stgrid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border-top:1px solid var(--line)}
-.st{background:var(--panel2);padding:10px 14px}
-.st .l{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim2);margin-bottom:3px}
-.st .v{font-family:'JetBrains Mono';font-weight:700;font-size:15px}
-.st .v.grn{color:var(--green)} .st .v.red{color:var(--red)} .st .v.cyn{color:var(--cyan)}
-#logBox{height:308px;overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:4px;font-family:'JetBrains Mono';font-size:11.3px;line-height:1.5}
-.lg{border-left:2px solid var(--line2);padding:2px 0 2px 9px;color:var(--dim);animation:lgin .35s;word-break:break-word}
-@keyframes lgin{from{opacity:0;transform:translateX(-7px)}}
-.lg .t{color:var(--dim2);margin-right:7px;font-size:10px}
-.lg.buy{border-color:var(--green);color:#a9f5cd}
-.lg.sell{border-color:var(--red);color:#ffb9c0}
-.lg.ok{border-color:var(--green);color:var(--green);font-weight:600}
-.lg.err{border-color:var(--red);color:var(--red);font-weight:600;background:rgba(255,80,98,.06)}
-.lg.warn{border-color:var(--amber);color:#ffd79a}
-.lg.sys{border-color:var(--cyan);color:#a8def5}
-#logBox::-webkit-scrollbar,.twrap::-webkit-scrollbar{width:8px;height:8px}
-#logBox::-webkit-scrollbar-thumb,.twrap::-webkit-scrollbar-thumb{background:#26364a;border-radius:4px}
-
-/* banner */
-.banner{position:fixed;top:16px;left:50%;transform:translate(-50%,-80px);z-index:60;opacity:0;
-  font-family:'Unbounded';font-size:12px;font-weight:700;letter-spacing:.08em;padding:12px 22px;border-radius:6px;border:1px solid;
-  transition:transform .4s cubic-bezier(.2,.9,.3,1.25), opacity .3s;pointer-events:none}
-.banner.show{transform:translate(-50%,0);opacity:1}
-.banner.win{background:#0c2b1c;border-color:var(--green);color:#8bf7c0;box-shadow:0 10px 40px rgba(62,224,140,.3)}
-.banner.loss{background:#331015;border-color:var(--red);color:#ffb0b8;box-shadow:0 10px 40px rgba(255,80,98,.3)}
-
-footer{position:relative;z-index:1;text-align:center;color:var(--dim2);font-size:11px;padding:6px 20px 26px;line-height:1.6}
-@media(max-width:1320px){.wrap{grid-template-columns:290px minmax(0,1fr)}.col-right{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;align-items:start}}
-@media(max-width:960px){.wrap{grid-template-columns:1fr}.col-right{grid-template-columns:1fr}#price{font-size:32px}.daystat{display:none}}
+  body{background-image:radial-gradient(1100px 500px at 88% -8%,rgba(255,80,98,.06),transparent 60%),
+                        radial-gradient(900px 460px at 8% -8%,rgba(62,224,140,.06),transparent 60%)}
+  body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+    background-image:linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);background-size:44px 44px}
+  @keyframes mq{to{transform:translateX(-50%)}}
+  .tape-track{animation:mq 55s linear infinite}.tape:hover .tape-track{animation-play-state:paused}
+  @keyframes ledp{0%,100%{box-shadow:0 0 0 0 rgba(62,224,140,.5)}50%{box-shadow:0 0 0 6px rgba(62,224,140,0)}}
+  .led-ok{background:#3ee08c;animation:ledp 1.6s infinite}.led-warn{background:#ffb224;animation:ledp 1s infinite}
+  .led-err{background:#ff5062;animation:ledp .7s infinite}.led-off{background:#546478}
+  @keyframes blinkc{50%{opacity:.5}}.chip-live{animation:blinkc 1s infinite}
+  @keyframes rowin{from{background:rgba(76,201,240,.16)}}.rowin{animation:rowin .7s}
+  @keyframes lgin{from{opacity:0;transform:translateX(-7px)}}.lgin{animation:lgin .3s}
+  .px-up{color:#3ee08c!important;text-shadow:0 0 22px rgba(62,224,140,.5)}
+  .px-down{color:#ff5062!important;text-shadow:0 0 22px rgba(255,80,98,.5)}
+  #banner{transition:transform .4s cubic-bezier(.2,.9,.3,1.25),opacity .3s;transform:translate(-50%,-80px);opacity:0}
+  #banner.show{transform:translate(-50%,0);opacity:1}
+  ::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:#26364a;border-radius:4px}
+  ::-webkit-scrollbar-track{background:transparent}
+  input,select{outline:none}input:focus,select:focus{border-color:#4cc9f0!important;box-shadow:0 0 0 3px rgba(76,201,240,.12)}
 </style>
 </head>
-<body>
+<body class="bg-ink text-slate-200 font-sans text-sm min-h-screen relative">
 
-<div class="banner" id="banner"></div>
+<div id="banner" class="fixed top-4 left-1/2 z-50 font-disp text-xs font-bold tracking-wider px-6 py-3 rounded-md border pointer-events-none"></div>
 
-<header class="topbar">
-  <div class="logo"><span class="led" id="wsLed"></span>КОРЗИНА<em>·</em>СКАЛЬП <span class="ver">PAPER v1.0</span></div>
-  <div class="ws-block"><span id="wsTxt">подключение…</span> <span class="mono" id="latEl"></span></div>
-  <select id="symSel" title="Торговая пара">
+<!-- ═══ TOPBAR ═══ -->
+<header class="relative z-10 flex flex-wrap items-center gap-x-6 gap-y-2 px-5 py-3 border-b border-line bg-panel/90">
+  <div class="flex items-center gap-2.5 font-disp font-black text-[15px] tracking-wide whitespace-nowrap">
+    <span id="wsLed" class="led-off w-2.5 h-2.5 rounded-full inline-block"></span>
+    КОРЗИНА<span class="text-grn">·</span>СКАЛЬП
+    <span class="font-mono font-normal text-[10px] text-mut border border-line2 rounded px-1.5 py-0.5 tracking-widest">PAPER v2.0</span>
+  </div>
+  <div class="flex items-center gap-2 text-xs text-mut"><span id="wsTxt">подключение…</span><span id="latEl" class="font-mono"></span></div>
+  <select id="symSel" class="bg-panel2 border border-line2 rounded px-2.5 py-1.5 font-mono text-[13px] cursor-pointer">
     <option>BTCUSDT</option><option>ETHUSDT</option><option>SOLUSDT</option><option>BNBUSDT</option>
     <option>XRPUSDT</option><option>DOGEUSDT</option><option>ADAUSDT</option><option>AVAXUSDT</option>
     <option>LINKUSDT</option><option>LTCUSDT</option><option>TONUSDT</option><option>TRXUSDT</option>
   </select>
-  <div class="quote"><div id="price" class="mono">—</div>
-    <div class="daystat">
-      <div>24ч<b id="chgEl" class="chg">—</b></div>
-      <div>Макс<b id="hiEl">—</b></div>
-      <div>Мин<b id="loEl">—</b></div>
-      <div>Объём<b id="volEl">—</b></div>
+  <div class="flex items-baseline gap-4">
+    <div id="price" class="font-mono font-extrabold text-4xl leading-none transition-colors">—</div>
+    <div class="hidden md:flex gap-5 text-[11px] text-mut">
+      <div>24ч<b id="chgEl" class="block font-mono font-semibold text-xs text-slate-200">—</b></div>
+      <div>Макс<b id="hiEl" class="block font-mono font-semibold text-xs text-slate-200">—</b></div>
+      <div>Мин<b id="loEl" class="block font-mono font-semibold text-xs text-slate-200">—</b></div>
+      <div>Объём<b id="volEl" class="block font-mono font-semibold text-xs text-slate-200">—</b></div>
     </div>
   </div>
-  <div class="hspace"></div>
-  <div class="clock mono" id="clock"></div>
-  <div class="badge">СИМУЛЯЦИЯ · РЕАЛЬНЫЕ ОРДЕРА ЧЕРЕЗ СЕРВЕР-ПРОКСИ</div>
+  <div class="flex-1"></div>
+  <div id="clock" class="font-mono text-[13px] text-mut"></div>
 </header>
 
-<div class="tape"><div class="tape-track" id="tape"></div></div>
+<!-- ═══ TAPE ═══ -->
+<div class="tape relative z-10 overflow-hidden border-b border-line bg-[#0b1118]">
+  <div id="tape" class="tape-track flex gap-10 w-max py-1.5 font-mono text-xs"></div>
+</div>
 
-<main class="wrap">
+<!-- ═══ MAIN GRID ═══ -->
+<main class="relative z-10 grid gap-3 p-3 max-w-[1760px] mx-auto xl:grid-cols-[308px_minmax(0,1fr)_344px] items-start">
 
   <!-- LEFT -->
-  <div class="col">
-    <section class="card" style="--acc:var(--cyan)">
-      <h2>Управление ботом</h2>
-      <div class="bd">
-        <div class="ctl">
-          <label>Старт. ордер, $<input id="baseUsd" type="number" value="100" min="10" step="10"></label>
-          <label>Цель корзины, $<input id="tpUsd" type="number" value="0.60" min="0.05" step="0.05"></label>
-          <label>Шаг усреднения, %<input id="stepPct" type="number" value="0.15" min="0.02" step="0.01"></label>
-          <label>Множитель объёма<input id="mult" type="number" value="1.6" min="1" step="0.1"></label>
-          <label>Макс. ордеров<input id="maxOrd" type="number" value="8" min="1" max="20" step="1"></label>
-          <label>Пауза, мс<input id="cooldownMs" type="number" value="1500" min="0" step="250"></label>
-          <label class="full">Направление входа
-            <select id="dirMode">
+  <div class="flex flex-col gap-3 min-w-0">
+    <section class="bg-panel border border-line rounded-lg shadow-xl hover:border-line2 transition-colors">
+      <h2 class="flex items-center gap-2 text-[10px] font-disp font-bold uppercase tracking-[0.18em] text-mut px-4 py-3 border-b border-line">
+        <span class="w-1.5 h-1.5 bg-cyn"></span>Настройки прибыли</h2>
+      <div class="p-4">
+        <div class="grid grid-cols-2 gap-2.5">
+          <label class="text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Старт. ордер, $<input id="baseUsd" type="number" value="100" min="10" step="10" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px]"></label>
+          <label class="text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Цель корзины, $<input id="tpUsd" type="number" value="0.60" min="0.05" step="0.05" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px]"></label>
+          <label class="text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Шаг компенсации, %<input id="stepPct" type="number" value="0.15" min="0.02" step="0.01" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px]"></label>
+          <label class="text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Множитель компенсац.<input id="mult" type="number" value="1.6" min="1" step="0.1" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px]"></label>
+          <label class="text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Макс. ордеров<input id="maxOrd" type="number" value="10" min="1" max="30" step="1" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px]"></label>
+          <label class="text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Пауза, мс<input id="cooldownMs" type="number" value="1500" min="0" step="250" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px]"></label>
+          <label class="col-span-2 text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Направление входа
+            <select id="dirMode" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px] cursor-pointer">
               <option value="auto">Авто — моментум EMA</option>
               <option value="BUY">Только BUY (лонг)</option>
               <option value="SELL">Только SELL (шорт)</option>
-            </select>
+            </select></label>
+        </div>
+
+        <div class="mt-3 pt-3 border-t border-dashed border-line2">
+          <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer select-none">
+            <input id="accOn" type="checkbox" checked class="accent-[#3ee08c] w-4 h-4">
+            <b class="font-disp text-[9.5px] tracking-[0.14em] text-grn">УСКОРЕНИЕ К ЦЕЛИ</b> — докидывать объём по ходу прибыли
           </label>
+          <div class="grid grid-cols-3 gap-2.5 mt-2.5">
+            <label class="text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Шаг ускор., %<input id="accStepPct" type="number" value="0.10" min="0.02" step="0.01" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px]"></label>
+            <label class="text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Ход до цели, %<input id="accMovePct" type="number" value="0.10" min="0.02" step="0.01" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px]"></label>
+            <label class="text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Макс. ускор., $<input id="accMaxUsd" type="number" value="200" min="10" step="10" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px]"></label>
+          </div>
         </div>
-        <div class="btnrow">
-          <button class="btn primary" id="btnStart">▶ Старт</button>
-          <button class="btn stop" id="btnStop" disabled>■ Стоп</button>
-          <button class="btn" id="btnReset" title="Сброс статистики">⟲</button>
+
+        <div class="flex gap-2 mt-3.5">
+          <button id="btnStart" class="flex-1 font-disp text-[11px] font-bold uppercase tracking-[0.12em] py-2.5 rounded-md bg-gradient-to-b from-grn to-[#128254] text-[#04140b] border border-grn hover:brightness-110 hover:shadow-[0_6px_20px_rgba(62,224,140,.28)] active:translate-y-px transition">▶ Старт</button>
+          <button id="btnStop" disabled class="flex-1 font-disp text-[11px] font-bold uppercase tracking-[0.12em] py-2.5 rounded-md bg-gradient-to-b from-[#d8404f] to-[#9c2531] text-white border border-red2 disabled:opacity-35 hover:shadow-[0_6px_20px_rgba(255,80,98,.28)] active:translate-y-px transition">■ Стоп</button>
+          <button id="btnReset" title="Сброс статистики" class="px-3.5 rounded-md border border-line2 bg-panel2 hover:border-cyn active:translate-y-px transition">⟲</button>
         </div>
-        <label class="chk"><input type="checkbox" id="sndChk" checked> Звуковые сигналы закрытия корзины</label>
-        <div class="rules">
-          <b class="n1">1.</b> Бот открывает корзину и при уходе цены против позиции добавляет <b>компенсирующие ордера</b> увеличенного объёма.<br>
-          <b class="n2">2.</b> Баланс корзины растёт с прибылью — фиксируется пиковый «потолок».<br>
-          <b class="n3">3.</b> Падение эквити хоть на <b>$0.01</b> ниже потолка → <b>мгновенное закрытие всей корзины</b>.
+        <label class="flex items-center gap-2 mt-3 text-xs text-mut cursor-pointer"><input id="sndChk" type="checkbox" checked class="accent-[#4cc9f0]"> Звук закрытия корзины</label>
+
+        <div class="mt-3 pt-3 border-t border-dashed border-line2 text-[11.5px] leading-relaxed text-mut">
+          <b class="text-cyn">1.</b> Вход по тренду (EMA). Против цены — <b class="text-slate-200">компенсация</b> ×множитель.<br>
+          <b class="text-grn">2.</b> В плюс — <b class="text-slate-200">ускорение</b>: объём рассчитывается так, чтобы добрать цель за «ход до цели» %.<br>
+          <b class="text-red2">3.</b> Эквити ниже потолка на <b class="text-slate-200">$0.01</b> → вся корзина закрывается мгновенно.
         </div>
-        <div class="api">
-          <input id="apiEp" placeholder="https://ваш-прокси/api/order (live-режим)">
-          <input id="apiKey" placeholder="API key (не хранится, уходит только на ваш прокси)" type="password">
-          <div class="note">Браузер не может слать подписанные запросы на Binance (CORS). Для реальных сделок поднимите прокси-сервер, бот будет отправлять ордера туда.</div>
+
+        <div class="mt-3 pt-3 border-t border-dashed border-line2 flex flex-col gap-2">
+          <input id="apiEp" placeholder="https://ваш-прокси/api/order (live)" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[11px]">
+          <input id="apiKey" type="password" placeholder="API key → только на ваш прокси" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[11px]">
+          <div class="text-[10.5px] leading-snug text-dim2">Реальные ордера из браузера блокирует CORS — для live нужен сервер-прокси.</div>
         </div>
       </div>
     </section>
 
-    <section class="card" style="--acc:var(--green)">
-      <h2>Активная корзина</h2>
-      <div class="bd">
-        <div class="basket-state"><span class="chip" id="sState">ОЖИДАНИЕ</span><span class="chip" id="sDir" style="display:none"></span></div>
-        <div class="ulabel">Плавающий PnL корзины</div>
-        <div id="sU" class="mono">+0.00</div>
-        <div style="margin-top:8px">
-          <div class="ulabel">Прогресс к цели <span class="mono" id="tpPct" style="color:var(--dim)">0%</span></div>
-          <div class="meter"><i id="tpBar"></i></div>
+    <section class="bg-panel border border-line rounded-lg shadow-xl hover:border-line2 transition-colors">
+      <h2 class="flex items-center gap-2 text-[10px] font-disp font-bold uppercase tracking-[0.18em] text-mut px-4 py-3 border-b border-line">
+        <span class="w-1.5 h-1.5 bg-grn"></span>Активная корзина</h2>
+      <div class="p-4">
+        <div class="flex items-center gap-2 mb-3">
+          <span id="sState" class="font-disp text-[9.5px] font-bold tracking-[0.14em] px-2.5 py-1.5 rounded border border-line2 text-mut">ОЖИДАНИЕ</span>
+          <span id="sDir" class="hidden font-disp text-[9.5px] font-bold tracking-[0.14em] px-2.5 py-1.5 rounded border"></span>
         </div>
-        <div style="margin-top:12px">
-          <div class="kv"><span>Потолок защиты</span><b id="sProtect" class="cyn">—</b></div>
-          <div class="kv"><span>Запас до закрытия</span><b id="sDD" class="amb">—</b></div>
-          <div class="kv"><span>Пик PnL корзины</span><b id="sPeak" class="grn">—</b></div>
-          <div class="kv"><span>Безубыток</span><b id="sBE">—</b></div>
-          <div class="kv"><span>Средняя цена</span><b id="sAvg">—</b></div>
-          <div class="kv"><span>Экспозиция</span><b id="sExp">—</b></div>
-          <div class="kv"><span>Ордеров</span><b id="sCnt">0 / 0</b></div>
+        <div class="text-[10px] uppercase tracking-[0.14em] text-mut mb-1">Плавающий PnL корзины</div>
+        <div id="sU" class="font-mono font-extrabold text-[32px] leading-none">+0.00</div>
+        <div class="mt-3">
+          <div class="flex justify-between text-[10px] uppercase tracking-[0.14em] text-mut"><span>Прогресс к цели</span><span id="tpPct" class="font-mono">0%</span></div>
+          <div class="h-[7px] mt-1.5 bg-[#0b1119] border border-line rounded overflow-hidden">
+            <div id="tpBar" class="h-full w-0 bg-gradient-to-r from-[#128254] to-grn transition-[width] duration-200"></div>
+          </div>
+        </div>
+        <div class="mt-3.5">
+          <div class="flex justify-between gap-3 py-[7px] border-t border-line/70 text-xs"><span class="text-mut">Потолок защиты</span><b id="sProtect" class="font-mono font-semibold text-cyn">—</b></div>
+          <div class="flex justify-between gap-3 py-[7px] border-t border-line/70 text-xs"><span class="text-mut">Запас до закрытия</span><b id="sDD" class="font-mono font-semibold">—</b></div>
+          <div class="flex justify-between gap-3 py-[7px] border-t border-line/70 text-xs"><span class="text-mut">Пик PnL корзины</span><b id="sPeak" class="font-mono font-semibold text-grn">—</b></div>
+          <div class="flex justify-between gap-3 py-[7px] border-t border-line/70 text-xs"><span class="text-mut">Безубыток / средняя</span><b id="sBE" class="font-mono font-semibold">—</b></div>
+          <div class="flex justify-between gap-3 py-[7px] border-t border-line/70 text-xs"><span class="text-mut">Скорость прибыли</span><b id="sSpeed" class="font-mono font-semibold text-grn">—</b></div>
+          <div class="flex justify-between gap-3 py-[7px] border-t border-line/70 text-xs"><span class="text-mut">Ход до цели</span><b id="sDist" class="font-mono font-semibold text-amb">—</b></div>
+          <div class="flex justify-between gap-3 py-[7px] border-t border-line/70 text-xs"><span class="text-mut">Экспозиция</span><b id="sExp" class="font-mono font-semibold">—</b></div>
+          <div class="flex justify-between gap-3 py-[7px] border-t border-line/70 text-xs"><span class="text-mut">Ордеров (С/К/У)</span><b id="sCnt" class="font-mono font-semibold">0</b></div>
         </div>
       </div>
     </section>
   </div>
 
   <!-- CENTER -->
-  <div class="col">
-    <section class="card" style="--acc:var(--amber)">
-      <h2>График · <span id="chSym" style="color:var(--txt)">BTCUSDT</span> · свечи 2с</h2>
-      <canvas id="chart"></canvas>
-      <div class="legend">
-        <span><i style="background:var(--green)"></i>BUY</span>
-        <span><i style="background:var(--red)"></i>SELL</span>
-        <span style="color:var(--cyan)">┄ безубыток корзины</span>
-        <span style="color:var(--green)">┄ цель TP</span>
-        <span id="chTime" class="mono" style="margin-left:auto;color:var(--dim2)"></span>
+  <div class="flex flex-col gap-3 min-w-0">
+    <section class="bg-panel border border-line rounded-lg shadow-xl hover:border-line2 transition-colors">
+      <h2 class="flex items-center gap-2 text-[10px] font-disp font-bold uppercase tracking-[0.18em] text-mut px-4 py-3 border-b border-line">
+        <span class="w-1.5 h-1.5 bg-amb"></span>График · <span id="chSym" class="text-slate-200">BTCUSDT</span> · свечи 2с</h2>
+      <canvas id="chart" class="w-full h-[330px] block cursor-crosshair"></canvas>
+      <div class="flex flex-wrap gap-x-4 gap-y-1 px-4 py-2.5 border-t border-line text-[11px] text-mut">
+        <span><i class="inline-block w-2 h-2 rounded-sm bg-grn mr-1"></i>BUY</span>
+        <span><i class="inline-block w-2 h-2 rounded-sm bg-red2 mr-1"></i>SELL</span>
+        <span class="text-cyn">┄ безубыток</span><span class="text-grn">┄ цель TP</span>
+        <span>С — старт · К — компенсация · У — ускорение</span>
+        <span id="chTime" class="font-mono ml-auto text-dim2"></span>
       </div>
     </section>
 
-    <section class="card" style="--acc:var(--red)">
-      <h2>Ордера корзины</h2>
-      <div class="twrap">
-        <table>
-          <thead><tr><th>№</th><th>Сторона</th><th>Вход</th><th>Кол-во</th><th>Объём $</th><th>PnL $</th></tr></thead>
+    <section class="bg-panel border border-line rounded-lg shadow-xl hover:border-line2 transition-colors">
+      <h2 class="flex items-center gap-2 text-[10px] font-disp font-bold uppercase tracking-[0.18em] text-mut px-4 py-3 border-b border-line">
+        <span class="w-1.5 h-1.5 bg-red2"></span>Ордера корзины</h2>
+      <div class="max-h-[260px] overflow-auto">
+        <table class="w-full border-collapse text-xs">
+          <thead><tr class="bg-panel">
+            <th class="sticky top-0 bg-panel text-left font-disp text-[9px] font-bold tracking-[0.13em] uppercase text-mut px-2.5 py-2 border-b border-line">№</th>
+            <th class="sticky top-0 bg-panel text-left font-disp text-[9px] font-bold tracking-[0.13em] uppercase text-mut px-2.5 py-2 border-b border-line">Тип</th>
+            <th class="sticky top-0 bg-panel text-left font-disp text-[9px] font-bold tracking-[0.13em] uppercase text-mut px-2.5 py-2 border-b border-line">Сторона</th>
+            <th class="sticky top-0 bg-panel text-right font-disp text-[9px] font-bold tracking-[0.13em] uppercase text-mut px-2.5 py-2 border-b border-line">Вход</th>
+            <th class="sticky top-0 bg-panel text-right font-disp text-[9px] font-bold tracking-[0.13em] uppercase text-mut px-2.5 py-2 border-b border-line">Кол-во</th>
+            <th class="sticky top-0 bg-panel text-right font-disp text-[9px] font-bold tracking-[0.13em] uppercase text-mut px-2.5 py-2 border-b border-line">Объём $</th>
+            <th class="sticky top-0 bg-panel text-right font-disp text-[9px] font-bold tracking-[0.13em] uppercase text-mut px-2.5 py-2 border-b border-line">PnL $</th>
+          </tr></thead>
           <tbody id="ordBody"></tbody>
-          <tfoot><tr><td>ИТОГО</td><td id="fCnt">—</td><td></td><td></td><td id="fExp">$0.00</td><td id="fPnl">$0.00</td></tr></tfoot>
+          <tfoot><tr>
+            <td class="px-2.5 py-2.5 text-left border-t border-line2 text-mut font-semibold">ИТОГО</td>
+            <td id="fCnt" class="px-2.5 py-2.5 text-left border-t border-line2 text-mut font-mono">—</td>
+            <td class="border-t border-line2"></td><td class="border-t border-line2"></td><td class="border-t border-line2"></td>
+            <td id="fExp" class="px-2.5 py-2.5 text-right border-t border-line2 font-mono font-extrabold">$0.00</td>
+            <td id="fPnl" class="px-2.5 py-2.5 text-right border-t border-line2 font-mono font-extrabold">$0.00</td>
+          </tr></tfoot>
         </table>
       </div>
     </section>
   </div>
 
   <!-- RIGHT -->
-  <div class="col col-right">
-    <section class="card" style="--acc:var(--green)">
-      <h2>Эквити и статистика</h2>
-      <canvas id="eqCanvas"></canvas>
-      <div class="stgrid">
-        <div class="st"><div class="l">Реализовано</div><div class="v grn" id="stEq">$0.00</div></div>
-        <div class="st"><div class="l">Корзин закрыто</div><div class="v" id="stB">0</div></div>
-        <div class="st"><div class="l">Прибыльных</div><div class="v grn" id="stW">0</div></div>
-        <div class="st"><div class="l">Закрыто защитой</div><div class="v red" id="stL">0</div></div>
-        <div class="st"><div class="l">Winrate</div><div class="v cyn" id="stWR">—</div></div>
-        <div class="st"><div class="l">Лучшая / худшая</div><div class="v" id="stBW" style="font-size:12px">— / —</div></div>
+  <div class="flex flex-col gap-3 min-w-0">
+    <section class="bg-panel border border-line rounded-lg shadow-xl hover:border-line2 transition-colors">
+      <h2 class="flex items-center gap-2 text-[10px] font-disp font-bold uppercase tracking-[0.18em] text-mut px-4 py-3 border-b border-line">
+        <span class="w-1.5 h-1.5 bg-grn"></span>Эквити и статистика</h2>
+      <canvas id="eqCanvas" class="w-full h-[76px] block"></canvas>
+      <div class="grid grid-cols-2 gap-px bg-line border-t border-line">
+        <div class="bg-panel2 p-2.5"><div class="text-[9.5px] uppercase tracking-[0.12em] text-dim2 mb-0.5">Реализовано</div><div id="stEq" class="font-mono font-bold text-[15px] text-grn">$0.00</div></div>
+        <div class="bg-panel2 p-2.5"><div class="text-[9.5px] uppercase tracking-[0.12em] text-dim2 mb-0.5">Корзин закрыто</div><div id="stB" class="font-mono font-bold text-[15px]">0</div></div>
+        <div class="bg-panel2 p-2.5"><div class="text-[9.5px] uppercase tracking-[0.12em] text-dim2 mb-0.5">По тейк-профиту</div><div id="stW" class="font-mono font-bold text-[15px] text-grn">0</div></div>
+        <div class="bg-panel2 p-2.5"><div class="text-[9.5px] uppercase tracking-[0.12em] text-dim2 mb-0.5">Закрыто защитой</div><div id="stL" class="font-mono font-bold text-[15px] text-red2">0</div></div>
+        <div class="bg-panel2 p-2.5"><div class="text-[9.5px] uppercase tracking-[0.12em] text-dim2 mb-0.5">Winrate</div><div id="stWR" class="font-mono font-bold text-[15px] text-cyn">—</div></div>
+        <div class="bg-panel2 p-2.5"><div class="text-[9.5px] uppercase tracking-[0.12em] text-dim2 mb-0.5">Лучшая / худшая</div><div id="stBW" class="font-mono font-bold text-xs">— / —</div></div>
       </div>
     </section>
 
-    <section class="card" style="--acc:var(--cyan)">
-      <h2>Журнал событий</h2>
-      <div id="logBox"></div>
+    <section class="bg-panel border border-line rounded-lg shadow-xl hover:border-line2 transition-colors">
+      <h2 class="flex items-center gap-2 text-[10px] font-disp font-bold uppercase tracking-[0.18em] text-mut px-4 py-3 border-b border-line">
+        <span class="w-1.5 h-1.5 bg-cyn"></span>Журнал событий</h2>
+      <div id="logBox" class="h-[330px] overflow-y-auto p-3 flex flex-col gap-1 font-mono text-[11.3px] leading-relaxed"></div>
     </section>
   </div>
 </main>
 
-<footer>Данные — публичные потоки Binance. Симуляция не учитывает комиссии и проскальзывание. Не является инвестиционной рекомендацией.<br>Для реальной торговли подключите серверный прокси — браузер блокирует подписанные запросы к бирже.</footer>
+<footer class="relative z-10 text-center text-dim2 text-[11px] px-5 pb-6 leading-relaxed">
+  Данные — публичные потоки Binance. Симуляция без комиссий и проскальзывания. Не является инвестиционной рекомендацией.
+</footer>
 
 <script>
 'use strict';
-/* ═══════════ helpers ═══════════ */
+/* ═══ helpers ═══ */
 const $=id=>document.getElementById(id);
 const fmt=(n,d=2)=>Number(n).toLocaleString('ru-RU',{minimumFractionDigits:d,maximumFractionDigits:d});
 const fmtS=(n,d=2)=>(n>=0?'+':'−')+fmt(Math.abs(n),d);
 const round2=n=>Math.round(n*100)/100;
 const roundStep=(v,s)=>Math.round(v/s)*s;
 const hhmmss=t=>new Date(t).toLocaleTimeString('ru-RU');
-const LS='basket-scalper.v1';
+const LS='basket-scalper.v2';
 
-/* ═══════════ state ═══════════ */
-const S={
-  symbol:'BTCUSDT', price:0, prevPrice:0, tickSize:0.01, latency:0,
-  ws:null, retries:0, pollTimer:null, connected:false,
-  emaF:null, emaS:null, ticks:0,
-  candles:[], CANDLE_MS:2000,
-  running:false, realized:0,
-  baskets:0, wins:0, losses:0, best:null, worst:null,
-  basket:null, oid:0, lastCloseTs:0, warned:false,
-  eqHist:[], rowRefs:new Map(), raf:0, lastEqPush:0
-};
+/* ═══ state ═══ */
+const S={symbol:'BTCUSDT',price:0,prevPrice:0,tickSize:.01,latency:0,ws:null,retries:0,pollTimer:null,connected:false,
+  emaF:null,emaS:null,ticks:0,candles:[],CANDLE_MS:2000,
+  running:false,realized:0,baskets:0,wins:0,losses:0,best:null,worst:null,
+  basket:null,oid:0,lastCloseTs:0,warmWarned:false,eqHist:[],rowRefs:new Map(),raf:0,lastEqPush:0};
+
 function cfg(){return{
   base:Math.max(10,+$('baseUsd').value||100), tp:Math.max(.05,+$('tpUsd').value||.6),
   step:Math.max(.02,+$('stepPct').value||.15), mult:Math.max(1,+$('mult').value||1.6),
-  maxOrders:Math.max(1,+$('maxOrd').value|0||8), cooldown:Math.max(0,+$('cooldownMs').value|0||1500),
-  dir:$('dirMode').value};}
+  maxOrders:Math.max(1,+$('maxOrd').value|0||10), cooldown:Math.max(0,+$('cooldownMs').value|0||1500),
+  dir:$('dirMode').value,
+  accOn:$('accOn').checked, accStep:Math.max(.02,+$('accStepPct').value||.1),
+  accMove:Math.max(.02,+$('accMovePct').value||.1), accMaxUsd:Math.max(10,+$('accMaxUsd').value||200)};}
 
-/* ═══════════ log / banner / sound ═══════════ */
+/* ═══ log / banner / sound ═══ */
+const LG={sys:'border-cyn/70 text-cyn',buy:'border-grn/80 text-grn/90',sell:'border-red2/80 text-red2/90',
+  acc:'border-grn text-[#9df7c6] font-semibold',ok:'border-grn text-grn font-semibold',
+  err:'border-red2 text-red2 font-semibold bg-red2/5',warn:'border-amb text-amb/90'};
 function log(type,msg){
   const box=$('logBox'),d=document.createElement('div');
-  d.className='lg '+type;
-  d.innerHTML=`<span class="t">${hhmmss(Date.now())}</span>${msg}`;
-  box.prepend(d);
-  while(box.children.length>240)box.lastChild.remove();
+  d.className=`lgin border-l-2 pl-2 ${LG[type]||LG.sys}`;
+  d.innerHTML=`<span class="text-dim2 mr-1.5 text-[10px]">${hhmmss(Date.now())}</span>${msg}`;
+  box.prepend(d);while(box.children.length>240)box.lastChild.remove();
 }
 let banT;
-function banner(text,cls){
-  const b=$('banner');b.textContent=text;b.className='banner show '+cls;
-  clearTimeout(banT);banT=setTimeout(()=>b.className='banner',2600);
+function banner(text,win){
+  const b=$('banner');b.textContent=text;
+  b.className='fixed top-4 left-1/2 z-50 font-disp text-xs font-bold tracking-wider px-6 py-3 rounded-md border pointer-events-none show '+
+    (win?'bg-[#0c2b1c] border-grn text-[#8bf7c0] shadow-[0_10px_40px_rgba(62,224,140,.3)]'
+        :'bg-[#331015] border-red2 text-[#ffb0b8] shadow-[0_10px_40px_rgba(255,80,98,.3)]');
+  clearTimeout(banT);banT=setTimeout(()=>b.classList.remove('show'),2600);
 }
 let AC;
 function beep(f,dur=.13,type='sine',vol=.06){
   if(!$('sndChk').checked)return;
   try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();
-    const o=AC.createOscillator(),g=AC.createGain();
-    o.type=type;o.frequency.value=f;g.gain.value=vol;
+    const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.value=f;g.gain.value=vol;
     g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+dur);
-    o.connect(g).connect(AC.destination);o.start();o.stop(AC.currentTime+dur);
-  }catch(e){}
+    o.connect(g).connect(AC.destination);o.start();o.stop(AC.currentTime+dur);}catch(e){}
 }
 
-/* ═══════════ data feeds ═══════════ */
-function setWs(state,txt){
-  $('wsLed').className='led '+state;$('wsTxt').textContent=txt;
-}
+/* ═══ data feeds ═══ */
+function setWs(state,txt){$('wsLed').className='w-2.5 h-2.5 rounded-full inline-block led-'+state;$('wsTxt').textContent=txt;}
 function connect(){
   try{S.ws&&S.ws.close()}catch(e){}
   setWs('warn','подключение…');
   const ws=new WebSocket(`wss://stream.binance.com:9443/stream?streams=${S.symbol.toLowerCase()}@trade`);
   S.ws=ws;
   ws.onopen=()=>{S.retries=0;S.connected=true;setWs('ok','Binance WS · live');stopPoll();log('sys',`WebSocket подключен: <b>${S.symbol}</b>`)};
-  ws.onmessage=e=>{
-    const m=JSON.parse(e.data);
-    if(m.data&&m.stream&&m.stream.endsWith('@trade')){
-      const d=m.data;onPrice(parseFloat(d.p),d.T);
-    }
-  };
-  ws.onclose=()=>{
-    S.connected=false;setWs('err','соединение потеряно');
+  ws.onmessage=e=>{const m=JSON.parse(e.data);
+    if(m.data&&m.stream&&m.stream.endsWith('@trade'))onPrice(parseFloat(m.data.p),m.data.T);};
+  ws.onclose=()=>{S.connected=false;setWs('err','соединение потеряно');
     if(++S.retries===3){log('warn','WS недоступен — переключаюсь на REST-опрос');startPoll();}
-    setTimeout(connect,Math.min(15000,800*Math.pow(2,S.retries)));
-  };
+    setTimeout(connect,Math.min(15000,800*Math.pow(2,S.retries)));};
 }
-function startPoll(){
-  if(S.pollTimer)return;
-  S.pollTimer=setInterval(async()=>{
-    try{const r=await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${S.symbol}`);
-      const j=await r.json();onPrice(parseFloat(j.price),Date.now());setWs('warn','REST-опрос 1с');
-    }catch(e){}
-  },1100);
-}
+function startPoll(){if(S.pollTimer)return;
+  S.pollTimer=setInterval(async()=>{try{
+    const r=await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${S.symbol}`);
+    const j=await r.json();onPrice(parseFloat(j.price),Date.now());setWs('warn','REST-опрос 1с');}catch(e){}},1100);}
 function stopPoll(){clearInterval(S.pollTimer);S.pollTimer=null;}
-async function fetch24(){
-  try{const r=await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${S.symbol}`);
-    const j=await r.json();
-    const c=parseFloat(j.priceChangePercent);
-    const el=$('chgEl');el.textContent=fmtS(c,2)+'%';el.className='chg '+(c>=0?'plus':'minus');
-    $('hiEl').textContent=fmt(parseFloat(j.highPrice));
-    $('loEl').textContent=fmt(parseFloat(j.lowPrice));
-    $('volEl').textContent=fmt(parseFloat(j.quoteVolume)/1e6,1)+'M $';
-  }catch(e){}
-}
-async function fetchTick(){
-  try{const r=await fetch(`https://api.binance.com/api/v3/exchangeInfo?symbol=${S.symbol}`);
-    const j=await r.json();S.tickSize=parseFloat(j.filters.find(f=>f.filterType==='PRICE_FILTER').tickSize)||0.01;
-  }catch(e){S.tickSize=0.01}
-}
-async function fetchTape(){
-  try{
-    const want=['BTCUSDT','ETHUSDT','SOLUSDT','BNBUSDT','XRPUSDT','DOGEUSDT','ADAUSDT','AVAXUSDT','LINKUSDT','LTCUSDT','TONUSDT','TRXUSDT'];
-    const r=await fetch('https://api.binance.com/api/v3/ticker/24hr');
-    const all=await r.json();const map={};all.forEach(t=>map[t.symbol]=t);
-    const html=want.filter(s=>map[s]).map(s=>{
-      const t=map[s],c=parseFloat(t.priceChangePercent);
-      return `<span class="tp-item"><span class="s">${s.replace('USDT','')}</span><span class="p">${fmt(parseFloat(t.lastPrice))}</span><span class="c ${c>=0?'plus':'minus'}">${fmtS(c,2)}%</span></span>`;
-    }).join('');
-    $('tape').innerHTML=html+html; /* дубль для бесшовной бегущей строки */
-  }catch(e){}
-}
+async function fetch24(){try{
+  const r=await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${S.symbol}`);const j=await r.json();
+  const c=parseFloat(j.priceChangePercent),el=$('chgEl');
+  el.textContent=fmtS(c,2)+'%';el.style.color=c>=0?'#3ee08c':'#ff5062';
+  $('hiEl').textContent=fmt(parseFloat(j.highPrice));$('loEl').textContent=fmt(parseFloat(j.lowPrice));
+  $('volEl').textContent=fmt(parseFloat(j.quoteVolume)/1e6,1)+'M $';}catch(e){}}
+async function fetchTick(){try{
+  const r=await fetch(`https://api.binance.com/api/v3/exchangeInfo?symbol=${S.symbol}`);const j=await r.json();
+  S.tickSize=parseFloat(j.filters.find(f=>f.filterType==='PRICE_FILTER').tickSize)||.01;}catch(e){S.tickSize=.01}}
+async function fetchTape(){try{
+  const want=['BTCUSDT','ETHUSDT','SOLUSDT','BNBUSDT','XRPUSDT','DOGEUSDT','ADAUSDT','AVAXUSDT','LINKUSDT','LTCUSDT','TONUSDT','TRXUSDT'];
+  const r=await fetch('https://api.binance.com/api/v3/ticker/24hr');const all=await r.json();
+  const map={};all.forEach(t=>map[t.symbol]=t);
+  const html=want.filter(s=>map[s]).map(s=>{const t=map[s],c=parseFloat(t.priceChangePercent);
+    return `<span class="flex gap-2 whitespace-nowrap"><span class="text-slate-200 font-semibold">${s.replace('USDT','')}</span><span class="text-slate-200">${fmt(parseFloat(t.lastPrice))}</span><span style="color:${c>=0?'#3ee08c':'#ff5062'}">${fmtS(c,2)}%</span></span>`;}).join('');
+  $('tape').innerHTML=html+html;}catch(e){}}
 
-/* ═══════════ price / candles / EMA ═══════════ */
+/* ═══ price / candles / EMA ═══ */
 function onPrice(p,eventTs){
   S.prevPrice=S.price;S.price=p;S.ticks++;
   S.latency=Math.max(0,Date.now()-eventTs);
@@ -441,126 +335,148 @@ function pushCandle(p,t){
   else{if(p>c.h)c.h=p;if(p<c.l)c.l=p;c.c=p;}
 }
 
-/* ═══════════ basket engine ═══════════ */
-function basketU(price){
-  if(!S.basket)return 0;
-  let u=0;for(const o of S.basket.orders)u+=(o.side==='BUY'?price-o.entry:o.entry-price)*o.qty;
-  return u;
-}
-function addOrder(side,usd,price){
-  const b=S.basket;
-  const entry=roundStep(price,S.tickSize);
-  const qty=Math.max(1e-6,Math.round((usd/entry)*1e6)/1e6);
-  b.orders.push({id:++S.oid,side,entry,qty,usd:round2(qty*entry),ts:Date.now()});
-  log(side==='BUY'?'buy':'sell',
-    `${side==='BUY'?'BUY ▲':'SELL ▼'} #${S.oid} · ${fmt(qty,6)} @ ${fmt(entry)} · $${fmt(qty*entry)}`);
-  beep(side==='BUY'?620:440,.05,'square',.035);
-  renderOrders();
+/* ═══ basket engine ═══ */
+function basketU(price){if(!S.basket)return 0;let u=0;
+  for(const o of S.basket.orders)u+=(o.side==='BUY'?price-o.entry:o.entry-price)*o.qty;return u;}
+function totalQty(b){let q=0;for(const o of b.orders)q+=o.qty;return q;}   // все ордера в одну сторону
+function totalExp(b){let e=0;for(const o of b.orders)e+=o.usd;return e;}
+
+function addOrder(side,usd,price,type){
+  const b=S.basket,entry=roundStep(price,S.tickSize);
+  const qty=Math.max(1e-6,Math.round(usd/entry*1e6)/1e6);
+  const o={id:++S.oid,side,entry,qty,usd:round2(qty*entry),type,ts:Date.now()};
+  b.orders.push(o);b.warnedLim=false;
+  if(type==='start'||type==='avg'){b.lastAvg=entry;b.lastAvgUsd=o.usd;}
+  if(type==='acc')b.accMark=entry;
+  const tag=type==='start'?'СТАРТ':type==='avg'?'КОМПЕНСАЦИЯ':'УСКОРЕНИЕ';
+  log(type==='acc'?'acc':(side==='BUY'?'buy':'sell'),
+    `${tag} ${side==='BUY'?'▲':'▼'} #${o.id} · ${fmt(o.qty,6)} @ ${fmt(entry)} · $${fmt(o.usd)}`);
+  beep(type==='acc'?760:(side==='BUY'?620:440),.05,'square',.035);
+  renderOrders();return o;
 }
 function openBasket(dir){
-  S.basket={dir,orders:[],peakU:0,openRealized:S.realized,openedAt:Date.now()};
-  S.warned=false;
+  S.basket={dir,orders:[],peakU:0,openRealized:S.realized,openedAt:Date.now(),
+            lastAvg:0,lastAvgUsd:cfg().base,accMark:0,warnedLim:false};
+  S.warmWarned=false;
   log('sys',`Новая корзина <b>${dir==='BUY'?'LONG ▲':'SHORT ▼'}</b> · старт $${fmt(cfg().base)}`);
-  addOrder(dir,cfg().base,S.price);
+  addOrder(dir,cfg().base,S.price,'start');
 }
 function closeBasket(reason,win){
   const b=S.basket,u=round2(basketU(S.price));
-  S.realized=round2(S.realized+u);
-  S.baskets++;
+  S.realized=round2(S.realized+u);S.baskets++;
   if(win){S.wins++;if(S.best==null||u>S.best)S.best=u;}
   else{S.losses++;if(S.worst==null||u<S.worst)S.worst=u;}
-  log(win?'ok':'err',
-    `${win?'КОРЗИНА ЗАКРЫТА':'⛔ ЗАЩИТА'} [${reason}] · ${fmtS(u)} $ · ордеров: ${b.orders.length}`);
-  banner(win?`КОРЗИНА ЗАКРЫТА ${fmtS(u)} $`:`ЗАЩИТА −$0.01 · ЗАКРЫТО ${fmtS(u)} $`,win?'win':'loss');
+  const nU=b.orders.filter(o=>o.type==='acc').length,nK=b.orders.filter(o=>o.type==='avg').length;
+  log(win?'ok':'err',`${win?'КОРЗИНА ЗАКРЫТА':'⛔ ЗАЩИТА'} [${reason}] · ${fmtS(u)} $ · ордеров ${b.orders.length} (К:${nK} У:${nU})`);
+  banner(win?`КОРЗИНА ЗАКРЫТА ${fmtS(u)} $`:`ЗАЩИТА −$0.01 · ЗАКРЫТО ${fmtS(u)} $`,win);
   win?beep(880,.18):beep(190,.3,'sawtooth',.08);
-  S.basket=null;S.lastCloseTs=Date.now();
-  renderOrders();save();
+  S.basket=null;S.lastCloseTs=Date.now();renderOrders();save();
 }
 function engine(price){
   if(!S.basket){
     if(Date.now()-S.lastCloseTs<cfg().cooldown)return;
-    if(S.ticks<80){if(!S.warned){log('sys','Прогрев индикаторов EMA…');S.warned=true}return;}
+    if(S.ticks<80){if(!S.warmWarned){log('sys','Прогрев индикаторов EMA…');S.warmWarned=true}return;}
     const c=cfg();
-    const dir=c.dir==='auto'?(S.emaF>=S.emaS?'BUY':'SELL'):c.dir;
-    openBasket(dir);return;
+    openBasket(c.dir==='auto'?(S.emaF>=S.emaS?'BUY':'SELL'):c.dir);return;
   }
   const b=S.basket,c=cfg();
   const u=basketU(price);
   if(u>b.peakU)b.peakU=u;
-  const protect=b.openRealized+Math.max(0,b.peakU);      // потолок: баланс + пиковая прибыль
+  const protect=b.openRealized+Math.max(0,b.peakU);
   const equity=S.realized+u;
-  if(u>=c.tp){closeBasket('тейк-профит',true);return;}
-  if(equity<=protect-0.01){closeBasket('просадка $0.01 от потолка',false);return;}
-  /* компенсационное усреднение */
-  const last=b.orders[b.orders.length-1],step=c.step/100;
-  const bad=last.side==='BUY'?price<=last.entry*(1-step):price>=last.entry*(1+step);
-  if(bad){
-    if(b.orders.length>=c.maxOrders){if(!S.warned){log('warn','Достигнут лимит ордеров корзины — ждём разворота');S.warned=true}}
-    else addOrder(last.side,last.usd*c.mult,price);
+  if(u>=c.tp)return closeBasket('тейк-профит',true);
+  if(equity<=protect-0.01)return closeBasket('просадка $0.01 от потолка',false);
+
+  const capAdd=usd=>{ // лимиты: число ордеров + общая экспозиция
+    if(b.orders.length>=c.maxOrders){if(!b.warnedLim){b.warnedLim=true;log('warn','Лимит ордеров — ждём разворота');}return 0;}
+    const room=c.base*150-totalExp(b);
+    if(room<10)return 0;
+    return Math.min(usd,room);
+  };
+
+  /* 1) компенсация против движения */
+  const step=c.step/100;
+  const bad=b.dir==='BUY'?price<=b.lastAvg*(1-step):price>=b.lastAvg*(1+step);
+  if(bad){const usd=capAdd(b.lastAvgUsd*c.mult);
+    if(usd>0)addOrder(b.dir,usd,price,'avg');}
+
+  /* 2) ускорение к цели по ходу прибыли */
+  if(c.accOn&&u>0){
+    const fav=b.dir==='BUY'?price>=b.accMark*(1+c.accStep/100):price<=b.accMark*(1-c.accStep/100);
+    if(fav){
+      const remaining=c.tp-u;                 // сколько прибыли ещё нужно
+      const delta=price*c.accMove/100;        // желаемый ход цены, $
+      let need=remaining/delta-totalQty(b);   // нехватка объёма в базовом активе
+      if(need>0){
+        const usd=capAdd(Math.min(need*price,c.accMaxUsd));
+        if(usd>=10)addOrder(b.dir,usd,price,'acc');else b.accMark=price;
+      }else b.accMark=price; // скорости уже хватает
+    }
   }
 }
 
-/* ═══════════ UI ═══════════ */
+/* ═══ UI ═══ */
 function uiTick(){
-  const pEl=$('price');
-  pEl.textContent=fmt(S.price);
-  if(S.price>S.prevPrice){pEl.className='up';}else if(S.price<S.prevPrice){pEl.className='down';}
-  setTimeout(()=>pEl.className='',220);
+  const pEl=$('price');pEl.textContent=fmt(S.price);
+  if(S.price>S.prevPrice)pEl.classList.add('px-up');else if(S.price<S.prevPrice)pEl.classList.add('px-down');
+  setTimeout(()=>pEl.classList.remove('px-up','px-down'),220);
   $('latEl').textContent=S.connected?`${S.latency} мс`:'';
   $('chSym').textContent=S.symbol;
 
   const u=S.basket?basketU(S.price):0;
-  const uEl=$('sU');uEl.textContent=fmtS(u)+' $';uEl.className='mono '+(u>=0?'plus':'minus');
+  const uEl=$('sU');uEl.textContent=fmtS(u)+' $';
+  uEl.style.color=u>=0?'#3ee08c':'#ff5062';
 
   if(S.basket){
     const b=S.basket,c=cfg();
     const protect=b.openRealized+Math.max(0,b.peakU);
     const dd=(S.realized+u)-protect;
-    $('sState').textContent='АКТИВНА';$('sState').className='chip pulse';
-    const dEl=$('sDir');dEl.style.display='';dEl.textContent=b.dir==='BUY'?'LONG ▲':'SHORT ▼';
-    dEl.className='chip '+(b.dir==='BUY'?'long':'short');
+    $('sState').textContent='АКТИВНА';
+    $('sState').className='chip-live font-disp text-[9.5px] font-bold tracking-[0.14em] px-2.5 py-1.5 rounded border border-cyn/50 text-cyn bg-cyn/5';
+    const dEl=$('sDir');dEl.classList.remove('hidden');
+    dEl.textContent=b.dir==='BUY'?'LONG ▲':'SHORT ▼';
+    dEl.className='font-disp text-[9.5px] font-bold tracking-[0.14em] px-2.5 py-1.5 rounded border '+
+      (b.dir==='BUY'?'border-grn/50 text-grn bg-grn/5':'border-red2/50 text-red2 bg-red2/5');
     $('sProtect').textContent='$ '+fmt(protect);
-    $('sDD').textContent=fmtS(dd)+' $';
-    $('sDD').className=dd<-0.005?'red':'amb';
+    $('sDD').textContent=fmtS(dd)+' $';$('sDD').style.color=dd<-0.005?'#ff5062':'#ffb224';
     $('sPeak').textContent=fmtS(b.peakU)+' $';
-    let sq=0,se=0,sexp=0;
-    for(const o of b.orders){sq+=o.qty;se+=(o.side==='BUY'?1:-1)*o.entry*o.qty;sexp+=o.usd;}
-    if(sq>0){
-      $('sBE').textContent=fmt(se/sq);
-      $('sAvg').textContent=fmt(Math.abs(se)/sq);
-      $('sExp').textContent='$ '+fmt(sexp);
-      const tpP=b.dir==='BUY'?se/sq+c.tp/sq:se/sq-c.tp/sq;
-      b._be=se/sq;b._tpP=tpP;
-    }
-    $('sCnt').textContent=`${b.orders.length} / ${c.maxOrders}`;
+
+    let se=0,sq=0,sexp=0;
+    for(const o of b.orders){sq+=o.qty;se+=(b.dir==='BUY'?1:-1)*o.entry*o.qty;sexp+=o.usd;}
+    const be=se/sq; b._be=be;
+    const tpP=b.dir==='BUY'?be+c.tp/sq:be-c.tp/sq; b._tpP=tpP;
+    $('sBE').textContent=`${fmt(be)} / ${fmt(Math.abs(se)/sq)}`;
+    $('sSpeed').textContent='$'+fmt(sq*S.price*0.001)+' за 0.1%';
+    $('sDist').textContent=fmt(Math.abs(tpP-S.price)/S.price*100,3)+'% хода';
+    $('sExp').textContent='$ '+fmt(sexp);
+    const nK=b.orders.filter(o=>o.type==='avg').length,nU=b.orders.filter(o=>o.type==='acc').length;
+    $('sCnt').textContent=`${b.orders.length}/${c.maxOrders} (${1}/${nK}/${nU})`;
     const pct=Math.max(0,Math.min(100,u/c.tp*100));
-    $('tpBar').style.width=pct+'%';$('tpBar').className=u<-0.005?'hot':'';
+    $('tpBar').style.width=pct+'%';
+    $('tpBar').style.background=u<-0.005?'linear-gradient(90deg,#9c2531,#ff5062)':'';
     $('tpPct').textContent=fmt(pct,0)+'%';
-    /* live-обновление строк таблицы */
+
     let tot=0;
     for(const o of b.orders){
       const r=S.rowRefs.get(o.id);if(!r)continue;
       const op=(o.side==='BUY'?S.price-o.entry:o.entry-S.price)*o.qty;tot+=op;
-      r.p.textContent=fmtS(op);r.p.style.color=op>=0?'var(--green)':'var(--red)';
+      r.p.textContent=fmtS(op);r.p.style.color=op>=0?'#3ee08c':'#ff5062';
     }
     $('fExp').textContent='$ '+fmt(sexp);
-    $('fPnl').textContent=fmtS(tot)+' $';
-    $('fPnl').style.color=tot>=0?'var(--green)':'var(--red)';
+    $('fPnl').textContent=fmtS(tot)+' $';$('fPnl').style.color=tot>=0?'#3ee08c':'#ff5062';
   }else{
-    $('sState').textContent=S.running?'ПАУЗА МЕЖДУ КОРЗИНАМИ':'ОЖИДАНИЕ';$('sState').className='chip';
-    $('sDir').style.display='none';
-    ['sProtect','sDD','sPeak','sBE','sAvg','sExp'].forEach(i=>{$(i).textContent='—';$(i).className='';});
-    $('sCnt').textContent='0 / '+(+$('maxOrd').value||8);
+    $('sState').textContent=S.running?'ПАУЗА МЕЖДУ КОРЗИНАМИ':'ОЖИДАНИЕ';
+    $('sState').className='font-disp text-[9.5px] font-bold tracking-[0.14em] px-2.5 py-1.5 rounded border border-line2 text-mut';
+    $('sDir').classList.add('hidden');
+    ['sProtect','sDD','sPeak','sBE','sSpeed','sDist','sExp'].forEach(i=>{$(i).textContent='—';$(i).style.color='';});
+    $('sCnt').textContent='0 / '+(+$('maxOrd').value||10);
     $('tpBar').style.width='0%';$('tpPct').textContent='0%';
     $('fCnt').textContent='—';$('fExp').textContent='$0.00';$('fPnl').textContent='$0.00';$('fPnl').style.color='';
   }
-  /* статистика */
-  $('stEq').textContent=fmtS(S.realized)+' $';
-  $('stEq').className='v '+(S.realized>=0?'grn':'red');
+  $('stEq').textContent=fmtS(S.realized)+' $';$('stEq').style.color=S.realized>=0?'#3ee08c':'#ff5062';
   $('stB').textContent=S.baskets;$('stW').textContent=S.wins;$('stL').textContent=S.losses;
   $('stWR').textContent=S.baskets?fmt(S.wins/S.baskets*100,0)+'%':'—';
-  $('stBW').innerHTML=`<span style="color:var(--green)">${S.best!=null?fmtS(S.best):'—'}</span> / <span style="color:var(--red)">${S.worst!=null?fmtS(S.worst):'—'}</span>`;
-  /* эквити-спарклайн */
+  $('stBW').innerHTML=`<span class="text-grn">${S.best!=null?fmtS(S.best):'—'}</span> / <span class="text-red2">${S.worst!=null?fmtS(S.worst):'—'}</span>`;
   const now=Date.now();
   if(now-S.lastEqPush>260){S.lastEqPush=now;
     S.eqHist.push(round2(S.realized+u));if(S.eqHist.length>320)S.eqHist.shift();drawEq();}
@@ -569,111 +485,101 @@ function uiTick(){
 function renderOrders(){
   const tb=$('ordBody');tb.innerHTML='';S.rowRefs.clear();
   if(!S.basket){$('fCnt').textContent='—';return;}
-  S.basket.orders.forEach((o,i)=>{
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td class="mono">#${o.id}</td>
-      <td class="${o.side==='BUY'?'side-b':'side-s'}">${o.side==='BUY'?'BUY ▲':'SELL ▼'}</td>
-      <td class="mono">${fmt(o.entry)}</td>
-      <td class="mono">${fmt(o.qty,6)}</td>
-      <td class="mono">$${fmt(o.usd)}</td><td class="mono"></td>`;
-    tb.appendChild(tr);
-    S.rowRefs.set(o.id,{p:tr.lastElementChild});
+  const T={start:['С','text-cyn border-cyn/50 bg-cyn/5'],avg:['К','text-amb border-amb/50 bg-amb/5'],acc:['У','text-grn border-grn/50 bg-grn/5']};
+  S.basket.orders.forEach(o=>{
+    const tr=document.createElement('tr');tr.className='rowin hover:bg-cyn/5';
+    tr.innerHTML=`<td class="px-2.5 py-1.5 font-mono text-left border-b border-line/50">#${o.id}</td>
+      <td class="px-2.5 py-1.5 text-left border-b border-line/50"><span class="inline-block w-6 text-center font-disp text-[9px] font-bold px-1 py-0.5 rounded border ${T[o.type][1]}">${T[o.type][0]}</span></td>
+      <td class="px-2.5 py-1.5 text-left border-b border-line/50 font-semibold ${o.side==='BUY'?'text-grn':'text-red2'}">${o.side==='BUY'?'BUY ▲':'SELL ▼'}</td>
+      <td class="px-2.5 py-1.5 font-mono text-right border-b border-line/50">${fmt(o.entry)}</td>
+      <td class="px-2.5 py-1.5 font-mono text-right border-b border-line/50">${fmt(o.qty,6)}</td>
+      <td class="px-2.5 py-1.5 font-mono text-right border-b border-line/50">$${fmt(o.usd)}</td>
+      <td class="px-2.5 py-1.5 font-mono text-right border-b border-line/50"></td>`;
+    tb.appendChild(tr);S.rowRefs.set(o.id,{p:tr.lastElementChild});
   });
   $('fCnt').textContent=S.basket.orders.length+' шт';
 }
 
-/* ═══════════ charts ═══════════ */
+/* ═══ charts ═══ */
 function fit(cv){const r=cv.getBoundingClientRect(),d=window.devicePixelRatio||1;
   if(cv.width!==Math.round(r.width*d)||cv.height!==Math.round(r.height*d)){cv.width=Math.round(r.width*d);cv.height=Math.round(r.height*d);}
   const ctx=cv.getContext('2d');ctx.setTransform(d,0,0,d,0,0);return{ctx,w:r.width,h:r.height};}
 function drawChart(){
-  const{ctx,w,h}=fit($('chart'));
-  ctx.clearRect(0,0,w,h);
+  const{ctx,w,h}=fit($('chart'));ctx.clearRect(0,0,w,h);
   const cs=S.candles.slice(-160);if(cs.length<2)return;
-  const padR=78,padT=12,padB=14;
+  const padR=84,padT=12,padB=14;
   let mn=Infinity,mx=-Infinity;
   cs.forEach(c=>{if(c.l<mn)mn=c.l;if(c.h>mx)mx=c.h;});
   if(S.basket)S.basket.orders.forEach(o=>{if(o.entry<mn)mn=o.entry;if(o.entry>mx)mx=o.entry;});
-  const pad=(mx-mn)*0.08||1;mn-=pad;mx+=pad;
+  const pd=(mx-mn)*.08||1;mn-=pd;mx+=pd;
   const Y=v=>padT+(mx-v)/(mx-mn)*(h-padT-padB);
-  /* сетка */
   ctx.font='9.5px JetBrains Mono';ctx.textAlign='left';
   for(let i=0;i<=4;i++){const v=mn+(mx-mn)*i/4,y=Y(v);
     ctx.strokeStyle='rgba(255,255,255,.045)';ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w-padR+8,y);ctx.stroke();
     ctx.fillStyle='#546478';ctx.fillText(fmt(v),w-padR+12,y+3);}
-  /* свечи */
   const n=cs.length,cw=(w-padR-10)/n,bw=Math.max(1.6,cw*.58);
-  cs.forEach((c,i)=>{
-    const x=6+i*cw+cw/2,up=c.c>=c.o,col=up?'#3ee08c':'#ff5062';
+  cs.forEach((c,i)=>{const x=6+i*cw+cw/2,up=c.c>=c.o,col=up?'#3ee08c':'#ff5062';
     ctx.strokeStyle=col;ctx.beginPath();ctx.moveTo(x,Y(c.h));ctx.lineTo(x,Y(c.l));ctx.stroke();
-    ctx.fillStyle=col;
-    const y1=Y(Math.max(c.o,c.c)),y2=Y(Math.min(c.o,c.c));
-    ctx.fillRect(x-bw/2,y1,bw,Math.max(1.2,y2-y1));
-  });
-  /* линии корзины */
-  const dash=(y,col,txt)=>{
-    if(y<padT-4||y>h-padB+4)return;
+    ctx.fillStyle=col;const y1=Y(Math.max(c.o,c.c)),y2=Y(Math.min(c.o,c.c));
+    ctx.fillRect(x-bw/2,y1,bw,Math.max(1.2,y2-y1));});
+  const dash=(y,col,txt)=>{if(y<padT-4||y>h-padB+4)return;
     ctx.save();ctx.setLineDash([5,4]);ctx.strokeStyle=col;ctx.globalAlpha=.85;
     ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w-padR+6,y);ctx.stroke();ctx.restore();
-    ctx.font='600 9.5px JetBrains Mono';ctx.fillStyle=col;ctx.fillText(txt,w-padR+12,y-4);
-  };
+    ctx.font='600 9.5px JetBrains Mono';ctx.fillStyle=col;ctx.fillText(txt,w-padR+12,y-4);};
   if(S.basket){
+    const P={start:'С',avg:'К',acc:'У'};
     S.basket.orders.forEach(o=>{
       const op=(o.side==='BUY'?S.price-o.entry:o.entry-S.price)*o.qty;
       dash(Y(o.entry),o.side==='BUY'?'rgba(62,224,140,.9)':'rgba(255,80,98,.9)',
-        `${o.side==='BUY'?'B':'S'} ${fmt(o.entry)} ${fmtS(op)}`);
-    });
+        `${P[o.type]} ${fmt(o.entry)} ${fmtS(op)}`);});
     if(S.basket._be!=null)dash(Y(S.basket._be),'rgba(76,201,240,.9)','Б/У '+fmt(S.basket._be));
     if(S.basket._tpP!=null)dash(Y(S.basket._tpP),'rgba(62,224,140,.5)','ЦЕЛЬ');
   }
-  /* последняя цена */
   const yp=Y(S.price);
   ctx.strokeStyle='rgba(217,228,240,.35)';ctx.beginPath();ctx.moveTo(0,yp);ctx.lineTo(w-padR+6,yp);ctx.stroke();
   ctx.fillStyle=S.price>=S.prevPrice?'#3ee08c':'#ff5062';
   ctx.fillRect(w-padR+8,yp-8,padR-12,16);
-  ctx.fillStyle='#0a0e13';ctx.font='800 10px JetBrains Mono';
-  ctx.fillText(fmt(S.price),w-padR+13,yp+3.5);
+  ctx.fillStyle='#0a0e13';ctx.font='800 10px JetBrains Mono';ctx.fillText(fmt(S.price),w-padR+13,yp+3.5);
   $('chTime').textContent=hhmmss(Date.now());
 }
 function drawEq(){
-  const{ctx,w,h}=fit($('eqCanvas'));
-  ctx.clearRect(0,0,w,h);
+  const{ctx,w,h}=fit($('eqCanvas'));ctx.clearRect(0,0,w,h);
   const v=S.eqHist;if(v.length<2){ctx.fillStyle='#546478';ctx.font='11px IBM Plex Sans';ctx.fillText('накопление данных…',10,h/2+4);return;}
-  let mn=Math.min(...v),mx=Math.max(...v);if(mx-mn<0.02){mx+=.01;mn-=.01;}
+  let mn=Math.min(...v),mx=Math.max(...v);if(mx-mn<.02){mx+=.01;mn-=.01;}
   const Y=x=>4+(mx-x)/(mx-mn)*(h-10),X=i=>i/(v.length-1)*(w-4)+2;
   const up=v[v.length-1]>=v[0],col=up?'#3ee08c':'#ff5062';
-  ctx.beginPath();ctx.moveTo(X(0),Y(v[0]));
-  v.forEach((x,i)=>ctx.lineTo(X(i),Y(x)));
+  ctx.beginPath();ctx.moveTo(X(0),Y(v[0]));v.forEach((x,i)=>ctx.lineTo(X(i),Y(x)));
   ctx.strokeStyle=col;ctx.lineWidth=1.6;ctx.stroke();
   ctx.lineTo(w-2,h);ctx.lineTo(2,h);ctx.closePath();
   const g=ctx.createLinearGradient(0,0,0,h);
   g.addColorStop(0,up?'rgba(62,224,140,.28)':'rgba(255,80,98,.28)');g.addColorStop(1,'rgba(0,0,0,0)');
   ctx.fillStyle=g;ctx.fill();ctx.lineWidth=1;
-  /* базовая линия нуля */
   if(mn<0&&mx>0){const y0=Y(0);ctx.setLineDash([3,3]);ctx.strokeStyle='rgba(255,255,255,.2)';
     ctx.beginPath();ctx.moveTo(0,y0);ctx.lineTo(w,y0);ctx.stroke();ctx.setLineDash([]);}
-  ctx.fillStyle=col;ctx.font='800 11px JetBrains Mono';
-  ctx.fillText(fmtS(v[v.length-1])+' $',8,13);
+  ctx.fillStyle=col;ctx.font='800 11px JetBrains Mono';ctx.fillText(fmtS(v[v.length-1])+' $',8,13);
 }
 
-/* ═══════════ persistence ═══════════ */
+/* ═══ persistence ═══ */
 function save(){try{localStorage.setItem(LS,JSON.stringify({
   realized:S.realized,baskets:S.baskets,wins:S.wins,losses:S.losses,best:S.best,worst:S.worst,
-  cfg:{b:$('baseUsd').value,t:$('tpUsd').value,s:$('stepPct').value,m:$('mult').value,
-       o:$('maxOrd').value,c:$('cooldownMs').value,d:$('dirMode').value}}));}catch(e){}}
+  cfg:{b:$('baseUsd').value,t:$('tpUsd').value,s:$('stepPct').value,m:$('mult').value,o:$('maxOrd').value,
+       c:$('cooldownMs').value,d:$('dirMode').value,ao:$('accOn').checked,as:$('accStepPct').value,
+       am:$('accMovePct').value,au:$('accMaxUsd').value}}));}catch(e){}}
 function load(){try{const j=JSON.parse(localStorage.getItem(LS)||'null');if(!j)return;
   S.realized=j.realized||0;S.baskets=j.baskets||0;S.wins=j.wins||0;S.losses=j.losses||0;
   S.best=j.best??null;S.worst=j.worst??null;
   if(j.cfg){$('baseUsd').value=j.cfg.b;$('tpUsd').value=j.cfg.t;$('stepPct').value=j.cfg.s;
-    $('mult').value=j.cfg.m;$('maxOrd').value=j.cfg.o;$('cooldownMs').value=j.cfg.c;$('dirMode').value=j.cfg.d;}
+    $('mult').value=j.cfg.m;$('maxOrd').value=j.cfg.o;$('cooldownMs').value=j.cfg.c;$('dirMode').value=j.cfg.d;
+    $('accOn').checked=j.cfg.ao!==false;$('accStepPct').value=j.cfg.as||.1;
+    $('accMovePct').value=j.cfg.am||.1;$('accMaxUsd').value=j.cfg.au||200;}
   log('sys','Статистика восстановлена из localStorage');}catch(e){}}
 
-/* ═══════════ controls ═══════════ */
+/* ═══ controls ═══ */
 $('btnStart').onclick=()=>{
   if(!S.connected&&S.ticks===0){log('warn','Дождитесь подключения к потоку котировок');return;}
   S.running=true;$('btnStart').disabled=true;$('btnStop').disabled=false;
   try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();AC.resume&&AC.resume();}catch(e){}
-  log('ok','▶ Бот запущен · режим PAPER');beep(700,.08);
+  log('ok','▶ Бот запущен · компенсация + ускорение · режим PAPER');beep(700,.08);
 };
 $('btnStop').onclick=()=>{
   S.running=false;$('btnStart').disabled=false;$('btnStop').disabled=true;
@@ -692,13 +598,14 @@ $('symSel').onchange=async e=>{
   log('sys','Переключение на <b>'+sym+'</b>');
   await fetchTick();connect();fetch24();
 };
-['baseUsd','tpUsd','stepPct','mult','maxOrd','cooldownMs','dirMode'].forEach(id=>$(id).addEventListener('change',()=>{save();}));
+['baseUsd','tpUsd','stepPct','mult','maxOrd','cooldownMs','dirMode','accOn','accStepPct','accMovePct','accMaxUsd']
+  .forEach(id=>$(id).addEventListener('change',save));
 
-/* ═══════════ init ═══════════ */
+/* ═══ init ═══ */
 setInterval(()=>$('clock').textContent=new Date().toLocaleString('ru-RU',{weekday:'short',hour:'2-digit',minute:'2-digit',second:'2-digit'}),1000);
 setInterval(fetch24,10000);setInterval(fetchTape,60000);
 load();
-log('sys','Инициализация. Правила: компенсационное усреднение + защита просадки <b>$0.01</b> от потолка эквити.');
+log('sys','Инициализация v2.0: компенсация против хода + <b>ускорение к цели</b> по ходу прибыли.');
 log('warn','Режим PAPER: ордера виртуальные, комиссии не учитываются.');
 fetchTick();fetch24();fetchTape();connect();
 </script>

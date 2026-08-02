@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Штаб праздника Оксаны · поздравить Василия и Илью</title>
+<meta name="description" content="Центр управления праздником семьи: главнокомандующая Оксана поздравляет мужа Василия с днём ВДВ и сына Илью с именинами. Никто не уйдёт непоздравлённым.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/yeseva-one@latest/cyrillic-400-normal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/golos-text@latest/cyrillic-400-normal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/golos-text@latest/cyrillic-500-normal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/golos-text@latest/cyrillic-700-normal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/marck-script@latest/cyrillic-400-normal.css">
+<style>
+:root{
+  --wine:#5c1226;--wine-2:#3f0b1a;--wine-3:#2c0712;--wine-4:#8a2440;
+  --rose:#e85d75;--blush:#f7b8c4;
+  --gold:#d9a441;--gold-soft:#f0c96b;--gold-dim:#8a6a25;
+  --paper:#f6efdd;--paper-2:#ece2c8;--line:#d8c9a4;
+  --ink:#2a2019;--ink-soft:#5c4f40;
+  --red:#b3261e;--cream:#f3e9d6;
+  --disp:'Yeseva One',serif;--body:'Golos Text',sans-serif;--script:'Marck Script',cursive;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--body);color:var(--cream);background-color:#3a0a17;
+  background-image:
+    radial-gradient(ellipse at 18% -5%, rgba(240,201,107,.11), transparent 50%),
+    radial-gradient(ellipse at 86% 12%, rgba(232,93,117,.12), transparent 46%),
+    radial-gradient(ellipse at 50% 112%, rgba(0,0,0,.55), transparent 60%),
+    repeating-radial-gradient(circle at 28% 24%, rgba(255,255,255,.013) 0 1px, transparent 1px 4px),
+    repeating-radial-gradient(circle at 74% 68%, rgba(0,0,0,.05) 0 1px, transparent 1px 5px);
+  background-attachment:fixed;line-height:1.6;overflow-x:hidden;
+}
+button{font-family:inherit}
+img,svg{display:block}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+section{padding:58px 0;position:relative;scroll-margin-top:70px}
+@media(min-width:861px){section{padding:84px 0}}
+
+/* ---------- AMBIENT ---------- */
+.amb{position:fixed;bottom:-8vh;pointer-events:none;z-index:0;animation:riseUp linear infinite;opacity:.1}
+@keyframes riseUp{from{transform:translateY(0) rotate(0)}to{transform:translateY(-114vh) rotate(300deg)}}
+.glow{position:fixed;border-radius:50%;filter:blur(60px);pointer-events:none;z-index:0;animation:breathe 7s ease-in-out infinite alternate}
+@keyframes breathe{from{opacity:.5;transform:scale(1)}to{opacity:.9;transform:scale(1.15)}}
+
+/* ---------- TOPBAR ---------- */
+.topbar{position:sticky;top:0;z-index:70;background:var(--wine-3);border-bottom:2px solid var(--gold-dim);box-shadow:0 8px 20px rgba(0,0,0,.4)}
+.tb-in{display:flex;align-items:center;gap:10px;padding:9px 16px}
+.tb-em{font-size:1.1rem;animation:beat 1.3s infinite}
+@keyframes beat{0%,100%{transform:scale(1)}30%{transform:scale(1.28)}}
+.topbar b{font-family:var(--disp);font-weight:400;font-size:.7rem;letter-spacing:.12em;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar b span{color:var(--gold-soft)}
+.tb-right{margin-left:auto;display:flex;gap:8px}
+.tb-btn{background:transparent;border:1.5px solid rgba(243,233,214,.35);color:var(--cream);border-radius:6px;width:36px;height:36px;cursor:pointer;font-size:.95rem;transition:.2s}
+.tb-btn:hover{border-color:var(--gold);transform:translateY(-2px)}
+.tb-reset{width:auto;padding:0 12px;font-family:var(--disp);font-size:.58rem;letter-spacing:.08em}
+
+/* ---------- TICKER ---------- */
+.ticker{background:var(--rose);overflow:hidden;white-space:nowrap;position:relative;padding:13px 0}
+.ticker::before,.ticker::after{content:"";position:absolute;left:0;right:0;height:6px;background:repeating-linear-gradient(90deg,var(--wine-3) 0 16px,var(--paper) 16px 32px);z-index:2}
+.ticker::before{top:0}.ticker::after{bottom:0}
+.ticker-track{display:inline-block;animation:marq 32s linear infinite;font-family:var(--disp);font-size:.7rem;letter-spacing:.1em;color:var(--wine-3)}
+.ticker:hover .ticker-track{animation-play-state:paused}
+.ticker-track span{margin:0 20px}
+.ticker-track span::before{content:"♥ ";color:var(--wine)}
+@keyframes marq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ---------- SECTION HEADS ---------- */
+.kick{font-family:var(--disp);font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;color:var(--rose);display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.kick::before{content:"♥";color:var(--gold);font-size:.8rem}
+h2{font-family:var(--disp);font-weight:400;font-size:clamp(1.7rem,6.5vw,2.9rem);color:var(--cream);line-height:1.08;max-width:22ch}
+h2 em{font-style:normal;color:var(--gold-soft)}
+.lead{margin-top:14px;max-width:62ch;color:var(--cream);opacity:.8;font-size:.96rem}
+
+/* ---------- OPENING ---------- */
+.opening{padding-top:34px}
+.open-grid{display:grid;gap:26px}
+@media(min-width:901px){.open-grid{grid-template-columns:1.15fr .85fr;gap:36px;align-items:stretch}}
+.decree{position:relative;background:var(--paper);color:var(--ink);border:1px solid var(--line);padding:26px 22px 28px;box-shadow:0 30px 64px rgba(0,0,0,.55);transform:rotate(-.7deg)}
+@media(min-width:861px){.decree{padding:38px 34px 40px}}
+.decree::before{content:"";position:absolute;inset:8px;border:2px solid rgba(179,38,30,.45);pointer-events:none}
+.ring{position:absolute;width:76px;height:76px;border:8px solid rgba(122,82,40,.16);border-radius:50%;top:18px;right:26px;transform:rotate(-8deg);pointer-events:none}
+.d-head{font-family:var(--disp);font-size:.6rem;letter-spacing:.26em;text-transform:uppercase;color:var(--red);text-align:center;border-bottom:2px solid var(--ink);padding-bottom:12px;margin-bottom:16px}
+.decree h1{font-family:var(--disp);font-weight:400;font-size:clamp(1.7rem,6.4vw,2.7rem);color:var(--ink);line-height:1.05}
+.decree h1 span{color:var(--red)}
+.d-date{font-family:var(--disp);font-size:.72rem;color:var(--ink-soft);margin:8px 0 16px;letter-spacing:.06em}
+.d-list{list-style:none;counter-reset:c;margin-bottom:20px}
+.d-list li{counter-increment:c;position:relative;padding:8px 0 8px 34px;font-size:.92rem;color:var(--ink-soft);border-bottom:1px dashed rgba(42,32,25,.25);transition:.2s}
+.d-list li:hover{background:rgba(217,164,65,.14);transform:translateX(5px)}
+.d-list li::before{content:counter(c)".";position:absolute;left:6px;font-family:var(--disp);color:var(--red);font-size:1rem}
+.d-list li b{color:var(--ink)}
+.d-foot{display:flex;align-items:flex-end;justify-content:space-between;gap:14px}
+.d-sign{border-top:1px solid var(--ink);padding-top:6px;min-width:150px}
+.d-sign small{font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft)}
+.d-sign .sig{font-family:var(--script);font-size:2.2rem;color:var(--wine);line-height:1.1}
+.seal{width:108px;height:108px;flex:0 0 auto;border:3px solid var(--red);border-radius:50%;color:var(--red);display:grid;place-items:center;text-align:center;transform:rotate(-13deg);position:relative;font-family:var(--disp);font-size:.52rem;letter-spacing:.08em;text-transform:uppercase;line-height:1.35;opacity:0;cursor:pointer}
+.seal::before{content:"";position:absolute;inset:6px;border:1px solid var(--red);border-radius:50%}
+.seal.in{animation:sealIn .55s cubic-bezier(.2,1.4,.3,1) forwards}
+.seal:hover{filter:brightness(1.15)}
+.seal b{display:block;font-size:.78rem}
+@keyframes sealIn{0%{opacity:0;transform:rotate(-13deg) scale(2.5)}60%{opacity:1;transform:rotate(-13deg) scale(.92)}100%{opacity:.92;transform:rotate(-13deg) scale(1)}}
+
+/* BOARD */
+.board{background:#1d0f0c;border:3px solid var(--gold-dim);border-radius:16px;padding:22px 18px;box-shadow:inset 0 0 34px rgba(0,0,0,.75),0 28px 54px rgba(0,0,0,.5);position:relative;display:flex;flex-direction:column;gap:18px}
+.riv{position:absolute;width:11px;height:11px;border-radius:50%;background:radial-gradient(circle at 34% 30%,#f0e6d2,#8a7a5c 55%,#3d3categories)}
+.riv{background:radial-gradient(circle at 34% 30%,#f0e6d2,#8a7a5c 55%,#3d3527)}
+.rv1{top:9px;left:9px}.rv2{top:9px;right:9px}.rv3{bottom:9px;left:9px}.rv4{bottom:9px;right:9px}
+.board-k{font-family:var(--disp);font-size:.6rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold-dim);text-align:center}
+.b-row{display:grid;grid-template-columns:auto 1fr auto auto;gap:12px;align-items:center;background:rgba(0,0,0,.3);border:1.5px solid #4a3423;border-radius:12px;padding:13px 14px}
+.b-ico{font-size:1.7rem}
+.b-main b{font-family:var(--disp);font-weight:400;font-size:1.05rem;color:var(--cream);display:block}
+.b-sub{font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:#a8906c;display:block;margin:2px 0 8px}
+.b-bar{height:13px;background:#000;border:1.5px solid #4a3423;border-radius:99px;overflow:hidden}
+.b-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold-dim),var(--gold-soft),var(--rose));transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.b-pct{font-family:var(--disp);font-size:1.15rem;color:var(--gold-soft);min-width:52px;text-align:right}
+.b-lamp{width:15px;height:15px;border-radius:50%;background:#3a2a1c;box-shadow:inset 0 0 5px #000;flex:0 0 auto;transition:.3s}
+.b-lamp.on{background:#57d977;box-shadow:0 0 14px rgba(87,217,119,.85)}
+.b-status{text-align:center;font-family:var(--disp);font-size:.62rem;letter-spacing:.16em;color:var(--blush)}
+.b-status .hb{display:inline-block;animation:beat 1.2s infinite}
+.b-mini{text-align:center;font-size:.72rem;color:#a8906c}
+.b-mini b{color:var(--gold-soft);font-family:var(--disp);font-weight:400}
+
+/* ---------- CONSOLE ---------- */
+.cons-grid{display:grid;gap:24px;margin-top:36px}
+@media(min-width:821px){.cons-grid{grid-template-columns:1fr 1fr}}
+.rcard{position:relative;background:var(--paper);color:var(--ink);border:1px solid var(--line);border-top:7px solid var(--wine);padding:22px 18px 24px;box-shadow:0 22px 46px rgba(0,0,0,.48);transition:transform .3s}
+.rcard:hover{transform:translateY(-5px)}
+.rcard.done{border-top-color:var(--gold)}
+.r-stamp{position:absolute;top:16px;right:12px;width:102px;height:102px;border:3px solid var(--red);border-radius:50%;color:var(--red);display:grid;place-items:center;text-align:center;font-family:var(--disp);font-size:.56rem;line-height:1.3;text-transform:uppercase;transform:rotate(12deg) scale(0);transition:transform .4s cubic-bezier(.2,1.6,.4,1);z-index:3;background:rgba(246,239,221,.88)}
+.r-stamp::before{content:"";position:absolute;inset:5px;border:1px solid var(--red);border-radius:50%}
+.rcard.done .r-stamp{transform:rotate(12deg) scale(1)}
+.r-head{display:flex;gap:14px;align-items:center;margin-bottom:16px}
+.r-ava{width:62px;height:62px;flex:0 0 auto;border-radius:50%;background:var(--wine);border:3px solid var(--gold);display:grid;place-items:center;font-size:1.8rem;box-shadow:0 6px 14px rgba(92,18,38,.4)}
+.r-head h3{font-family:var(--disp);font-weight:400;font-size:1.35rem;color:var(--ink)}
+.r-head p{font-size:.76rem;color:var(--ink-soft)}
+.r-prog{display:flex;align-items:center;gap:12px}
+.r-bar{flex:1;height:17px;background:#e6dabd;border:1.5px solid #c9b892;border-radius:99px;overflow:hidden}
+.r-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--rose));transition:width .45s cubic-bezier(.2,.8,.2,1)}
+.r-pct{font-family:var(--disp);font-size:1.2rem;color:var(--wine);min-width:54px;text-align:right}
+.r-cap{font-size:.68rem;color:var(--ink-soft);margin-top:6px;font-style:italic}
+.r-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.act{background:var(--wine);color:var(--cream);border:2px solid var(--gold-dim);border-radius:10px;padding:13px 8px 11px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;transition:.15s;box-shadow:0 5px 0 var(--wine-3)}
+.act span{font-size:1.55rem;line-height:1}
+.act b{font-family:var(--disp);font-weight:400;font-size:.76rem;letter-spacing:.02em}
+.act small{font-size:.58rem;color:var(--gold-soft);letter-spacing:.1em}
+.act:hover{transform:translateY(-3px);border-color:var(--gold)}
+.act:active{transform:translateY(3px);box-shadow:0 1px 0 var(--wine-3)}
+.feed{margin-top:26px;background:#170b08;border:2px solid #4a3423;border-radius:14px;padding:18px 16px;box-shadow:inset 0 0 26px rgba(0,0,0,.7)}
+.feed-k{font-family:var(--disp);font-size:.58rem;letter-spacing:.22em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:12px}
+#feed{list-style:none}
+#feed li{display:flex;gap:11px;align-items:baseline;padding:8px 0;border-bottom:1px dashed rgba(243,233,214,.13);font-size:.86rem;color:#e8dcc4}
+#feed li.new{animation:feedIn .45s}
+@keyframes feedIn{from{opacity:0;transform:translateX(-16px)}to{opacity:1;transform:none}}
+.f-time{font-family:var(--disp);font-size:.56rem;color:var(--rose);flex:0 0 auto;letter-spacing:.06em}
+.f-em{flex:0 0 auto}
+
+/* ---------- WHEEL ---------- */
+.wheel-panel{background:var(--wine-2);border-radius:18px;border:3px solid var(--gold-dim);padding:26px 18px;box-shadow:0 28px 54px rgba(0,0,0,.5);position:relative;overflow:hidden}
+.wheel-panel::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(232,93,117,.14),transparent 55%);pointer-events:none}
+.wheel-grid{display:grid;gap:30px;position:relative}
+@media(min-width:881px){.wheel-grid{grid-template-columns:1fr 1fr;align-items:center;gap:40px}}
+.wheel-zone{display:flex;flex-direction:column;align-items:center;gap:20px}
+.wheel-wrap{position:relative;--wr:140px;width:calc(var(--wr)*2);aspect-ratio:1}
+@media(min-width:861px){.wheel-wrap{--wr:166px}}
+.wheel{position:absolute;inset:0;border-radius:50%;border:6px solid var(--gold);box-shadow:0 0 0 6px rgba(217,164,65,.16),0 26px 54px rgba(0,0,0,.55),inset 0 0 26px rgba(0,0,0,.3);will-change:transform;background:conic-gradient(var(--wine) 0 45deg,var(--paper) 45deg 90deg,var(--gold) 90deg 135deg,var(--paper) 135deg 180deg,var(--wine-4) 180deg 225deg,var(--paper) 225deg 270deg,var(--wine) 270deg 315deg,var(--rose) 315deg 360deg)}
+.wlabel{position:absolute;left:50%;top:50%;font-family:var(--disp);font-size:.58rem;color:var(--cream);text-align:center;line-height:1.25;transform:translate(-50%,-50%) rotate(var(--a)) translateY(calc(var(--wr)*-0.64));white-space:nowrap;text-shadow:0 1px 3px rgba(0,0,0,.7)}
+.wlabel.dk{color:var(--ink);text-shadow:none}
+@media(min-width:861px){.wlabel{font-size:.68rem}}
+.wheel-hub{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:58px;height:58px;border-radius:50%;background:var(--wine);border:4px solid var(--gold);display:grid;place-items:center;font-size:1.4rem;z-index:2;box-shadow:0 4px 10px rgba(0,0,0,.45)}
+@media(min-width:861px){.wheel-hub{width:66px;height:66px}}
+.wheel-pointer{position:absolute;top:-15px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:14px solid transparent;border-right:14px solid transparent;border-top:24px solid var(--gold);z-index:3;filter:drop-shadow(0 3px 4px rgba(0,0,0,.5))}
+.task-card{position:relative;background:var(--paper);color:var(--ink);border:2px solid var(--line);border-radius:8px;padding:22px 20px;min-height:130px;box-shadow:0 14px 30px rgba(0,0,0,.4)}
+.task-card .tc-k{font-family:var(--disp);font-size:.56rem;letter-spacing:.2em;color:var(--red);display:block;margin-bottom:10px;text-transform:uppercase}
+.task-card b{font-family:var(--disp);font-weight:400;font-size:1.05rem;line-height:1.5;display:block;color:var(--ink)}
+.tc-stamp{position:absolute;right:14px;bottom:12px;border:2.5px solid var(--red);color:var(--red);font-family:var(--disp);font-size:.52rem;letter-spacing:.12em;padding:6px 10px;border-radius:4px;transform:rotate(-8deg) scale(0);transition:transform .35s cubic-bezier(.2,1.6,.4,1);text-transform:uppercase}
+.task-card.stamped .tc-stamp{transform:rotate(-8deg) scale(1)}
+.task-card.pop{animation:pop .4s}
+@keyframes pop{0%{transform:scale(.94)}60%{transform:scale(1.03)}100%{transform:scale(1)}}
+.wheel-side p{color:var(--blush);font-size:.86rem;margin-top:16px;opacity:.85}
+.btn-wine{font-family:var(--disp);font-weight:400;font-size:.86rem;color:var(--cream);background:linear-gradient(180deg,var(--wine-4),var(--wine-2));border:2px solid var(--gold);border-radius:9px;padding:14px 22px;cursor:pointer;box-shadow:0 6px 0 #1c040c,0 12px 22px rgba(0,0,0,.4);transition:.12s;margin-top:18px}
+.btn-wine:active{transform:translateY(5px);box-shadow:0 1px 0 #1c040c}
+.btn-wine:disabled{opacity:.55;cursor:wait}
+
+/* ---------- BUDGET ---------- */
+.bud-panel{background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:26px 20px;box-shadow:0 22px 46px rgba(0,0,0,.48);position:relative;margin-top:34px}
+.bud-panel::before{content:"СМЕТА";position:absolute;top:-14px;left:22px;background:var(--wine);color:var(--gold-soft);font-family:var(--disp);font-size:.62rem;letter-spacing:.3em;padding:7px 16px;border-radius:4px;transform:rotate(-1.5deg)}
+.bud-rows{list-style:none;margin-top:8px}
+.bud-rows li{display:flex;align-items:baseline;gap:10px;padding:11px 2px;border-bottom:1px dashed rgba(42,32,25,.28);font-size:.92rem;color:var(--ink-soft)}
+.bud-rows .dots{flex:1;border-bottom:2px dotted rgba(42,32,25,.3);transform:translateY(-4px)}
+.bud-rows b{font-family:var(--disp);font-weight:400;color:var(--wine);white-space:nowrap}
+.bud-rows li.spec b{color:var(--red)}
+.bud-ctrl{margin:22px 0 6px}
+.bud-ctrl label{display:flex;justify-content:space-between;gap:10px;font-family:var(--disp);font-size:.78rem;color:var(--ink);margin-bottom:10px}
+.bud-ctrl label b{color:var(--red);font-weight:400}
+.bud-ctrl input[type=range]{width:100%;accent-color:var(--wine);height:34px}
+.bud-total{border-top:2px solid var(--ink);margin-top:14px;padding-top:16px;text-align:center}
+.bud-total small{display:block;font-family:var(--disp);font-size:.58rem;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:8px}
+.bud-total b{font-family:var(--disp);font-weight:400;font-size:clamp(1.9rem,7.5vw,3rem);color:var(--wine);line-height:1}
+.bud-total.shake{animation:shake .5s}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+#genReact{margin-top:12px;font-size:.86rem;color:var(--ink-soft);font-style:italic}
+.bud-note{margin-top:12px;font-size:.7rem;color:var(--ink-soft);opacity:.75}
+
+/* ---------- QUIZ ---------- */
+.quiz-panel{background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:24px 20px;box-shadow:0 20px 44px rgba(0,0,0,.45);position:relative;margin-top:34px}
+.q-banner{background:var(--wine);color:var(--gold-soft);font-family:var(--disp);font-size:.62rem;letter-spacing:.24em;text-align:center;padding:10px;margin:-24px -20px 20px;border-radius:12px 12px 0 0;text-transform:uppercase}
+.q-top{display:flex;justify-content:space-between;align-items:center;font-family:var(--disp);font-size:.58rem;letter-spacing:.14em;color:var(--ink-soft);margin-bottom:10px}
+.q-dots{display:flex;gap:6px}
+.q-dot{width:9px;height:9px;border-radius:50%;background:#ddd2b4;transition:.2s}
+.q-dot.on{background:var(--wine)}
+.q-dot.done{background:var(--gold)}
+.q-text{font-family:var(--disp);font-weight:400;font-size:1.12rem;color:var(--ink);margin:6px 0 18px;min-height:2.4em}
+.q-answers{display:grid;gap:9px}
+.q-ans{text-align:left;font-family:var(--body);font-weight:500;font-size:.9rem;padding:13px 15px;background:#fffdf5;border:2px solid #ddd2b4;border-radius:6px;cursor:pointer;transition:.18s;color:var(--ink)}
+.q-ans:hover:not(:disabled){border-color:var(--wine);transform:translateX(5px)}
+.q-ans.right{background:#e2efe0;border-color:#3f7a3f;color:#2c5c2c;font-weight:700}
+.q-ans.wrong{background:#f6dedc;border-color:var(--red);color:var(--red)}
+.q-ans:disabled{cursor:default}
+.q-ans.right::after{content:" ✔"}
+.q-ans.wrong::after{content:" ✖"}
+#qNext{margin-top:16px}
+.q-score{font-family:var(--disp);font-weight:400;font-size:2.2rem;color:var(--wine);margin:6px 0}
+#quizResult p{color:var(--ink-soft);margin-bottom:18px}
+
+/* ---------- TOASTS ---------- */
+.toast-grid{display:grid;gap:24px;margin-top:34px}
+@media(min-width:821px){.toast-grid{grid-template-columns:1.2fr .8fr;align-items:center}}
+.t-bubble{position:relative;background:var(--paper);border:2px solid var(--gold-dim);border-left:6px solid var(--rose);border-radius:12px;padding:26px 24px;font-family:var(--script);font-size:clamp(1.35rem,4.5vw,1.7rem);color:var(--wine);line-height:1.35;transform:rotate(-.7deg);box-shadow:0 18px 36px rgba(0,0,0,.4);min-height:130px;display:grid;place-items:center;text-align:center}
+.t-bubble.pop{animation:pop .4s}
+.t-bubble::before{content:"«";position:absolute;top:0;left:12px;font-size:2.8rem;color:var(--gold-dim);opacity:.6}
+.toast-side p{font-size:.86rem;color:var(--cream);opacity:.8;margin-bottom:16px}
+.toast-actions{display:flex;gap:12px;flex-wrap:wrap}
+
+/* ---------- MEDALS ---------- */
+.omed-panel{background:linear-gradient(180deg,var(--wine-4),var(--wine-2));border:3px solid var(--gold-dim);border-radius:18px;padding:28px 18px;box-shadow:inset 0 2px 0 rgba(255,255,255,.15),0 26px 50px rgba(0,0,0,.5);margin-top:34px}
+.omed-head{text-align:center;color:var(--cream)}
+.omed-head h3{font-family:var(--disp);font-weight:400;font-size:1.3rem}
+.omed-head p{font-size:.78rem;opacity:.75;margin-top:6px}
+.omedals{display:grid;grid-template-columns:repeat(3,1fr);gap:26px 14px;max-width:430px;margin:26px auto 0}
+.om-slot{text-align:center}
+.omed{width:80px;height:80px;margin:0 auto;border-radius:50%;border:3px dashed rgba(243,233,214,.4);display:grid;place-items:center;transition:.4s;background:rgba(0,0,0,.2)}
+.omed .m-em{font-size:1.9rem;filter:grayscale(1);opacity:.35;transition:.4s}
+.omed.earned{border-style:solid;border-color:var(--gold);background:radial-gradient(circle at 34% 28%,#ffe9a8,#f0c96b 62%,#c9a227);box-shadow:0 0 20px rgba(240,201,107,.55)}
+.omed.earned .m-em{filter:none;opacity:1;animation:medalPop .55s cubic-bezier(.2,1.6,.4,1)}
+@keyframes medalPop{0%{transform:scale(0) rotate(-40deg)}100%{transform:scale(1) rotate(0)}}
+.om-nm{display:block;margin-top:9px;font-size:.6rem;letter-spacing:.05em;color:var(--blush);text-transform:uppercase;font-weight:700}
+.omed-progress{text-align:center;margin-top:26px;color:var(--cream)}
+.omed-progress b{font-family:var(--disp);font-weight:400;font-size:1.45rem;color:var(--gold-soft)}
+#omedStatus{display:block;margin-top:6px;font-size:.8rem;opacity:.85}
+
+/* ---------- FOOTER ---------- */
+footer{background:var(--wine-3);color:var(--cream);padding:54px 0 40px;border-top:4px solid var(--gold-dim)}
+.foot-grid{display:grid;gap:26px}
+@media(min-width:761px){.foot-grid{grid-template-columns:1.2fr .8fr}}
+.foot-sig{font-family:var(--script);font-size:clamp(2.2rem,7vw,3rem);color:var(--gold-soft);line-height:1.15}
+.foot-role{font-family:var(--disp);font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--blush);margin-top:8px}
+.foot-legal{font-size:.78rem;color:var(--cream);opacity:.72}
+.foot-legal p{margin-bottom:9px}
+.foot-bottom{margin-top:30px;padding-top:16px;border-top:1px solid rgba(243,233,214,.15);font-size:.66rem;color:var(--blush);opacity:.6;text-align:center;letter-spacing:.05em}
+
+/* ---------- FX ---------- */
+#fx{position:fixed;inset:0;z-index:90;pointer-events:none}
+.eb{position:fixed;z-index:95;pointer-events:none;font-size:1.3rem;animation:ebFly .95s ease-out forwards}
+@keyframes ebFly{from{transform:translate(0,0) scale(1) rotate(0);opacity:1}to{transform:translate(var(--dx),var(--dy)) rotate(var(--rot)) scale(.35);opacity:0}}
+#toasts{position:fixed;right:12px;left:12px;bottom:14px;z-index:96;display:flex;flex-direction:column;gap:9px;pointer-events:none}
+@media(min-width:700px){#toasts{left:auto;max-width:340px}}
+.toastn{background:var(--paper);color:var(--ink);border-left:5px solid var(--rose);padding:12px 15px;font-size:.84rem;border-radius:8px;box-shadow:0 14px 30px rgba(0,0,0,.5);transform:translateY(120%);opacity:0;transition:.4s cubic-bezier(.2,.9,.3,1)}
+.toastn.show{transform:translateY(0);opacity:1}
+.toastn b{font-family:var(--disp);font-weight:400;color:var(--wine);display:block;font-size:.78rem;margin-bottom:3px}
+
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease;transition-delay:var(--d,0s)}
+.reveal.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}.amb{display:none}}
+</style>
+</head>
+<body>
+
+<canvas id="fx"></canvas>
+
+<!-- AMBIENT -->
+<div class="glow" style="left:-80px;top:10%;width:260px;height:260px;background:rgba(232,93,117,.14)"></div>
+<div class="glow" style="right:-90px;top:45%;width:300px;height:300px;background:rgba(240,201,107,.12);animation-delay:2s"></div>
+<span class="amb" style="left:6%;animation-duration:26s;font-size:1.5rem">💗</span>
+<span class="amb" style="left:22%;animation-duration:34s;animation-delay:7s;font-size:1.2rem">🌸</span>
+<span class="amb" style="left:44%;animation-duration:29s;animation-delay:13s;font-size:1.7rem">✨</span>
+<span class="amb" style="left:66%;animation-duration:38s;animation-delay:3s;font-size:1.3rem">🌷</span>
+<span class="amb" style="left:84%;animation-duration:31s;animation-delay:17s;font-size:1.5rem">💗</span>
+<span class="amb" style="left:94%;animation-duration:24s;animation-delay:9s;font-size:1.1rem">🌸</span>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="wrap tb-in" style="padding-left:16px;padding-right:16px">
+    <span class="tb-em">💗</span>
+    <b>ШТАБ ПРАЗДНИКА · ГЛАВНОКОМАНДУЮЩАЯ: <span>ОКСАНА</span></b>
+    <div class="tb-right">
+      <button class="tb-btn" id="sndBtn" aria-label="Звук">🔊</button>
+      <button class="tb-btn tb-reset" id="resetBtn">СМЕНИТЬ ГЛАВНУЮ</button>
+    </div>
+  </div>
+</div>
+
+<!-- TICKER -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track" id="tickerTrack">
+    <span>НИКТО НЕ УЙДЁТ НЕПОЗДРАВЛЕННЫМ</span>
+    <span>ВАСИЛИЙ, Я ВСЁ ВИЖУ</span>
+    <span>ИЛЬЯ, МАМА — ГЛАВНАЯ</span>
+    <span>ЗАНЧКА ВАСИЛИЯ НАЙДЕНА И ПУЩЕНА НА ПРАЗДНИК</span>
+    <span>ОБНИМАТЬ ПО ЛЮБВИ, А НЕ ПО ПРИКАЗУ</span>
+    <span>С ДНЁМ ВДВ, ВАСИЛИЙ! С ИМЕНИНАМИ, ИЛЬЯ!</span>
+  </div>
+</div>
+
+<!-- OPENING -->
+<section class="opening">
+  <div class="wrap open-grid">
+    <article class="decree reveal">
+      <span class="ring"></span>
+      <div class="d-head">Штаб праздника семьи · совершенно секретно</div>
+      <h1>Приказ <span>№ 0208</span></h1>
+      <p class="d-date">от 2 августа · день ВДВ + Ильин день</p>
+      <ol class="d-list">
+        <li>Мужа <b>Василия</b> — поздравить с днём ВДВ. Громко, с объятиями и без критики его песен.</li>
+        <li>Сына <b>Илью</b> — поздравить с именинами. С подарком и без «а вот я в твои годы».</li>
+        <li>Себя, <b>Оксану</b>, — считать главной. Это не обсуждается.</li>
+        <li><b>Никто не уйдёт непоздравлённым.</b> Это приказ. Подписано.</li>
+      </ol>
+      <div class="d-foot">
+        <div class="d-sign">
+          <small>Главнокомандующая праздником</small>
+          <div class="sig">Оксана</div>
+        </div>
+        <div class="seal reveal" id="seal" title="Трогать можно. Спорить — нет.">
+          <div><b>ГЛАВНАЯ</b>по праздникам<br>· печать ·</div>
+        </div>
+      </div>
+    </article>
+
+    <aside class="board reveal" style="--d:.12s">
+      <span class="riv rv1"></span><span class="riv rv2"></span><span class="riv rv3"></span><span class="riv rv4"></span>
+      <div class="board-k">Табло степени поздравленности</div>
+      <div class="b-row">
+        <span class="b-ico">🪂</span>
+        <div class="b-main">
+          <b>Василий</b>
+          <span class="b-sub">муж · десантник · большой ребёнок</span>
+          <div class="b-bar"><i id="pvFill"></i></div>
+        </div>
+        <span class="b-pct" id="pvPct">0%</span>
+        <span class="b-lamp" id="lampV"></span>
+      </div>
+      <div class="b-row">
+        <span class="b-ico">🧒</span>
+        <div class="b-main">
+          <b>Илья</b>
+          <span class="b-sub">сын · именинник · маленький командир</span>
+          <div class="b-bar"><i id="piFill"></i></div>
+        </div>
+        <span class="b-pct" id="piPct">0%</span>
+        <span class="b-lamp" id="lampI"></span>
+      </div>
+      <div class="b-status"><span class="hb">💗</span> ОКСАНА НА ПОСТУ · РЕЖИМ: ЛЮБОВЬ</div>
+      <div class="b-mini">Действий выполнено: <b id="bActs">0</b> · из них объятий: <b id="bHugs">0</b></div>
+    </aside>
+  </div>
+</section>
+
+<!-- CONSOLE -->
+<section id="console">
+  <div class="wrap">
+    <div class="kick reveal">Пульт управления праздником</div>
+    <h2 class="reveal" style="--d:.06s">Оксана, <em>запускай поздравления</em></h2>
+    <p class="lead reveal" style="--d:.12s">Каждая кнопка — действие. Каждое действие — плюс к счастью. Доведи обоих мужчин до 100% — и штаб закроет смену с чувством выполненного долга.</p>
+
+    <div class="cons-grid">
+      <article class="rcard reveal" style="--d:.16s" id="cardV">
+        <div class="r-stamp">Поздравлен<br>на 100%</div>
+        <div class="r-head">
+          <span class="r-ava">🪂</span>
+          <div><h3>Василий</h3><p>десантник, муж и человек, который «не плачет»</p></div>
+        </div>
+        <div class="r-prog"><div class="r-bar"><i id="pvFill2"></i></div><b class="r-pct" id="pvPct2">0%</b></div>
+        <p class="r-cap">норма поздравленности: 100%. Перевыполнение приветствуется.</p>
+        <div class="r-actions">
+          <button class="act" data-p="v" data-a="hug"><span>🤗</span><b>Обнять</b><small>+7%</small></button>
+          <button class="act" data-p="v" data-a="kiss"><span>💋</span><b>Поцеловать</b><small>+9%</small></button>
+          <button class="act" data-p="v" data-a="gift"><span>🎁</span><b>Вручить подарок</b><small>+15%</small></button>
+          <button class="act" data-p="v" data-a="hurrah"><span>📣</span><b>Крикнуть «Ура!»</b><small>+5%</small></button>
+        </div>
+      </article>
+
+      <article class="rcard reveal" style="--d:.22s" id="cardI">
+        <div class="r-stamp">Поздравлен<br>на 100%</div>
+        <div class="r-head">
+          <span class="r-ava">🧒</span>
+          <div><h3>Илья</h3><p>именинник, сын и будущий командир папы</p></div>
+        </div>
+        <div class="r-prog"><div class="r-bar"><i id="piFill2"></i></div><b class="r-pct" id="piPct2">0%</b></div>
+        <p class="r-cap">именины — день, когда можно всё. Почти. Мама решает.</p>
+        <div class="r-actions">
+          <button class="act" data-p="i" data-a="hug"><span>🤗</span><b>Обнять</b><small>+7%</small></button>
+          <button class="act" data-p="i" data-a="kiss"><span>💋</span><b>Поцеловать</b><small>+9%</small></button>
+          <button class="act" data-p="i" data-a="gift"><span>🎁</span><b>Вручить подарок</b><small>+15%</small></button>
+          <button class="act" data-p="i" data-a="hurrah"><span>📣</span><b>Крикнуть «Ура!»</b><small>+5%</small></button>
+        </div>
+      </article>
+    </div>
+
+    <div class="feed reveal" style="--d:.26s">
+      <div class="feed-k">Сводка штаба · записывает Оксана · ничего не скроется</div>
+      <ul id="feed"></ul>
+    </div>
+  </div>
+</section>
+
+<!-- WHEEL -->
+<section id="tasks">
+  <div class="wrap">
+    <div class="kick reveal">Боевые задачи</div>
+    <h2 class="reveal" style="--d:.06s">Колесо обязанностей <em>главной</em></h2>
+    <p class="lead reveal" style="--d:.12s">У главнокомандующей тоже есть задачи. Крути колесо — получай приказ самой себе. Выполнять с удовольствием, как и всё в этом доме.</p>
+
+    <div class="wheel-panel reveal" style="--d:.16s">
+      <div class="wheel-grid">
+        <div class="wheel-zone">
+          <div class="wheel-wrap">
+            <div class="wheel-pointer"></div>
+            <div class="wheel" id="wheel">
+              <span class="wlabel" style="--a:22.5deg">🤗<br>обнять<br>обоих</span>
+              <span class="wlabel dk" style="--a:67.5deg">🥂<br>налить<br>Василию</span>
+              <span class="wlabel dk" style="--a:112.5deg">💋<br>Илью<br>в лоб</span>
+              <span class="wlabel dk" style="--a:157.5deg">🍗<br>все<br>сыты?</span>
+              <span class="wlabel" style="--a:202.5deg">🎤<br>разрешить<br>петь ВДВ</span>
+              <span class="wlabel dk" style="--a:247.5deg">🔍<br>пересчитать<br>заначку</span>
+              <span class="wlabel dk" style="--a:292.5deg">🍰<br>разрезать<br>торт</span>
+              <span class="wlabel" style="--a:337.5deg">❤️<br>обнять<br>ещё раз</span>
+            </div>
+            <div class="wheel-hub">💗</div>
+          </div>
+        </div>
+        <div class="wheel-side">
+          <div class="task-card" id="taskCard">
+            <span class="tc-k">Задача не получена</span>
+            <b>Крути колесо, Оксана. Праздник сам себя не организует. Хотя ты всё равно уже всё организовала.</b>
+            <i class="tc-stamp">Принято к исполнению</i>
+          </div>
+          <button class="btn-wine" id="taskBtn">🎡 Крутить колесо задач</button>
+          <p>Задачи выдаются штабом (тобой же). Обжалованию не подлежат, потому что обжаловать некому — ты главная.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BUDGET -->
+<section id="budget">
+  <div class="wrap">
+    <div class="kick reveal">Финансовый отдел</div>
+    <h2 class="reveal" style="--d:.06s">Смета праздника <em>имени Оксаны</em></h2>
+    <p class="lead reveal" style="--d:.12s">Двигай ползунок щедрости — смотри, как растёт бюджет. Спонсор половины праздника — заначка Василия. Он пока не в курсе. Уже в курсе.</p>
+
+    <div class="bud-panel reveal" style="--d:.16s">
+      <ul class="bud-rows">
+        <li><span>Подарок Василию (он скажет «не стоило»)</span><i class="dots"></i><b data-base="3000">3 000 ₽</b></li>
+        <li><span>Подарок Илье (он скажет «ура!»)</span><i class="dots"></i><b data-base="2000">2 000 ₽</b></li>
+        <li><span>Стол: шашлык, салаты, торт</span><i class="dots"></i><b data-base="5000">5 000 ₽</b></li>
+        <li><span>Цветы. Себе. Заслужила.</span><i class="dots"></i><b data-base="1500">1 500 ₽</b></li>
+        <li class="spec"><span>Валерьянка для Оксаны (после праздника)</span><i class="dots"></i><b>бесценно</b></li>
+      </ul>
+      <div class="bud-ctrl">
+        <label>Уровень щедрости: <b id="genLbl">золотая середина</b></label>
+        <input type="range" id="genRange" min="1" max="4" value="2" aria-label="Уровень щедрости">
+      </div>
+      <div class="bud-total" id="budTotal">
+        <small>Итого на праздник</small>
+        <b id="sumVal">11 500 ₽</b>
+        <p id="genReact">Золотая середина. И муж доволен, и бюджет почти цел.</p>
+      </div>
+      <p class="bud-note">* Половина суммы — из заначки Василия. Статья бюджета так и называется: «самофинансирование».</p>
+    </div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz">
+  <div class="wrap">
+    <div class="kick reveal">Аттестация жены</div>
+    <h2 class="reveal" style="--d:.06s">Насколько Оксана знает <em>своих мужчин</em></h2>
+    <p class="lead reveal" style="--d:.12s">Пять вопросов. Ответы очевидные, потому что кто тут всех знает лучше всех? Правильно.</p>
+
+    <div class="quiz-panel reveal" style="--d:.16s">
+      <div class="q-banner">Анкета · заполняет Оксана</div>
+      <div id="quizBox">
+        <div class="q-top"><span id="qNum">ВОПРОС 1/5</span><span class="q-dots" id="qDots"></span></div>
+        <p class="q-text" id="qText"></p>
+        <div class="q-answers" id="qAnswers"></div>
+        <button class="btn-wine" id="qNext" style="display:none;margin-top:16px">Далее →</button>
+      </div>
+      <div id="quizResult" style="display:none">
+        <div class="q-top"><span>РЕЗУЛЬТАТ АТТЕСТАЦИИ</span></div>
+        <div class="q-score" id="qScore"></div>
+        <p id="qVerdict"></p>
+        <button class="btn-wine" id="qRestart" style="margin-top:0">Пройти ещё раз</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOASTS -->
+<section id="toastsSec">
+  <div class="wrap">
+    <div class="kick reveal">Тосты от главной</div>
+    <h2 class="reveal" style="--d:.06s">Слово предоставляется <em>Оксане</em></h2>
+    <p class="lead reveal" style="--d:.12s">Генератор тостов для застолья. Жми «Ещё тост», выбирай лучший — и произноси. Громче всех всё равно будет Василий.</p>
+
+    <div class="toast-grid">
+      <div class="t-bubble reveal" id="tBubble">За моих мужчин: большого и маленького. Я у них — и тыл, и фронт, и штаб!»</div>
+      <div class="toast-side reveal" style="--d:.1s">
+        <p>Тосты проверены на прочность: выдерживают и шашлык, и песни про ВДВ, и «пап, а пап» в три часа ночи.</p>
+        <div class="toast-actions">
+          <button class="btn-wine" id="tGen" style="margin-top:0">🎲 Ещё тост</button>
+          <button class="btn-wine" id="tSend" style="margin-top:0">🥂 Произнести</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MEDALS -->
+<section id="medals">
+  <div class="wrap">
+    <div class="kick reveal">Наградной отдел</div>
+    <h2 class="reveal" style="--d:.06s">Ордена <em>главнокомандующей</em></h2>
+    <p class="lead reveal" style="--d:.12s">Каждое выполненное действие — орден. Собери все шесть: полная коллекция полагается только самым лучшим жёнам и мамам. То есть тебе.</p>
+
+    <div class="omed-panel reveal" style="--d:.16s">
+      <div class="omed-head">
+        <h3>ОКСАНА · ГЛАВНАЯ ПО ПРАЗДНИКАМ</h3>
+        <p>награждается за любовь, терпение и идеальную организацию 2 августа</p>
+      </div>
+      <div class="omedals">
+        <div class="om-slot"><div class="omed" id="omd0"><span class="m-em">💗</span></div><span class="om-nm">За первое объятие</span></div>
+        <div class="om-slot"><div class="omed" id="omd1"><span class="m-em">🪂</span></div><span class="om-nm">Василий — 100%</span></div>
+        <div class="om-slot"><div class="omed" id="omd2"><span class="m-em">🧒</span></div><span class="om-nm">Илья — 100%</span></div>
+        <div class="om-slot"><div class="omed" id="omd3"><span class="m-em">📜</span></div><span class="om-nm">За приказ выполнен</span></div>
+        <div class="om-slot"><div class="omed" id="omd4"><span class="m-em">🥂</span></div><span class="om-nm">За тост</span></div>
+        <div class="om-slot"><div class="omed" id="omd5"><span class="m-em">🧠</span></div><span class="om-nm">За знание мужчин</span></div>
+      </div>
+      <div class="omed-progress">
+        <b>Орденов: <span id="omedCount">0/6</span></b>
+        <span id="omedStatus">Начни с малого: обними кого-нибудь. Например, обоих.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap foot-grid">
+    <div>
+      <div class="foot-sig">С любовью, ваша главная — Оксана</div>
+      <div class="foot-role">жена · мама · генерал семейного масштаба</div>
+    </div>
+    <div class="foot-legal">
+      <p>Штаб праздника работает круглосуточно. Перерыв — только на обнимашки.</p>
+      <p>Все объятия, поцелуи и ордена сохраняются в localStorage — как и положено настоящим чувствам. Кнопка «Сменить главную» декоративная: главная не меняется.</p>
+      <p>С днём ВДВ, Василий! С именинами, Илья! И спасибо, что вы у меня такие.</p>
+    </div>
+  </div>
+  <div class="wrap foot-bottom">♥ ШТАБ ПРАЗДНИКА · ОКСАНА · ВАСИЛИЙ · ИЛЬЯ · 2 АВГУСТА · НИКТО НЕ УЙДЁТ НЕПОЗДРАВЛЕННЫМ ♥</div>
+</footer>
+
+<div id="toasts" aria-live="polite"></div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s);};
+  var $$=function(s){return Array.prototype.slice.call(document.querySelectorAll(s));};
+  function pick(a){return a[Math.floor(Math.random()*a.length)];}
+  function fmt(n){return Math.round(n).toLocaleString('ru-RU')+' ₽';}
+
+  /* ---------- STATE / LOCALSTORAGE ---------- */
+  var KEY='oksana_hq_v1';
+  function fresh(){return{vasya:0,ilya:0,acts:0,hugs:0,tasks:0,toasts:0,quizDone:0,gen:2,celebrated:0};}
+  var S=fresh();
+  try{var d=JSON.parse(localStorage.getItem(KEY));if(d&&typeof d==='object'){for(var k in S){if(typeof d[k]!=='undefined')S[k]=d[k];}}}catch(e){}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+
+  /* ---------- SOUND ---------- */
+  var AC=null,sndOn=true;
+  function ac(){AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();return AC;}
+  function tone(f,dt,dur,type,vol){
+    if(!sndOn)return;
+    try{
+      var a=ac(),t=a.currentTime+dt;
+      var o=a.createOscillator(),g=a.createGain();
+      o.type=type||'sine';o.frequency.value=f;
+      g.gain.setValueAtTime(0.0001,t);
+      g.gain.exponentialRampToValueAtTime(vol||.15,t+.02);
+      g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+      o.connect(g);g.connect(a.destination);
+      o.start(t);o.stop(t+dur+.05);
+    }catch(e){}
+  }
+  function popS(){tone(300,0,.12,'sine',.25);tone(190,.04,.1,'sine',.2);}
+  function kissS(){tone(1400,0,.06,'triangle',.12);tone(1850,.08,.07,'triangle',.12);}
+  function giftS(){tone(1318,0,.1,'triangle',.16);tone(1760,.1,.14,'triangle',.16);}
+  function hurrahS(){
+    if(!sndOn)return;
+    try{
+      var a=ac(),t=a.currentTime;
+      var o=a.createOscillator(),g=a.createGain();
+      o.type='sawtooth';
+      o.frequency.setValueAtTime(380,t);
+      o.frequency.exponentialRampToValueAtTime(920,t+.3);
+      g.gain.setValueAtTime(.001,t);
+      g.gain.exponentialRampToValueAtTime(.1,t+.05);
+      g.gain.exponentialRampToValueAtTime(.001,t+.35);
+      o.connect(g);g.connect(a.destination);
+      o.start(t);o.stop(t+.4);
+    }catch(e){}
+  }
+  function fanfare(){[523,659,784,1047,784,1047,1319].forEach(function(f,i){tone(f,i*.12,.26,'triangle',.15);});}
+  function stampS(){tone(180,0,.1,'square',.18);tone(120,.03,.12,'sine',.22);}
+  function tick(){tone(1250,0,.03,'square',.035);}
+  function clickS(){tone(760,0,.05,'square',.05);}
+
+  /* ---------- TOASTS UI ---------- */
+  var toastBox=$('#toasts');
+  function toast(msg,tag){
+    var d=document.createElement('div');
+    d.className='toastn';
+    d.innerHTML='<b>'+(tag||'Штаб Оксаны')+'</b>'+msg;
+    toastBox.appendChild(d);
+    requestAnimationFrame(function(){d.classList.add('show');});
+    setTimeout(function(){
+      d.classList.remove('show');
+      setTimeout(function(){if(d.parentNode)d.parentNode.removeChild(d);},450);
+    },3600);
+    while(toastBox.children.length>3)toastBox.removeChild(toastBox.firstChild);
+  }
+
+  /* ---------- CANVAS CONFETTI ---------- */
+  var cv=$('#fx'),cx2=cv.getContext('2d');
+  function sizeCv(){cv.width=innerWidth;cv.height=innerHeight;}
+  sizeCv();addEventListener('resize',sizeCv);
+  var parts=[],fxOn=false;
+  var CCOLS=['#d9a441','#f0c96b','#e85d75','#f7b8c4','#f6efdd','#8a2440'];
+  function confetti(x,y,n){
+    n=n||50;
+    for(var i=0;i<n;i++){
+      var a=Math.random()*Math.PI*2,sp=1.5+Math.random()*4.6;
+      parts.push({x:x,y:y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-1.2,life:1,c:CCOLS[Math.floor(Math.random()*CCOLS.length)],r:1.8+Math.random()*2.6});
+    }
+    if(!fxOn){fxOn=true;requestAnimationFrame(fxLoop);}
+  }
+  function fxLoop(){
+    cx2.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(function(p){
+      p.x+=p.vx;p.y+=p.vy;p.vy+=0.05;p.vx*=0.985;p.life-=0.012;
+      cx2.globalAlpha=Math.max(p.life,0);
+      cx2.fillStyle=p.c;
+      cx2.beginPath();cx2.arc(p.x,p.y,p.r,0,7);cx2.fill();
+    });
+    cx2.globalAlpha=1;
+    parts=parts.filter(function(p){return p.life>0;});
+    if(parts.length){requestAnimationFrame(fxLoop);}else{fxOn=false;cx2.clearRect(0,0,cv.width,cv.height);}
+  }
+  function burstAt(el){
+    var r=el.getBoundingClientRect();
+    confetti(r.left+r.width/2,r.top+r.height/2,40);
+  }
+
+  /* ---------- EMOJI BURST ---------- */
+  function emojiBurst(x,y,em,n){
+    for(var i=0;i<(n||8);i++){
+      var s=document.createElement('span');
+      s.className='eb';
+      s.textContent=em;
+      s.style.left=x+'px';
+      s.style.top=y+'px';
+      s.style.setProperty('--dx',(Math.random()*180-90)+'px');
+      s.style.setProperty('--dy',(-60-Math.random()*110)+'px');
+      s.style.setProperty('--rot',(Math.random()*260-130)+'deg');
+      document.body.appendChild(s);
+      (function(el){el.addEventListener('animationend',function(){if(el.parentNode)el.parentNode.removeChild(el);});})(s);
+    }
+  }
+
+  /* ---------- FEED ---------- */
+  function addFeed(text,em){
+    var ul=$('#feed');
+    var li=document.createElement('li');
+    var t=new Date();
+    var hh=('0'+t.getHours()).slice(-2)+':'+('0'+t.getMinutes()).slice(-2);
+    li.innerHTML='<span class="f-time">'+hh+'</span><span class="f-em">'+em+'</span><span>'+text+'</span>';
+    ul.insertBefore(li,ul.firstChild);
+    while(ul.children.length>7)ul.removeChild(ul.lastChild);
+    li.classList.add('new');
+  }
+
+  /* ---------- MESSAGE POOLS ---------- */
+  var LINES={
+    v:{
+      hug:[
+        'Оксана обняла Василия. Он сделал вид, что не прослезился. Получилось плохо.',
+        'Объятие длительностью 40 секунд. Василий сопротивлялся три.',
+        'Василий обнят. Десантники не плачут, но глаза у него вспотели.'
+      ],
+      kiss:[
+        'Поцелуй в щёку. Вторая щёка подставлена автоматически — рефлекс.',
+        'Оксана поцеловала Василия. Он теперь неделю будет ходить гордый.',
+        'Поцелуй доставлен. Василий покраснел. В его-то годы. Молодец.'
+      ],
+      gift:[
+        'Вручён подарок. Василий трижды сказал «не стоило». Стоило.',
+        'Подарок вручён. Заначка Василия торжественно пошла на его же подарок.',
+        'Василий получил подарок. Уже спрятал. Оксана уже нашла.'
+      ],
+      hurrah:[
+        'Оксана крикнула «Ура!». Соседи ответили. ВДВ, наверное, услышало.',
+        'Громкое «Ура!» для Василия. Голос у Оксаны — командирский.',
+        '«Ура!» произнесено. Василий ответил внеплановым тостом.'
+      ]
+    },
+    i:{
+      hug:[
+        'Илья обнят. Попытался вывернуться — не вышло. Мама сильнее.',
+        'Объятие с подъёмом в воздух. Илья стал на пять сантиметров выше от гордости.',
+        'Илья получил обнимашки. Сопротивлялся для виду полсекунды.'
+      ],
+      kiss:[
+        'Поцелуй в макушку. Илья сделал вид, что взрослый. Никого не убедил.',
+        'Илья поцелован. Потёр щёку, но улыбается. Конспиратор.',
+        'Мама поцеловала именинника. Он теперь официально самый любимый.'
+      ],
+      gift:[
+        'Илье вручён подарок. Сказал «спасибо» сам, без напоминаний. Растёт человек.',
+        'Подарок для Ильи разворачивался 0,3 секунды. Рекорд семьи.',
+        'Илья получил подарок и обнял маму. Лучший возврат вложений.'
+      ],
+      hurrah:[
+        '«Ура!» для Ильи на весь двор. Голос командирский — в папу.',
+        'Оксана крикнула «Ура!», Илья подхватил. Получился дуэт.',
+        'Именинник услышал «Ура!» и потребовал торт. Логично.'
+      ]
+    }
+  };
+  var OVER={
+    v:[
+      'Василий уже на 100%, но Оксана добавила ещё. Лимит любви не установлен.',
+      'Больше 100% не бывает, но Оксана попробовала. Получилось.',
+      'Василий просил остановиться. Оксана продолжила. Она главная.'
+    ],
+    i:[
+      'Илья уже на 100% счастлив, но мама добавила. Маме виднее.',
+      'Илья сказал «хватит целовать». Получил ещё три. Мама есть мама.',
+      'Лимит поздравлений превышен. Илья, если честно, не против.'
+    ]
+  };
+
+  /* ---------- ACTIONS ---------- */
+  var ACTS={
+    hug:{w:7,em:'🤗',snd:popS},
+    kiss:{w:9,em:'💋',snd:kissS},
+    gift:{w:15,em:'🎁',snd:giftS},
+    hurrah:{w:5,em:'📣',snd:hurrahS}
+  };
+  function doAction(p,a,btn){
+    var cfg=ACTS[a];
+    var key=p==='v'?'vasya':'ilya';
+    var before=S[key];
+    S[key]=Math.min(100,S[key]+cfg.w);
+    S.acts++;
+    if(a==='hug')S.hugs++;
+    cfg.snd();
+    var r=btn.getBoundingClientRect();
+    emojiBurst(r.left+r.width/2,r.top+r.height/2,cfg.em,8);
+    var pool=(before>=100)?OVER[p]:LINES[p][a];
+    addFeed(pick(pool),cfg.em);
+    save();renderAll();
+    if(before<100&&S[key]>=100)celebrate(p);
+  }
+  function celebrate(p){
+    var card=p==='v'?$('#cardV'):$('#cardI');
+    card.classList.add('done');
+    fanfare();stampS();
+    confetti(innerWidth/2,innerHeight*0.35,80);
+    setTimeout(function(){confetti(innerWidth*0.28,innerHeight*0.3,50);},260);
+    setTimeout(function(){confetti(innerWidth*0.72,innerHeight*0.3,50);},520);
+    var msg=p==='v'
+      ?'🎉 ВАСИЛИЙ ПОЗДРАВЛЕН НА 100%! Миссия выполнена. Оксана довольна. Василий — тем более.'
+      :'🎉 ИЛЬЯ ПОЗДРАВЛЕН НА 100%! Маленький командир счастлив. Мама — вдвойне.';
+    addFeed(msg,'🎉');
+    toast(msg,'Поздравление завершено');
+  }
+
+  $$('.act').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      doAction(btn.getAttribute('data-p'),btn.getAttribute('data-a'),btn);
+    });
+  });
+
+  /* ---------- RENDER ---------- */
+  function renderAll(){
+    $('#pvFill').style.width=S.vasya+'%';
+    $('#pvFill2').style.width=S.vasya+'%';
+    $('#pvPct').textContent=S.vasya+'%';
+    $('#pvPct2').textContent=S.vasya+'%';
+    $('#piFill').style.width=S.ilya+'%';
+    $('#piFill2').style.width=S.ilya+'%';
+    $('#piPct').textContent=S.ilya+'%';
+    $('#piPct2').textContent=S.ilya+'%';
+    $('#lampV').classList.toggle('on',S.vasya>=100);
+    $('#lampI').classList.toggle('on',S.ilya>=100);
+    if(S.vasya>=100)$('#cardV').classList.add('done');
+    if(S.ilya>=100)$('#cardI').classList.add('done');
+    $('#bActs').textContent=S.acts;
+    $('#bHugs').textContent=S.hugs;
+    renderMedals();
+  }
+
+  /* ---------- MEDALS ---------- */
+  var OMED=[
+    {id:'first'},{id:'vas100'},{id:'ily100'},{id:'task'},{id:'toast'},{id:'quiz'}
+  ];
+  var booted=false;
+  function hasO(m){
+    switch(m.id){
+      case 'first':return S.acts>0;
+      case 'vas100':return S.vasya>=100;
+      case 'ily100':return S.ilya>=100;
+      case 'task':return S.tasks>0;
+      case 'toast':return S.toasts>0;
+      case 'quiz':return S.quizDone>0;
+    }
+    return false;
+  }
+  var ONAMES=['За первое объятие','Василий — 100%','Илья — 100%','За приказ выполнен','За тост','За знание мужчин'];
+  function renderMedals(){
+    var count=0;
+    OMED.forEach(function(m,i){
+      var el=$('#omd'+i);
+      var got=hasO(m);
+      if(got)count++;
+      var was=el.classList.contains('earned');
+      el.classList.toggle('earned',got);
+      if(got&&!was&&booted){
+        toast('🏅 Орден «'+ONAMES[i]+'» вручён Оксане. Заслуженно, как всегда.','Награда');
+        fanfare();burstAt(el);
+      }
+    });
+    $('#omedCount').textContent=count+'/6';
+    $('#omedStatus').textContent=
+      count===6?'ПОЛНАЯ КОЛЛЕКЦИЯ! Лучшая жена и мама по версии этого штаба. То есть по её версии.':
+      count>=3?'Отличный темп. Мужчины почти не сопротивляются.':
+      'Начни с малого: обними кого-нибудь. Например, обоих.';
+    if(count===6&&S.celebrated===0){
+      S.celebrated=1;save();
+      toast('👑 Все шесть орденов! Оксана официально — сердце этого дома.','Вершина');
+      fanfare();
+      [0.2,0.6,1.0,1.4].forEach(function(dl,i){
+        setTimeout(function(){confetti(innerWidth*(0.2+i*0.2),innerHeight*0.3,60);},dl*1000);
+      });
+    }
+  }
+
+  /* ---------- WHEEL ---------- */
+  var TASKS=[
+    'Обнять обоих немедленно. Обоих — это Василия и Илью, а не Василия дважды.',
+    'Налить Василию. И себе налить. Заслужила.',
+    'Поцеловать Илью в лоб. Даже если он будет уворачиваться. Особенно тогда.',
+    'Проверить, все ли сыты. Спойлер: Илья уже голодный.',
+    'Разрешить Василию спеть про ВДВ. Один раз. Ладно, два.',
+    'Пересчитать заначку Василия. Вдруг он её пополнил. Наивный.',
+    'Разрезать праздничный торт. Первый кусок — себе. Это закон.',
+    'Обнять всех ещё раз. Просто так. Без повода. Лучший повод.'
+  ];
+  var wheel=$('#wheel'),wheelAngle=0,wheelBusy=false;
+  $('#taskBtn').addEventListener('click',function(){
+    if(wheelBusy)return;
+    wheelBusy=true;
+    $('#taskBtn').disabled=true;
+    clickS();
+    wheelAngle+=1440+Math.floor(Math.random()*360);
+    wheel.style.transition='transform 3.8s cubic-bezier(.12,.85,.15,1)';
+    wheel.style.transform='rotate('+wheelAngle+'deg)';
+    setTimeout(function(){
+      wheelBusy=false;
+      $('#taskBtn').disabled=false;
+      var norm=((360-(wheelAngle%360))%360);
+      var idx=Math.floor(norm/45)%8;
+      S.tasks++;save();
+      var card=$('#taskCard');
+      card.classList.remove('stamped','pop');
+      card.innerHTML='<span class="tc-k">Задача № '+S.tasks+' · приказ самой себе</span><b>'+TASKS[idx]+'</b><i class="tc-stamp">Принято к исполнению</i>';
+      void card.offsetWidth;
+      card.classList.add('pop');
+      setTimeout(function(){card.classList.add('stamped');stampS();},350);
+      addFeed('Оксана получила задачу № '+S.tasks+': '+TASKS[idx],'📜');
+      renderAll();
+    },3900);
+  });
+
+  /* ---------- BUDGET ---------- */
+  var MULTS=[0.6,1,1.5,2.2];
+  var GENL=['скромненько','золотая середина','гуляем!','на всю катушку'];
+  var GENR=[
+    'Скромненько, но с любовью. Главное — не подарок, а объятия. И целая заначка.',
+    'Золотая середина. И муж доволен, и бюджет почти цел.',
+    'Гуляем! Половина — из заначки Василия. Он уже в курсе. Смирился.',
+    'НА ВСЮ КАТУШКУ! Заначка Василия мобилизована полностью. За ВДВ!'
+  ];
+  var BASE_SUM=11500;
+  function renderBudget(){
+    var g=S.gen;
+    $('#genRange').value=g;
+    $('#genLbl').textContent=GENL[g-1];
+    $$('.bud-rows b[data-base]').forEach(function(b){
+      b.textContent=fmt(+b.getAttribute('data-base')*MULTS[g-1]);
+    });
+    $('#sumVal').textContent=fmt(BASE_SUM*MULTS[g-1]);
+    $('#genReact').textContent=GENR[g-1];
+  }
+  $('#genRange').addEventListener('input',function(){
+    S.gen=+this.value;save();
+    renderBudget();
+    var bt=$('#budTotal');
+    bt.classList.remove('shake');void bt.offsetWidth;bt.classList.add('shake');
+    tick();
+  });
+
+  /* ---------- QUIZ ---------- */
+  var quizData=[
+    {q:'Что сделает Василий, если подарить ему носки?',a:['Скажет «не стоило» и наденет сразу','Выбросит','Спрячет в заначку','Расплачется'],c:0},
+    {q:'Кто в семье настоящий генерал?',a:['Василий (по его мнению)','Илья (по его мнению)','Оксана (по факту)','Кот'],c:2},
+    {q:'Что кричит Илья, когда папа приходит домой?',a:['«Папа-а-а!»','«Где мой подарок?»','«Мама, спрячь конфеты!»','Молча обнимает'],c:0},
+    {q:'Где Василий хранит заначку?',a:['В гараже','Под стелькой ботинка','Оксана давно её нашла и перепрятала','У него нет заначки (смешно)'],c:2},
+    {q:'Идеальный вечер 2 августа по версии Оксаны?',a:['Все здоровы, все обняты, все сыты','Тишина','Василий молчит','Илья спит, Василий молчит'],c:0}
+  ];
+  var qIdx=0,qScore=0,qLock=false;
+  var qDots=$('#qDots');
+  function buildDots(){
+    qDots.innerHTML='';
+    for(var i=0;i<quizData.length;i++){var s=document.createElement('span');s.className='q-dot';qDots.appendChild(s);}
+  }
+  function renderQ(){
+    qLock=false;
+    $('#qNum').textContent='ВОПРОС '+(qIdx+1)+'/'+quizData.length;
+    $('#qText').textContent=quizData[qIdx].q;
+    var box=$('#qAnswers');box.innerHTML='';
+    quizData[qIdx].a.forEach(function(txt,ai){
+      var b=document.createElement('button');
+      b.className='q-ans';b.textContent=txt;
+      b.addEventListener('click',function(){pickAns(ai,b);});
+      box.appendChild(b);
+    });
+    $('#qNext').style.display='none';
+    var dots=qDots.children;
+    for(var i=0;i<dots.length;i++){dots[i].className='q-dot'+(i<qIdx?' done':(i===qIdx?' on':''));}
+  }
+  function pickAns(ai,btn){
+    if(qLock)return;qLock=true;
+    var correct=quizData[qIdx].c;
+    var btns=$('#qAnswers').children;
+    for(var i=0;i<btns.length;i++){btns[i].disabled=true;if(i===correct)btns[i].classList.add('right');}
+    if(ai===correct){qScore++;tick();}else{btn.classList.add('wrong');}
+    $('#qNext').textContent=(qIdx===quizData.length-1)?'Вердикт →':'Далее →';
+    $('#qNext').style.display='inline-block';
+  }
+  $('#qNext').addEventListener('click',function(){
+    qIdx++;
+    if(qIdx<quizData.length){renderQ();}else{showResult();}
+  });
+  function showResult(){
+    $('#quizBox').style.display='none';
+    $('#quizResult').style.display='block';
+    $('#qScore').textContent=qScore+'/'+quizData.length;
+    var v;
+    if(qScore===5)v='Идеальная жена штаба! Знает своих мужчин как облупленных. 5 из 5.';
+    else if(qScore===4)v='Отлично! Один промах — и тот из любви.';
+    else if(qScore===3)v='Крепко. Но мужчин надо знать лучше. Обнимай чаще — поможет.';
+    else v='Срочно обнять обоих и изучить матчасть. Оксана, мы в тебя верим.';
+    $('#qVerdict').textContent=v;
+    S.quizDone=1;save();renderAll();
+    if(qScore>=4){fanfare();confetti(innerWidth/2,innerHeight*0.35,50);}
+    toast('Анкета сдана: '+qScore+'/5. '+v,'Аттестация');
+  }
+  $('#qRestart').addEventListener('click',function(){
+    qIdx=0;qScore=0;
+    $('#quizResult').style.display='none';
+    $('#quizBox').style.display='block';
+    renderQ();
+  });
+  buildDots();renderQ();
+
+  /* ---------- TOASTS GEN ---------- */
+  var TOASTS=[
+    'За моего десантника: пусть купол раскрывается, а сердце — только дома!',
+    'За Илью: расти большим, как папа, и умным — как мама. То есть очень умным.',
+    'За то, чтобы в нашем доме пахло борщом, а не порохом!',
+    'За Василия: он, конечно, упрямый, но мой. И это главное.',
+    'За наших мужчин: большого и маленького. Мы, жёны и мамы, — их тыл, фронт и штаб.',
+    'За то, что 2 августа у нас два праздника, а голова от счастья болит одна — моя.',
+    'За любовь, которая сильнее любого приказа. Хотя приказ есть приказ.'
+  ];
+  var lastToast='';
+  $('#tGen').addEventListener('click',function(){
+    var t;do{t=TOASTS[Math.floor(Math.random()*TOASTS.length)];}while(t===lastToast&&TOASTS.length>1);
+    lastToast=t;
+    var b=$('#tBubble');
+    b.textContent=t+'»';
+    b.classList.remove('pop');void b.offsetWidth;b.classList.add('pop');
+    clickS();
+  });
+  $('#tSend').addEventListener('click',function(){
+    var t=lastToast||TOASTS[0];
+    S.toasts++;save();
+    fanfare();
+    burstAt($('#tBubble'));
+    toast('Тост произнесён: «'+t+'» Василий уже достал телефон снимать.','Тост');
+    addFeed('Оксана произнесла тост: «'+t+'»','🥂');
+    renderAll();
+  });
+
+  /* ---------- SEAL EASTER EGG ---------- */
+  $('#seal').addEventListener('click',function(){
+    stampS();
+    toast('👀 Печать трогать можно. Спорить с главной — нет.','Печать');
+  });
+
+  /* ---------- SOUND / RESET ---------- */
+  $('#sndBtn').addEventListener('click',function(){
+    sndOn=!sndOn;
+    $('#sndBtn').textContent=sndOn?'🔊':'🔇';
+    if(sndOn)clickS();
+  });
+  $('#resetBtn').addEventListener('click',function(){
+    try{localStorage.removeItem(KEY);}catch(e){}
+    S=fresh();
+    $('#cardV').classList.remove('done');
+    $('#cardI').classList.remove('done');
+    renderAll();renderBudget();
+    toast('Попытка сменить главную отклонена. Главная вернулась на пост через 3 секунды.','Штаб');
+    addFeed('Попытка переворота в штабе подавлена. Оксана снова на посту.','👑');
+  });
+
+  /* ---------- TICKER / REVEAL ---------- */
+  var tt=$('#tickerTrack');
+  tt.innerHTML+=tt.innerHTML;
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(en){
+      if(en.isIntersecting){
+        en.target.classList.add('in');
+        io.unobserve(en.target);
+      }
+    });
+  },{threshold:.15});
+  document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+
+  /* ---------- INIT ---------- */
+  renderAll();
+  renderBudget();
+  addFeed('Штаб развёрнут. Оксана приступила к обязанностям. Сопротивление мужчин не ожидается.','🚩');
+  booted=true;
+})();
+</script>
+</body>
+</html>

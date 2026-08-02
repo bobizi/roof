@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SCALPGRID — мультивалютный скальпинг-терминал</title>
+<title>SCALPGRID v3 — мультивалютный скальпинг-терминал</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
@@ -91,14 +91,14 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 /* ── сетка ── */
 main{display:grid;grid-template-columns:1fr 390px;gap:14px;padding:14px;max-width:1760px;margin:0 auto;position:relative;z-index:2}
 .left{min-width:0}
-.deck-head{display:flex;align-items:center;gap:1.1rem;flex-wrap:wrap;margin-bottom:12px;padding:10px 14px;
+.deck-head{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:12px;padding:10px 14px;
   border:1px solid var(--edge);background:linear-gradient(90deg,#0d151f,#0a1017)}
 .deck-head h2{font-family:var(--disp);font-size:.78rem;letter-spacing:.12em;font-weight:400}
 .deck-head h2 span{color:var(--faint);font:600 .62rem var(--mono);margin-left:.4rem;letter-spacing:.05em}
-.settings{display:flex;gap:1rem;flex-wrap:wrap;align-items:center;margin-left:auto}
-.settings label{font:600 .56rem var(--body);letter-spacing:.14em;color:var(--dim);display:flex;gap:.45rem;align-items:center;text-transform:uppercase}
+.settings{display:flex;gap:.85rem;flex-wrap:wrap;align-items:center;margin-left:auto}
+.settings label{font:600 .55rem var(--body);letter-spacing:.12em;color:var(--dim);display:flex;gap:.4rem;align-items:center;text-transform:uppercase}
 .settings input,.settings select{background:#0a1119;border:1px solid var(--edge);color:var(--txt);
-  font:600 .74rem var(--mono);padding:.32rem .45rem;width:72px;outline:none;transition:border-color .2s,box-shadow .2s}
+  font:600 .72rem var(--mono);padding:.3rem .4rem;width:64px;outline:none;transition:border-color .2s,box-shadow .2s}
 .settings select{width:auto}
 .settings input:focus,.settings select:focus{border-color:var(--cyan);box-shadow:0 0 8px -3px var(--cyan)}
 .botchip{font:700 .6rem var(--mono);letter-spacing:.16em;padding:.4rem .8rem;border:1px solid var(--edge-hi);color:var(--dim);transition:.3s}
@@ -143,7 +143,7 @@ main{display:grid;grid-template-columns:1fr 390px;gap:14px;padding:14px;max-widt
 .chip.spin{animation:spinIn .5s}
 @keyframes spinIn{0%{transform:rotateX(90deg);opacity:0}100%{transform:rotateX(0);opacity:1}}
 .rots{margin-left:auto;font:600 .68rem var(--mono);color:var(--amber)}
-.pos{font:500 .7rem var(--mono);border:1px dashed var(--edge);padding:.5rem .6rem;color:var(--faint);min-height:3.1em;line-height:1.5;transition:border-color .3s}
+.pos{font:500 .68rem var(--mono);border:1px dashed var(--edge);padding:.5rem .6rem;color:var(--faint);min-height:3.3em;line-height:1.55;transition:border-color .3s}
 .pos .idle{opacity:.7}
 .pos.live{border-style:solid;color:var(--txt)}
 .pos.long{border-color:rgba(31,210,134,.45)}
@@ -151,6 +151,8 @@ main{display:grid;grid-template-columns:1fr 390px;gap:14px;padding:14px;max-widt
 .pos b{font-weight:700}
 .pos.long b{color:var(--up)}.pos.short b{color:var(--dn)}
 .fpnl{font-weight:700}
+.be{color:var(--amber);font-weight:700;letter-spacing:.05em}
+.trail{color:var(--cyan)}
 .pair footer{display:flex;gap:1rem;margin-top:.6rem;padding-top:.5rem;border-top:1px solid #16202c;
   font:500 .62rem var(--body);color:var(--dim);letter-spacing:.05em}
 .pair footer b{font:700 .68rem var(--mono);color:var(--txt)}
@@ -166,25 +168,24 @@ aside .panel:nth-child(3){animation-delay:.2s}
 .eq-wrap{height:150px;padding:6px 4px 0}
 #eqCanvas{width:100%;height:100%;display:block}
 .eq-foot{display:flex;border-top:1px solid var(--edge)}
-.eq-foot div{flex:1;padding:.55rem .5rem;text-align:center;border-right:1px solid var(--edge)}
+.eq-foot div{flex:1;padding:.55rem .4rem;text-align:center;border-right:1px solid var(--edge)}
 .eq-foot div:last-child{border-right:0}
-.eq-foot span{display:block;font:600 .53rem var(--body);letter-spacing:.16em;color:var(--faint);text-transform:uppercase}
-.eq-foot b{font:700 .8rem var(--mono)}
-.srow{display:grid;grid-template-columns:4px 1fr;gap:0 .7rem;padding:.6rem .85rem;border-bottom:1px solid #141e2a;transition:background .2s}
+.eq-foot span{display:block;font:600 .52rem var(--body);letter-spacing:.14em;color:var(--faint);text-transform:uppercase}
+.eq-foot b{font:700 .78rem var(--mono)}
+.srow{display:grid;grid-template-columns:4px 1fr;gap:0 .7rem;padding:.55rem .85rem;border-bottom:1px solid #141e2a;transition:background .2s}
 .srow:hover{background:#121c28}
-.srow:last-child{border-bottom:0}
 .sbar{grid-row:1/3;background:var(--c);width:4px;box-shadow:0 0 8px -1px var(--c)}
 .stop{display:flex;align-items:baseline;gap:.5rem}
-.stop b{font:600 .78rem var(--body);color:var(--txt)}
-.suse{font:600 .6rem var(--mono);color:var(--faint)}
-.spnl{margin-left:auto;font:700 .72rem var(--mono)}
-.shint{font:500 .62rem var(--body);color:var(--dim)}
-.swr{position:relative;height:14px;background:#0a1119;border:1px solid var(--edge);margin-top:.35rem}
+.stop b{font:600 .76rem var(--body);color:var(--txt)}
+.suse{font:600 .58rem var(--mono);color:var(--faint)}
+.spnl{margin-left:auto;font:700 .7rem var(--mono)}
+.shint{font:500 .6rem var(--body);color:var(--dim)}
+.swr{position:relative;height:14px;background:#0a1119;border:1px solid var(--edge);margin-top:.3rem}
 .swr i{position:absolute;inset:0;right:auto;background:color-mix(in srgb,var(--c) 40%,transparent);transition:width .5s}
 .swr em{position:absolute;inset:0;display:flex;align-items:center;padding-left:.45rem;
-  font:600 .56rem var(--mono);font-style:normal;color:var(--txt);letter-spacing:.05em}
-.rot-note{padding:.55rem .85rem;font:500 .62rem var(--body);color:var(--amber);border-top:1px solid var(--edge);
-  background:rgba(255,176,46,.05)}
+  font:600 .55rem var(--mono);font-style:normal;color:var(--txt);letter-spacing:.05em}
+.rot-note{padding:.55rem .85rem;font:500 .6rem var(--body);color:var(--amber);border-top:1px solid var(--edge);
+  background:rgba(255,176,46,.05);line-height:1.5}
 .tabs{gap:.4rem}
 .tab{background:none;border:1px solid var(--edge);color:var(--dim);font:700 .6rem var(--mono);
   letter-spacing:.12em;padding:.35rem .8rem;cursor:pointer;transition:.2s;text-transform:uppercase}
@@ -192,17 +193,17 @@ aside .panel:nth-child(3){animation-delay:.2s}
 .tab.act{color:var(--cyan);border-color:rgba(56,200,224,.5);background:rgba(56,200,224,.08)}
 .grow{flex:1;display:flex;flex-direction:column;min-height:300px}
 .logbox{flex:1;overflow-y:auto;max-height:340px}
-.trow{display:grid;grid-template-columns:60px 62px 96px 46px 1fr 62px 38px;gap:.4rem;align-items:center;
+.trow{display:grid;grid-template-columns:60px 62px 104px 46px 1fr 62px 46px;gap:.4rem;align-items:center;
   padding:.34rem .7rem;font-size:.66rem;border-bottom:1px solid #121c28;animation:evIn .3s}
 .trow:hover{background:#121c28}
-.thead{position:sticky;top:0;background:#0d151f;z-index:2;font:600 .54rem var(--body);letter-spacing:.12em;
+.thead{position:sticky;top:0;background:#0d151f;z-index:2;font:600 .54rem var(--body);letter-spacing:.1em;
   color:var(--faint);text-transform:uppercase;border-bottom:1px solid var(--edge)}
 .trow .dim{color:var(--faint)}
-.tchip{font:600 .58rem var(--body);font-style:normal;padding:.1rem .4rem;color:var(--c);
+.tchip{font:600 .57rem var(--body);font-style:normal;padding:.1rem .38rem;color:var(--c);
   background:color-mix(in srgb,var(--c) 14%,transparent);border:1px solid color-mix(in srgb,var(--c) 40%,transparent);white-space:nowrap}
 .dir{font:700 .6rem var(--mono)}
 .dir.long{color:var(--up)}.dir.short{color:var(--dn)}
-.ev{display:flex;gap:.6rem;padding:.4rem .85rem;font-size:.7rem;border-left:2px solid var(--c,#333);
+.ev{display:flex;gap:.6rem;padding:.4rem .85rem;font-size:.69rem;border-left:2px solid var(--c,#333);
   border-bottom:1px solid #121c28;animation:evIn .3s;line-height:1.45}
 .ev:hover{background:#121c28}
 @keyframes evIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
@@ -229,7 +230,7 @@ footer.page{padding:14px 20px 22px;text-align:center;font:500 .62rem var(--body)
 <header id="topbar">
   <div class="brand">
     <div class="logo">▚</div>
-    <div><h1>SCALP<em>GRID</em></h1><span>FX AUTOPILOT · v2.1</span></div>
+    <div><h1>SCALP<em>GRID</em></h1><span>RISK ENGINE · v3.0</span></div>
   </div>
   <div class="conn">
     <span class="led" id="led"></span>
@@ -255,12 +256,18 @@ footer.page{padding:14px 20px 22px;text-align:center;font:500 .62rem var(--body)
       <h2>▚ ТОРГОВЫЕ ПАНЕЛИ<span id="pairCount"></span></h2>
       <div class="settings">
         <label>Ставка, $ <input id="stake" type="number" value="500" min="50" step="50"></label>
-        <label>TP, % <input id="tpIn" type="number" value="0.10" step="0.01" min="0.02"></label>
-        <label>SL, % <input id="slIn" type="number" value="0.07" step="0.01" min="0.02"></label>
-        <label>Смена стратегии после
-          <select id="rotIn"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
-          убытка
+        <label>SL, % <input id="slIn" type="number" value="0.07" step="0.01" min="0.02" title="жёсткий аварийный стоп"></label>
+        <label>Трейлинг вкл. при +<input id="trOnIn" type="number" value="0.03" step="0.01" min="0.01" title="порог прибыли для включения трейлинга и безубытка">%</label>
+        <label>Откат <input id="trBackIn" type="number" value="0.02" step="0.01" min="0.01" title="откат от пика прибыли для мягкого режима">%</label>
+        <label>Фиксация
+          <select id="fixIn" title="жёсткая — закрывать при первом снижении прибыли; мягкая — при откате от пика">
+            <option value="hard" selected>жёсткая</option><option value="soft">мягкая</option>
+          </select>
         </label>
+        <label>Позиций макс.
+          <select id="maxPosIn"><option value="2">2</option><option value="3">3</option><option value="4" selected>4</option><option value="6">6</option></select>
+        </label>
+        <label>Риск-лимит <input id="riskIn" type="number" value="5" step="1" min="1" max="30" title="остановка бота при потере N% депозита">%</label>
       </div>
       <span class="botchip" id="botChip">БОТ: ПАУЗА</span>
     </div>
@@ -275,13 +282,14 @@ footer.page{padding:14px 20px 22px;text-align:center;font:500 .62rem var(--body)
         <div><span>Плавающий</span><b class="mono" id="flV">+0.00$</b></div>
         <div><span>Реализовано</span><b class="mono" id="realV">+0.00$</b></div>
         <div><span>Ротаций</span><b class="mono" id="rotV">0</b></div>
+        <div><span>Макс. просадка</span><b class="mono" id="ddV">0.00%</b></div>
       </div>
     </section>
 
     <section class="panel">
-      <div class="p-head"><span><i style="background:var(--amber)"></i>Пул стратегий · авторотация</span></div>
+      <div class="p-head"><span><i style="background:var(--amber)"></i>Пул стратегий · умная ротация</span></div>
       <div id="stratRows"></div>
-      <div class="rot-note">↻ Убыточная серия на паре → автоматическая смена стратегии на следующую из пула</div>
+      <div class="rot-note">↻ Убыточная стратегия получает кулдаун на паре · дальше выбирается лучшая по счёту (победы − штрафы) · трейлинг тянет прибыль до пика и фиксирует на первом откате</div>
     </section>
 
     <section class="panel grow">
@@ -323,39 +331,76 @@ function ema(s,per){const k=2/(per+1);let e=s[0];for(let i=1;i<s.length;i++)e=s[
 function rsi(s,per=14){if(s.length<per+1)return 50;let g=0,l=0;
   for(let i=s.length-per;i<s.length;i++){const d=s[i]-s[i-1];if(d>0)g+=d;else l-=d;}
   if(l===0)return 100;return 100-100/(1+g/l);}
+function stdev(a){const n=a.length;if(n<2)return 0;const m=a.reduce((s,v)=>s+v,0)/n;
+  return Math.sqrt(a.reduce((s,v)=>s+(v-m)*(v-m),0)/n);}
+function rets(p,n){const s=p.series,out=[];
+  for(let i=Math.max(1,s.length-n);i<s.length;i++)out.push((s[i]-s[i-1])/s[i-1]);return out;}
+function rollHiLo(p,n){const w=p.series.slice(-n-1,-1);return{hi:Math.max(...w),lo:Math.min(...w)};}
 function gauss(){let u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();
   return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
 function plural(n,one,few,many){n=Math.abs(n)%100;const d=n%10;
   if(n>10&&n<20)return many;if(d===1)return one;if(d>=2&&d<=4)return few;return many;}
 
-/* ── пул стратегий ── */
+/* ── пул стратегий: 6 разнонаправленных сигналов с подтверждением ── */
 const STRATS=[
-  {id:'imp',name:'Импульс',color:'#38c8e0',hint:'направленное движение цены',
-   entry(p){const s=p.series,k=6;if(s.length<k+10)return null;
-     const m=(s[s.length-1]-s[s.length-1-k])/s[s.length-1-k],t=p.vol*Math.sqrt(k)*1.15;
-     return m>t?{dir:1}:m<-t?{dir:-1}:null;}},
-  {id:'rev',name:'Возврат к EMA',color:'#ffb02e',hint:'откат к скользящей средней',
+  {id:'imp',name:'Импульс-прокат',color:'#38c8e0',hint:'направленный разгон + подтверждение тренда',
+   entry(p){const s=p.series,k=6;if(s.length<40)return null;
+     const m=(s[s.length-1]-s[s.length-1-k])/s[s.length-1-k],t=p.vol*Math.sqrt(k)*1.2;
+     const last=s[s.length-1]-s[s.length-2];
+     const e5=ema(s.slice(-30),5),e15=ema(s.slice(-60),15);
+     if(m>t&&last>0&&e5>e15)return{dir:1,why:'импульс + продолжение'};
+     if(m<-t&&last<0&&e5<e15)return{dir:-1,why:'импульс + продолжение'};
+     return null;}},
+  {id:'rev',name:'Возврат к EMA',color:'#ffb02e',hint:'перегрев от средней + RSI-фильтр',
+   entry(p){const s=p.series;if(s.length<45)return null;
+     const e=ema(s.slice(-70),20),d=(s[s.length-1]-e)/e,t=p.vol*2.3,r=rsi(s);
+     if(d<-t&&r<40)return{dir:1,why:`отрыв от EMA ${(d/p.vol).toFixed(1)}σ · RSI ${r|0}`};
+     if(d>t&&r>60)return{dir:-1,why:`отрыв от EMA ${(d/p.vol).toFixed(1)}σ · RSI ${r|0}`};
+     return null;}},
+  {id:'fake',name:'Ложный пробой',color:'#a06bff',hint:'разворот после ложного выхода из диапазона',
+   entry(p){const s=p.series;if(s.length<35)return null;
+     const {hi,lo}=rollHiLo(p,24),prev=s[s.length-2],cur=s[s.length-1];
+     if(prev>hi&&cur<=hi)return{dir:-1,why:'ложный пробой максимума'};
+     if(prev<lo&&cur>=lo)return{dir:1,why:'ложный пробой минимума'};
+     return null;}},
+  {id:'brk',name:'Истинный пробой',color:'#1fd286',hint:'выход из сжатия волатильности с удержанием',
+   entry(p){const s=p.series;if(s.length<70)return null;
+     const {hi,lo}=rollHiLo(p,24),cur=s[s.length-1],prev=s[s.length-2];
+     const r12=stdev(rets(p,12)),r40=stdev(rets(p,40));
+     if(r40===0)return null;
+     const squeeze=r12<r40*0.85;
+     if(cur>hi&&prev>hi&&squeeze)return{dir:1,why:'пробой максимума после сжатия'};
+     if(cur<lo&&prev<lo&&squeeze)return{dir:-1,why:'пробой минимума после сжатия'};
+     return null;}},
+  {id:'rsi',name:'RSI-разворот',color:'#ff6f91',hint:'экстремум RSI + первый разворотный тик',
    entry(p){const s=p.series;if(s.length<30)return null;
-     const e=ema(s.slice(-60),20),d=(s[s.length-1]-e)/e,t=p.vol*2.4;
-     return d<-t?{dir:1}:d>t?{dir:-1}:null;}},
-  {id:'brk',name:'Пробой диапазона',color:'#a06bff',hint:'выход из локального коридора',
-   entry(p){const s=p.series,w=24;if(s.length<w+10)return null;
-     const win=s.slice(-w-1,-1),hi=Math.max(...win),lo=Math.min(...win),v=s[s.length-1];
-     return v>hi?{dir:1}:v<lo?{dir:-1}:null;}},
-  {id:'rsi',name:'RSI-скальп',color:'#1fd286',hint:'перекупленность / перепроданность',
-   entry(p){const s=p.series;if(s.length<25)return null;
-     const r=rsi(s);return r<32?{dir:1}:r>68?{dir:-1}:null;}},
+     const rPrev=rsi(s.slice(0,-1)),r=rsi(s),tick=s[s.length-1]-s[s.length-2];
+     if(rPrev<28&&r>rPrev&&tick>0)return{dir:1,why:`RSI-разворот ${rPrev|0}→${r|0}`};
+     if(rPrev>72&&r<rPrev&&tick<0)return{dir:-1,why:`RSI-разворот ${rPrev|0}→${r|0}`};
+     return null;}},
+  {id:'trp',name:'Микро-тренд',color:'#6f9bff',hint:'вход по тренду на откате к EMA8',
+   entry(p){const s=p.series;if(s.length<50)return null;
+     const e8=ema(s.slice(-40),8),e21=ema(s.slice(-70),21);
+     const prev=s[s.length-2],cur=s[s.length-1],gap=p.vol*0.3;
+     if(e8>e21*(1+gap)&&prev<=e8&&cur>e8)return{dir:1,why:'откат к EMA8 в восходящем тренде'};
+     if(e8<e21*(1-gap)&&prev>=e8&&cur<e8)return{dir:-1,why:'откат к EMA8 в нисходящем тренде'};
+     return null;}},
 ];
 
 /* ── состояние ── */
 const S={running:false,mode:'connecting',deposit:10000,realized:0,trades:0,wins:0,
-  stake:500,tp:0.0010,sl:0.0007,fee:0.0002,rotateAfter:1,maxHold:50,
-  eqHist:[],stratStats:{},ws:null,simT:null,lastMsg:0,ping:0,autoStarted:false};
+  stake:500,sl:0.0007,fee:0.0002,
+  trailOn:0.0003,trailBack:0.0002,trailMode:'hard',trailPatience:2,
+  rotateAfter:1,coolTrades:4,maxPos:4,riskLimit:0.05,maxHold:60,
+  eqHist:[],eqPeak:10000,maxDD:0,stratStats:{},
+  ws:null,simT:null,lastMsg:0,ping:0,autoStarted:false};
 STRATS.forEach(st=>S.stratStats[st.id]={trades:0,wins:0,pnl:0});
 
 PAIRS.forEach((p,i)=>{Object.assign(p,{price:p.seed*(1+(Math.random()-.5)*.001),open:0,series:[],
   pos:null,stratIdx:i%STRATS.length,lossStreak:0,rotations:0,enabled:true,
-  trades:0,wins:0,pnl:0,tickN:0,prev:null,cool:0,changePct:0});p.open=p.price;});
+  trades:0,wins:0,pnl:0,tickN:0,prev:null,wait:0,changePct:0,
+  cool:{},score:{},st:0,phase:Math.random()*6.28});
+  p.open=p.price;STRATS.forEach(st=>{p.cool[st.id]=0;p.score[st.id]=0;});});
 
 /* ── журнал событий ── */
 const EVC={open:'var(--cyan)',win:'var(--up)',loss:'var(--dn)',rot:'var(--amber)',sys:'var(--dim)',warn:'var(--amber)'};
@@ -363,7 +408,7 @@ function logEv(type,text){
   const host=$('#evList'),d=document.createElement('div');
   d.className='ev';d.style.setProperty('--c',EVC[type]);
   d.innerHTML=`<span class="et mono">${new Date().toLocaleTimeString('ru-RU')}</span><span>${text}</span>`;
-  host.prepend(d);while(host.children.length>70)host.lastChild.remove();
+  host.prepend(d);while(host.children.length>80)host.lastChild.remove();
 }
 
 /* ── построение UI ── */
@@ -468,16 +513,18 @@ async function connectLive(){
   }
 }
 
-/* ── котировки: симуляция ── */
+/* ── котировки: симуляция с трендовыми волнами ── */
 function startSim(){
   if(S.mode==='sim')return;
   S.mode='sim';setConn('sim','СИМУЛЯЦИЯ','синтетический поток котировок');
   killWs();autoStart();
   if(!S.simT){
     S.simT=setInterval(()=>{PAIRS.forEach(p=>{
+      p.st++;
       const g=gauss();
+      const bias=p.vol*0.4*Math.sin(p.st/180+p.phase)+p.vol*0.25*Math.sin(p.st/47+p.phase*2);
       const shock=Math.random()<0.015?(Math.random()-.5)*6:0;
-      p.price=Math.max(p.price*(1+g*p.vol+shock*p.vol),p.seed*0.9);
+      p.price=Math.max(p.price*(1+g*p.vol+bias*0.5+shock*p.vol),p.seed*0.9);
       p.changePct=(p.price-p.open)/p.open*100;
       processTick(p);
     });},320);
@@ -487,69 +534,122 @@ function autoStart(){if(!S.autoStarted){S.autoStarted=true;setTimeout(()=>setRun
 
 /* ── предпосев истории для индикаторов ── */
 function seedSeries(p){let x=p.price;const a=[x];
-  for(let i=0;i<140;i++){x=x*(1+gauss()*p.vol);a.unshift(x);}
+  for(let i=0;i<150;i++){x=x*(1+gauss()*p.vol);a.unshift(x);}
   p.series=a;p.price=a[a.length-1];}
 
 /* ── торговое ядро ── */
+const openCount=()=>PAIRS.filter(p=>p.pos).length;
+
 function processTick(p){
   p.tickN++;
   p.series.push(p.price);if(p.series.length>420)p.series.shift();
   renderPrice(p);
   if(S.running&&p.enabled){
     if(p.pos)manage(p);
-    else if(p.cool>0)p.cool--;
+    else if(p.wait>0)p.wait--;
     else tryEntry(p);
   }
   if(p.tickN%2===0)renderPos(p);
 }
+
 function tryEntry(p){
-  const st=STRATS[p.stratIdx],sig=st.entry(p);if(!sig)return;
+  if(openCount()>=S.maxPos)return;                 // лимит одновременных позиций
+  if(p.series.length<30)return;
+  const r20=stdev(rets(p,20));                     // волатильность-гейт
+  if(r20<p.vol*0.55||r20>p.vol*4.5)return;         // мёртвый или хаотичный рынок — пропуск
+  const st=STRATS[p.stratIdx],sig=st.entry(p);
+  if(!sig)return;
   const e=p.price;
   p.pos={dir:sig.dir,entry:e,strat:st.id,ticks:0,t0:Date.now(),
-    tp:e*(1+sig.dir*S.tp),sl:e*(1-sig.dir*S.sl)};
-  logEv('open',`${p.label}: ${sig.dir>0?'▲ LONG':'▼ SHORT'} @ ${e.toFixed(p.dec)} · «${st.name}»`);
+    sl:e*(1-sig.dir*S.sl),peak:0,downTicks:0,beArmed:false};
+  logEv('open',`${p.label}: ${sig.dir>0?'▲ LONG':'▼ SHORT'} @ ${e.toFixed(p.dec)} · «${st.name}» · ${sig.why}`);
   renderPos(p);
 }
+
+/* ведение позиции: трейлинг прибыли + безубыток + жёсткий SL */
 function manage(p){
-  const pos=p.pos;pos.ticks++;let reason=null;
-  if(pos.dir>0){if(p.price>=pos.tp)reason='TP';else if(p.price<=pos.sl)reason='SL';}
-  else{if(p.price<=pos.tp)reason='TP';else if(p.price>=pos.sl)reason='SL';}
-  if(!reason&&pos.ticks>=S.maxHold)reason='TIME';
-  if(reason)closePos(p,reason);
+  const pos=p.pos;pos.ticks++;
+  const cur=(p.price-pos.entry)/pos.entry*pos.dir;
+  if(cur>pos.peak){pos.peak=cur;pos.downTicks=0;}else pos.downTicks++;
+
+  // включение трейлинга + перенос стопа в безубыток
+  if(!pos.beArmed&&pos.peak>=S.trailOn){
+    pos.beArmed=true;
+    pos.sl=pos.entry*(1+pos.dir*S.fee*1.5);
+    logEv('sys',`${p.label}: трейлинг активен · безубыток включён (пик +${(pos.peak*100).toFixed(3)}%)`);
+  }
+  // жёсткий стоп (до безубытка) или фиксация в безубытке
+  const slHit=pos.dir>0?p.price<=pos.sl:p.price>=pos.sl;
+  if(slHit){closePos(p,pos.beArmed?'Б/У':'SL');return;}
+  // фиксация прибыли на откате от пика
+  if(pos.beArmed){
+    let exit=false;
+    if(S.trailMode==='hard'){if(pos.downTicks>=S.trailPatience)exit=true;}   // первое снижение прибыли
+    else if((pos.peak-cur)>=S.trailBack)exit=true;                            // мягкий откат от пика
+    if(exit){closePos(p,'ТРЕЙЛ');return;}
+  }
+  if(pos.ticks>=S.maxHold){closePos(p,'ВРЕМЯ');return;}
 }
+
 function closePos(p,reason){
   const pos=p.pos;if(!pos)return;
   const exit=p.price;
   const gross=(exit-pos.entry)/pos.entry*pos.dir;
   const pnl=(gross-S.fee)*S.stake;
   S.realized+=pnl;S.trades++;if(pnl>0)S.wins++;
-  p.trades++;if(pnl>0)p.wins++;p.pnl+=pnl;p.cool=2;
+  p.trades++;if(pnl>0)p.wins++;p.pnl+=p.pnl*0+pnl;p.wait=3;
   const st=STRATS.find(s=>s.id===pos.strat),ss=S.stratStats[pos.strat];
   ss.trades++;ss.pnl+=pnl;if(pnl>0)ss.wins++;
   addTrade({t:new Date(),pair:p.label,strat:st,dir:pos.dir,entry:pos.entry,exit,dec:p.dec,pnl,reason});
   const win=pnl>0;
   logEv(win?'win':'loss',`${p.label} · ${pos.dir>0?'LONG':'SHORT'} «${st.name}» → ${reason} · ${win?'+':''}${pnl.toFixed(2)}$`);
   p.pos=null;
+
+  // счёт и кулдауны стратегий на паре
+  p.score[pos.strat]+=win?1:-1.6;
+  Object.keys(p.cool).forEach(k=>{if(p.cool[k]>0)p.cool[k]--;});
   if(!win){p.lossStreak++;if(p.lossStreak>=S.rotateAfter)rotate(p);}
   else p.lossStreak=0;
+
   pushEq();renderStrats();renderCardStats(p);renderHeader();renderPos(p);
+
+  // риск-лимит по депозиту
+  if(S.running&&S.realized<-S.deposit*S.riskLimit){
+    logEv('warn',`РИСК-ЛИМИТ: потеряно ${(Math.abs(S.realized)/S.deposit*100).toFixed(1)}% депозита — бот остановлен`);
+    setRunning(false);
+  }
 }
+
+/* умная ротация: кулдаун для убыточной + выбор лучшей по счёту */
 function rotate(p){
-  const old=STRATS[p.stratIdx];
+  const oldId=STRATS[p.stratIdx].id,oldName=STRATS[p.stratIdx].name;
+  p.cool[oldId]=S.coolTrades;
   p.stratIdx=(p.stratIdx+1)%STRATS.length;
+  let best=-1,bestScore=-1e9;
+  STRATS.forEach((st,i)=>{
+    if(st.id===oldId||(p.cool[st.id]||0)>0)return;
+    if(p.score[st.id]>bestScore){bestScore=p.score[st.id];best=i;}
+  });
+  if(best>=0)p.stratIdx=best;
   const nw=STRATS[p.stratIdx];
   p.lossStreak=0;p.rotations++;
-  logEv('rot',`${p.label}: убыточная серия — смена «${old.name}» → «${nw.name}»`);
+  logEv('rot',`${p.label}: «${oldName}» в кулдауне (${S.coolTrades} сдел.) → «${nw.name}» (счёт ${bestScore>=0?'+':''}${bestScore.toFixed(1)})`);
   p.el.card.style.setProperty('--sc',nw.color);
   p.el.chip.textContent=nw.name;p.el.chip.title=nw.hint;
   p.el.chip.classList.remove('spin');void p.el.chip.offsetWidth;p.el.chip.classList.add('spin');
   p.el.rots.textContent='↻ '+p.rotations;
 }
 
-/* ── эквити ── */
+/* ── эквити и просадка ── */
 function floating(){let fl=0;PAIRS.forEach(p=>{if(p.pos)fl+=(p.price-p.pos.entry)/p.pos.entry*p.pos.dir*S.stake;});return fl;}
 function equity(){return S.deposit+S.realized+floating();}
-function pushEq(){S.eqHist.push({t:Date.now(),v:equity()});if(S.eqHist.length>600)S.eqHist.shift();}
+function pushEq(){
+  const eq=equity();
+  S.eqHist.push({t:Date.now(),v:eq});if(S.eqHist.length>600)S.eqHist.shift();
+  if(eq>S.eqPeak)S.eqPeak=eq;
+  const dd=(S.eqPeak-eq)/S.eqPeak*100;
+  if(dd>S.maxDD)S.maxDD=dd;
+}
 
 /* ── отрисовка ── */
 function renderPrice(p){
@@ -610,8 +710,8 @@ function renderPos(p){
   const sec=Math.round((Date.now()-pos.t0)/1000);
   const st=STRATS.find(s=>s.id===pos.strat);
   el.className='pos live '+(pos.dir>0?'long':'short');
-  el.innerHTML=`<b>${pos.dir>0?'▲ LONG':'▼ SHORT'}</b> @ ${pos.entry.toFixed(p.dec)} · TP ${pos.tp.toFixed(p.dec)} · SL ${pos.sl.toFixed(p.dec)}<br>
-    <span class="fpnl ${fl>=0?'up':'dn'}">${fl>=0?'+':''}${fl.toFixed(2)}$</span> · «${st.name}» · ${sec}с`;
+  el.innerHTML=`<b>${pos.dir>0?'▲ LONG':'▼ SHORT'}</b> @ ${pos.entry.toFixed(p.dec)} · SL ${pos.sl.toFixed(p.dec)}${pos.beArmed?' <span class="be">Б/У</span>':''}<br>
+    <span class="fpnl ${fl>=0?'up':'dn'}">${fl>=0?'+':''}${fl.toFixed(2)}$</span> · пик <span>${(pos.peak*100).toFixed(3)}%</span>${pos.beArmed?' <span class="trail">⚡трейлинг</span>':''} · «${st.name}» · ${sec}с`;
 }
 function renderCardStats(p){
   p.el.cTr.textContent=p.trades;
@@ -628,11 +728,10 @@ function renderHeader(){
   $('#trV').textContent=S.trades;
   $('#wrV').textContent=S.trades?Math.round(S.wins/S.trades*100)+'%':'—';
   $('#pingV').textContent=S.mode==='live'?S.ping+'ms':'sim';
-  $('#flV').textContent=(fl>=0?'+':'')+fl.toFixed(2)+'$';
-  $('#flV').className='mono '+(fl>=0?'up':'dn');
-  $('#realV').textContent=(S.realized>=0?'+':'')+S.realized.toFixed(2)+'$';
-  $('#realV').className='mono '+(S.realized>=0?'up':'dn');
+  const f=$('#flV');f.textContent=(fl>=0?'+':'')+fl.toFixed(2)+'$';f.className='mono '+(fl>=0?'up':'dn');
+  const r=$('#realV');r.textContent=(S.realized>=0?'+':'')+S.realized.toFixed(2)+'$';r.className='mono '+(S.realized>=0?'up':'dn');
   $('#rotV').textContent=PAIRS.reduce((a,p)=>a+p.rotations,0);
+  const d=$('#ddV');d.textContent='−'+S.maxDD.toFixed(2)+'%';d.className='mono '+(S.maxDD>2?'dn':'');
 }
 function addTrade(t){
   $('#noTrades')?.remove();
@@ -656,7 +755,7 @@ function setRunning(v){
   const chip=$('#botChip');
   chip.textContent=v?'БОТ: АКТИВЕН':'БОТ: ПАУЗА';chip.classList.toggle('on',v);
   logEv('sys',v?'Бот запущен — автоторговля включена':'Бот остановлен — позиции закрыты по рынку');
-  if(!v)PAIRS.forEach(p=>{if(p.pos)closePos(p,'STOP');});
+  if(!v)PAIRS.forEach(p=>{if(p.pos)closePos(p,'СТОП');});
 }
 $('#startBtn').onclick=()=>setRunning(!S.running);
 addEventListener('keydown',e=>{
@@ -668,10 +767,13 @@ $('#modeBtn').onclick=()=>{
 };
 $('#stake').onchange=e=>{S.stake=Math.min(5000,Math.max(50,+e.target.value||500));e.target.value=S.stake;
   logEv('sys',`Ставка на сделку: ${S.stake}$`);};
-$('#tpIn').onchange=e=>{S.tp=Math.max(0.02,+e.target.value||0.10)/100;};
 $('#slIn').onchange=e=>{S.sl=Math.max(0.02,+e.target.value||0.07)/100;};
-$('#rotIn').onchange=e=>{S.rotateAfter=+e.target.value;
-  logEv('sys',`Ротация стратегии после ${S.rotateAfter} ${plural(S.rotateAfter,'убытка','убытков','убытков')} подряд`);};
+$('#trOnIn').onchange=e=>{S.trailOn=Math.max(0.01,+e.target.value||0.03)/100;};
+$('#trBackIn').onchange=e=>{S.trailBack=Math.max(0.01,+e.target.value||0.02)/100;};
+$('#fixIn').onchange=e=>{S.trailMode=e.target.value;
+  logEv('sys',`Фиксация прибыли: ${S.trailMode==='hard'?'жёсткая (первое снижение)':'мягкая (откат '+ (S.trailBack*100).toFixed(2)+'%)'}`);};
+$('#maxPosIn').onchange=e=>{S.maxPos=+e.target.value;};
+$('#riskIn').onchange=e=>{S.riskLimit=Math.min(30,Math.max(1,+e.target.value||5))/100;};
 $$('.tab').forEach(b=>b.onclick=()=>{
   $$('.tab').forEach(x=>x.classList.toggle('act',x===b));
   $('#tradePanel').classList.toggle('hidden',b.dataset.t!=='trades');
@@ -683,6 +785,7 @@ buildCards();buildTape();renderStrats();
 PAIRS.forEach(p=>seedSeries(p));
 pushEq();renderHeader();drawEq();updateTape();
 logEv('sys','Терминал инициализирован · виртуальный депозит $10 000 · 6 валютных пар');
+logEv('sys','Риск-движок v3: трейлинг прибыли до пика, безубыток, волатильность-гейт, умная ротация, риск-лимит');
 logEv('sys','Бот запустится автоматически после получения котировок (пробел — старт/стоп)');
 connectLive();
 

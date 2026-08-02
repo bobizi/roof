@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>SCALPER // AUTOPILOT — MULTI-TERMINAL</title>
+<title>SCALPER // AUTOPILOT — BASKET ENGINE</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -43,11 +43,10 @@ input,select{user-select:text}
 @keyframes blink{50%{opacity:.4}}
 
 .main{display:grid;grid-template-columns:1fr;padding-bottom:150px;
- grid-template-areas:"acc" "watch" "sym" "sig" "chart" "tabs" "risk" "entry" "bt" "logic"}
+ grid-template-areas:"acc" "set" "watch" "sym" "sig" "chart" "tabs" "logic"}
 .colA,.colB,.colC{display:contents}
-.accCard{grid-area:acc}.watchCard{grid-area:watch}.symCard{grid-area:sym}.sig{grid-area:sig}
-.chartCard{grid-area:chart}.tabsCard{grid-area:tabs}.riskAcc{grid-area:risk}.entryAcc{grid-area:entry}
-.btAcc{grid-area:bt}.logicAcc{grid-area:logic}
+.accCard{grid-area:acc}.setCard{grid-area:set}.watchCard{grid-area:watch}.symCard{grid-area:sym}
+.sig{grid-area:sig}.chartCard{grid-area:chart}.tabsCard{grid-area:tabs}.logicAcc{grid-area:logic}
 
 .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:12px;contain:layout style}
 .chead{font-family:'Chakra Petch';font-weight:600;font-size:10.5px;letter-spacing:2px;color:var(--mut);margin-bottom:9px;display:flex;justify-content:space-between;align-items:center;gap:8px}
@@ -63,12 +62,20 @@ input,select{user-select:text}
 .depBtn{border-radius:8px;border:1px solid #24344f;background:#22304a;color:var(--txt);font-family:'Chakra Petch';font-size:10px;letter-spacing:1px;padding:0 12px;cursor:pointer}
 .depBtn.rst{color:var(--red);border-color:rgba(255,84,112,.4);background:rgba(255,84,112,.06)}
 
+/* settings */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.field label{display:block;font-size:9.5px;letter-spacing:1px;color:var(--mut);text-transform:uppercase;margin-bottom:4px}
+.field input[type=number]{width:100%;background:#0d1424;border:1px solid #24344f;border-radius:8px;padding:10px 12px;color:var(--txt);font-family:'IBM Plex Mono';font-size:16px;appearance:none}
+.field input[type=number]:focus{outline:none;border-color:var(--grn);box-shadow:0 0 0 3px rgba(60,227,154,.12)}
+.rng{width:100%;height:26px;accent-color:var(--grn);cursor:pointer;margin-top:6px}
+.riskVal{color:var(--amb);font-family:'Chakra Petch';font-weight:700}
+.hint{margin-top:11px;font-size:10.5px;line-height:1.6;color:#5f7391;border-top:1px dashed var(--line);padding-top:9px}
+
 /* market watch */
-.wrow{display:grid;grid-template-columns:60px 13px 1fr 56px 10px 36px 20px;gap:6px;align-items:center;padding:8px 6px;border-radius:8px;cursor:pointer;border:1px solid transparent;transition:opacity .2s}
+.wrow{display:grid;grid-template-columns:1fr 56px 10px 36px 20px;gap:7px;align-items:center;padding:8px 6px;border-radius:8px;cursor:pointer;border:1px solid transparent;transition:opacity .2s}
 .wrow.off{opacity:.4}
 .wrow.sel{background:#16233a;border-color:#2a3f63}
 .wname{font-family:'Chakra Petch';font-weight:600;font-size:11px;letter-spacing:1px}
-.wfit{color:var(--cyn);font-style:normal;font-size:10px}
 .wprice{font-size:12.5px;text-align:right;transition:color .12s}
 .wprice.up{color:var(--grn2)} .wprice.dn{color:var(--red)}
 .wchg{font-size:10px;text-align:right;color:var(--mut)}
@@ -95,7 +102,8 @@ input,select{user-select:text}
 .mtrade .btn{flex:1;height:46px;font-size:13px}
 .btnBuy{border:none;color:#04231a;background:linear-gradient(180deg,#3ce39a,#18bd7c)}
 .btnSell{border:none;color:#fff;background:linear-gradient(180deg,#ff6e84,#e03552)}
-.selInfo{margin-top:8px;font-size:10.5px;color:var(--mut)}
+.basketBar{margin-top:10px;background:var(--panel2);border:1px solid #1d2a40;border-radius:8px;padding:8px 10px;display:flex;justify-content:space-between;gap:8px;font-size:11px}
+.basketBar b{font-weight:600}
 
 /* signal */
 .verdict{font-family:'Chakra Petch';font-weight:700;font-size:9.5px;letter-spacing:1.5px;padding:4px 8px;border-radius:4px;border:1px solid var(--line);color:var(--mut);transition:all .2s;white-space:nowrap}
@@ -127,19 +135,6 @@ input,select{user-select:text}
 .cwrap{height:200px}
 canvas{width:100%;height:100%;display:block}
 
-/* backtest / fit */
-.btBtn{width:100%;height:44px;border-radius:8px;border:1px solid rgba(90,209,255,.45);background:rgba(90,209,255,.08);color:var(--cyn);font-family:'Chakra Petch';font-weight:700;font-size:11.5px;letter-spacing:1px;cursor:pointer;transition:all .15s}
-.btBtn.fit{border-color:rgba(255,180,84,.45);background:rgba(255,180,84,.08);color:var(--amb)}
-.btBtn:disabled{opacity:.5;cursor:wait}
-.btRow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
-.btGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
-.btWrap{height:90px;margin-top:8px}
-.btNote{margin-top:8px;font-size:10px;color:var(--mut);line-height:1.5}
-.profHead{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:1px dashed var(--line)}
-.profHead b{font-family:'Chakra Petch';font-size:10.5px;letter-spacing:2px;color:var(--amb)}
-.miniBtn2{background:none;border:1px solid #24344f;border-radius:6px;color:var(--mut);font-family:'Chakra Petch';font-size:9px;letter-spacing:1px;padding:5px 8px;cursor:pointer}
-.miniBtn2:hover{color:var(--red);border-color:rgba(255,84,112,.5)}
-
 /* tabs */
 .tabs{display:flex;gap:6px;margin-bottom:10px}
 .tbtn{flex:1;padding:9px 4px;background:#0d1424;border:1px solid #24344f;color:var(--mut);font-family:'Chakra Petch';font-size:9.5px;letter-spacing:1.5px;border-radius:8px;cursor:pointer;transition:all .15s}
@@ -159,7 +154,6 @@ canvas{width:100%;height:100%;display:block}
 .cShort{background:rgba(255,180,84,.16);color:var(--amb)}
 .cExit{background:rgba(115,135,163,.18);color:#a9bcd6}
 .cSym{background:rgba(90,209,255,.13);color:var(--cyn)}
-.cBsk{background:rgba(90,209,255,.14);color:var(--cyn);border:1px dashed rgba(90,209,255,.5)}
 .note{flex:1;color:#b9c8dd;font-size:11.5px}
 .pp{font-weight:600;font-size:12px;white-space:nowrap}
 .tr.win .pp{color:var(--grn)} .tr.loss .pp{color:var(--red)} .tr.flat .pp{color:#8fa3bd}
@@ -167,25 +161,16 @@ canvas{width:100%;height:100%;display:block}
 .xb{background:none;border:1px solid #24344f;border-radius:6px;color:var(--mut);width:24px;height:22px;font-size:11px;cursor:pointer;flex:none}
 @keyframes slideIn{from{opacity:0;transform:translateY(-7px)}to{opacity:1;transform:none}}
 
-/* accordions */
+/* logic accordion */
 details.acc{border:1px solid var(--line);border-radius:12px;background:var(--panel);margin-bottom:12px;overflow:hidden}
 summary{list-style:none;cursor:pointer;padding:13px 14px;font-family:'Chakra Petch';font-weight:600;font-size:11px;letter-spacing:2px;color:#a9bcd6;display:flex;justify-content:space-between;align-items:center}
 summary::after{content:'▾';transition:transform .25s;color:var(--mut)}
 details[open] summary::after{transform:rotate(180deg)}
 .accBody{padding:2px 14px 14px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.field label{display:block;font-size:9.5px;letter-spacing:1px;color:var(--mut);text-transform:uppercase;margin-bottom:4px}
-.field input,.field select,.duo input,.duo select{width:100%;background:#0d1424;border:1px solid #24344f;border-radius:8px;padding:10px 12px;color:var(--txt);font-family:'IBM Plex Mono';font-size:16px;appearance:none}
-.field select,.duo select{background-image:linear-gradient(45deg,transparent 50%,var(--mut) 50%),linear-gradient(135deg,var(--mut) 50%,transparent 50%);background-position:calc(100% - 18px) 55%,calc(100% - 13px) 55%;background-size:5px 5px;background-repeat:no-repeat}
-.field input:focus,.field select:focus,.duo input:focus,.duo select:focus{outline:none;border-color:var(--grn);box-shadow:0 0 0 3px rgba(60,227,154,.12)}
-.duo{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.chk{display:flex;align-items:center;gap:9px;margin-top:12px;font-size:11.5px;color:#b9c8dd}
-.chk input{width:18px;height:18px;accent-color:var(--grn);flex:none}
-.hint{margin-top:11px;font-size:10.5px;line-height:1.6;color:#5f7391;border-top:1px dashed var(--line);padding-top:9px}
 .logic{padding-left:18px;color:#b9c8dd;font-size:12.5px;line-height:1.55}
 .logic li{margin:7px 0}
 .logic b{font-weight:600}
-.k1{color:var(--grn)} .k2{color:var(--amb)} .k3{color:var(--red)} .k4{color:var(--cyn)} .k5{color:var(--grn2)}
+.k1{color:var(--grn)} .k2{color:var(--amb)} .k3{color:var(--red)} .k4{color:var(--cyn)}
 
 /* dock */
 .dock{position:fixed;left:0;right:0;bottom:0;z-index:40;
@@ -217,7 +202,7 @@ details[open] summary::after{transform:rotate(180deg)}
     gap:14px;padding-bottom:0;overflow:hidden;grid-template-areas:none}
   .colA,.colB,.colC{display:flex;flex-direction:column;gap:14px;min-height:0;overflow-y:auto;padding-right:3px}
   .main .card,.main details.acc{margin-bottom:0}
-  .accCard,.watchCard,.symCard,.sig,.chartCard,.tabsCard,.riskAcc,.entryAcc,.btAcc,.logicAcc{grid-area:auto}
+  .accCard,.setCard,.watchCard,.symCard,.sig,.chartCard,.tabsCard,.logicAcc{grid-area:auto}
   .watchCard{flex:1;display:flex;flex-direction:column;min-height:150px}
   #watch{flex:1;overflow-y:auto;overscroll-behavior:contain}
   .chartCard{flex:1;display:flex;flex-direction:column;min-height:260px}
@@ -230,14 +215,13 @@ details[open] summary::after{transform:rotate(180deg)}
   .btn{height:44px;padding:0 24px}
   .btn.start{min-width:230px}
   .foot{grid-column:auto;margin-left:auto;padding:0}
-  .field input,.field select,.duo input,.duo select,.dep input,.addrow select{font-size:13.5px;padding:9px 11px}
+  .field input[type=number],.dep input,.addrow select{font-size:13.5px;padding:9px 11px}
   @media (hover:hover){
     .wrow:hover{background:#131e31}
     .btnBuy:hover{filter:brightness(1.12)}
     .btnSell:hover{filter:brightness(1.12)}
     .btn.stop:hover{background:rgba(255,84,112,.16)}
     .btn.close:hover{background:#2c3d5a}
-    .btBtn:hover{filter:brightness(1.2)}
     .tr:hover{background:#152034}
     .tile:hover{border-color:#3a5578}
     summary:hover{color:var(--txt)}
@@ -254,12 +238,11 @@ details[open] summary::after{transform:rotate(180deg)}
 <div class="app">
 
   <header class="top">
-    <div class="brand"><span class="glyph">◢◤</span> SCALPER <span class="thin">/ MT</span></div>
+    <div class="brand"><span class="glyph">◢◤</span> SCALPER <span class="thin">/ BASKET</span></div>
     <div class="hacc">
       <div class="hc"><span class="lbl">Баланс</span><b id="hBal">$0</b></div>
       <div class="hc"><span class="lbl">Средства</span><b id="hEq">$0</b></div>
-      <div class="hc"><span class="lbl">Нагрузка</span><b id="hLoad">—</b></div>
-      <div class="hc"><span class="lbl">Уровень</span><b id="hLvl">—</b></div>
+      <div class="hc"><span class="lbl">Риск</span><b id="hLoad">—</b></div>
     </div>
     <div class="conn"><i class="dot" id="dot"></i><span id="connTxt">OFFLINE</span></div>
   </header>
@@ -276,8 +259,8 @@ details[open] summary::after{transform:rotate(180deg)}
           <div class="sc"><span class="lbl">Нагрузка</span><b id="aLoad">—</b></div>
           <div class="sc"><span class="lbl">Маржа</span><b id="aUsed">—</b></div>
           <div class="sc"><span class="lbl">Свободно</span><b id="aFree">—</b></div>
-          <div class="sc"><span class="lbl">Лимит маржи</span><b id="aLimit">—</b></div>
-          <div class="sc"><span class="lbl">Уровень</span><b id="aLvl">—</b></div>
+          <div class="sc"><span class="lbl">Лимит риска</span><b id="aLimit">—</b></div>
+          <div class="sc"><span class="lbl">Стоп корзины</span><b id="aBStop">—</b></div>
         </div>
         <div class="dep">
           <input type="number" id="depIn" value="1000" min="1" inputmode="numeric">
@@ -286,8 +269,23 @@ details[open] summary::after{transform:rotate(180deg)}
         </div>
       </section>
 
+      <section class="card setCard">
+        <div class="chead"><span>НАСТРОЙКИ</span><span style="font-size:8.5px;letter-spacing:.5px">только ставка и риск</span></div>
+        <div class="grid2">
+          <div class="field">
+            <label>Ставка, USDT</label>
+            <input type="number" id="size" value="100" min="10" inputmode="numeric">
+          </div>
+          <div class="field">
+            <label>Макс. риск: <b class="riskVal" id="riskLbl">50%</b></label>
+            <input type="range" id="risk" min="1" max="100" value="50" class="rng">
+          </div>
+        </div>
+        <div class="hint">Риск ограничивает и суммарную маржу (% от средств), и максимальный минус корзины пары — при его достижении корзина закрывается. Всё остальное (входы, хеджи, усреднения, фиксацию пика) движок решает сам.</div>
+      </section>
+
       <section class="card watchCard">
-        <div class="chead"><span>MARKET WATCH · <b id="wCount">0</b></span><span style="font-size:8.5px;letter-spacing:.5px">⚙ = личный профиль пары</span></div>
+        <div class="chead"><span>MARKET WATCH · <b id="wCount">0</b></span><span style="font-size:8.5px;letter-spacing:.5px">ползунок = вкл/выкл пару</span></div>
         <div id="watch"></div>
         <div class="addrow">
           <select id="addSel"></select>
@@ -295,111 +293,14 @@ details[open] summary::after{transform:rotate(180deg)}
         </div>
       </section>
 
-      <details class="acc riskAcc" open>
-        <summary>РИСК И ДВИЖОК ВОССТАНОВЛЕНИЯ</summary>
-        <div class="accBody"><div class="grid2">
-          <div class="field"><label>Стоп-лосс (одиночная), п.</label><input type="number" id="sl" value="50" min="1" inputmode="numeric"></div>
-          <div class="field"><label>Базовый размер, USDT</label><input type="number" id="size" value="100" min="10" inputmode="numeric"></div>
-          <div class="field" style="grid-column:1/-1"><label>Откат от пика одиночной → закрыть сразу</label>
-            <div class="duo">
-              <input type="number" id="trailV" value="1" min="0.5" step="0.5" inputmode="decimal">
-              <select id="trailU"><option value="pips">пунктов</option><option value="usd">в $</option></select>
-            </div>
-          </div>
-          <div class="field"><label>Макс. маржа, % средств (1–100)</label><input type="number" id="margPct" value="50" min="1" max="100" step="1" inputmode="numeric"></div>
-          <div class="field"><label>Шаг усреднения, п.</label><input type="number" id="step" value="30" min="5" inputmode="numeric"></div>
-          <div class="field"><label>Тейк корзины, $</label><input type="number" id="bTake" value="2" min="0.1" step="0.5" inputmode="decimal"></div>
-          <div class="field"><label>Макс. убыток корзины, $</label><input type="number" id="bStop" value="0" min="0" inputmode="numeric"></div>
-          <div class="field"><label>Пауза между действиями, с</label><input type="number" id="cool" value="3" min="0" inputmode="numeric"></div>
-        </div>
-        <label class="chk"><input type="checkbox" id="guard"> Дополнительно: блокировать сделку, если свободных средств меньше её размера</label>
-        <div class="hint">Эти поля — ручные настройки. Если у пары есть подобранный профиль (⚙), автопилот использует его вместо полей выше. Макс. убыток корзины 0 = выключен.</div>
-        </div>
-      </details>
-
-      <details class="acc entryAcc">
-        <summary>ВХОД И ИНДИКАТОРЫ</summary>
-        <div class="accBody"><div class="grid2">
-          <div class="field"><label>Мин. голосов для входа</label><input type="number" id="thr" value="6" min="1" max="18" inputmode="numeric"></div>
-          <div class="field"><label>—</label><div style="font-size:10px;color:var(--mut);padding-top:10px">из 18 индикаторов</div></div>
-          <div class="field"><label>Быстрая EMA</label><input type="number" id="emaF" value="9" min="2" inputmode="numeric"></div>
-          <div class="field"><label>Медленная EMA</label><input type="number" id="emaS" value="21" min="3" inputmode="numeric"></div>
-        </div>
-        <div class="hint">Индикаторы вкл/выкл — тапом по плитке. Пороги: RSI 30/70 · Stoch 20/80 · Bollinger — выход за ленту · W%R −80/−20 · CCI ±100 · MFI 20/80 · VWAP ±3п · объём ±15% · ADX&gt;20.</div>
-        </div>
-      </details>
-
-      <details class="acc btAcc" open>
-        <summary>ТЕСТ И ПОДБОР СТРАТЕГИИ · ИСТОРИЯ</summary>
-        <div class="accBody">
-          <div class="grid2">
-            <div class="field"><label>Период истории</label>
-              <select id="btPeriod">
-                <option value="6h">6 часов · свечи 1м</option>
-                <option value="1d" selected>1 день · свечи 5м</option>
-                <option value="1w">7 дней · свечи 15м</option>
-                <option value="1M">30 дней · свечи 1ч</option>
-              </select>
-            </div>
-            <div class="field"><label>Депозит теста, $</label><input type="number" id="btDep" value="10000" min="100" inputmode="numeric"></div>
-          </div>
-          <div class="btRow">
-            <button class="btBtn" id="btnBT">▶ ТЕСТ ТЕКУЩЕЙ</button>
-            <button class="btBtn fit" id="btnFit">⚙ ПОДБОР ПАРАМЕТРОВ</button>
-          </div>
-          <label class="chk"><input type="checkbox" id="autoRefit" checked> Автоподбор в реальном времени (перефитчивает пары на свежей истории)</label>
-          <div class="grid2" style="margin-top:8px">
-            <div class="field"><label>Периодичность</label>
-              <select id="fitEvery">
-                <option value="5" selected>каждые 5 минут</option>
-                <option value="15">каждые 15 минут</option>
-                <option value="30">каждые 30 минут</option>
-              </select>
-            </div>
-            <div class="field"><label>Профиль пары <span id="fitSymLbl" style="color:var(--cyn)">BTCUSDT</span></label>
-              <div id="fitTime" style="font-size:11px;color:var(--mut);padding-top:10px">не подобран</div>
-            </div>
-          </div>
-          <div class="hint">Подбор: 1024 комбинации (голоса × стоп × трейлинг × шаг × тейк) на истории пары; критерий = прибыль − 0.7×просадка. Лучшая сохраняется как профиль пары ⚙ и применяется автопилотом. При автоподборе новый профиль ставится, только если лучше старого ≥ 10%.</div>
-
-          <div id="fitRes" class="hidden">
-            <div class="profHead"><b>ПРОФИЛЬ ПАРЫ <span id="fitSym">—</span></b><button class="miniBtn2" id="btnProfRst">✕ СБРОСИТЬ</button></div>
-            <div class="btGrid">
-              <div class="sc"><span class="lbl">Голоса ≥</span><b id="fThr">—</b></div>
-              <div class="sc"><span class="lbl">Стоп, п</span><b id="fSl">—</b></div>
-              <div class="sc"><span class="lbl">Трейлинг, п</span><b id="fTr">—</b></div>
-              <div class="sc"><span class="lbl">Шаг уср., п</span><b id="fSt">—</b></div>
-              <div class="sc"><span class="lbl">Тейк корр., $</span><b id="fTk">—</b></div>
-              <div class="sc"><span class="lbl">Тест дал</span><b id="fPL">—</b></div>
-            </div>
-            <div class="btNote" id="fitNote"></div>
-          </div>
-
-          <div id="btRes" class="hidden">
-            <div class="profHead"><b>РЕЗУЛЬТАТ ТЕСТА</b></div>
-            <div class="btGrid">
-              <div class="sc"><span class="lbl">Итог</span><b id="btPL">—</b></div>
-              <div class="sc"><span class="lbl">Доходность</span><b id="btPCT">—</b></div>
-              <div class="sc"><span class="lbl">Эквити</span><b id="btEQ">—</b></div>
-              <div class="sc"><span class="lbl">Сделок</span><b id="btTr">—</b></div>
-              <div class="sc"><span class="lbl">Winrate</span><b id="btWR">—</b></div>
-              <div class="sc"><span class="lbl">Макс. просадка</span><b id="btDD" style="color:var(--red)">—</b></div>
-            </div>
-            <div class="cwrap btWrap"><canvas id="btCv"></canvas></div>
-            <div class="btNote" id="btNote"></div>
-          </div>
-        </div>
-      </details>
-
       <details class="acc logicAcc">
-        <summary>ЛОГИКА АВТОПИЛОТА</summary>
+        <summary>МЕХАНИКА КОРЗИН</summary>
         <div class="accBody"><ol class="logic">
-          <li><b class="k4">Вход:</b> 18 индикаторов голосуют по каждой паре. Голоса ≥ +N → LONG, ≤ −N → SHORT.</li>
-          <li><b class="k1">Одиночная сделка:</b> прибыль растёт — держим пик; откат от пика — фиксируем сразу; прибыли не было — ждём стоп-лосс.</li>
-          <li><b class="k2">Минус + разворот сигнала</b> → хедж на объём корзины. <b class="k3">Минус + сигнал за корзину</b> → усреднение расширяющимся шагом.</li>
-          <li><b class="k5">Корзина (2+ сделок)</b> закрывается целиком по тейку корзины / откату от пика к безубытку / макс. убытку.</li>
-          <li><b class="k2">Подбор стратегии:</b> для каждой пары терминал перебирает 1024 комбинации параметров на истории и торгует её по лучшему профилю; автоподбор обновляет профили на свежих данных с защитой от ухудшения.</li>
-          <li><b class="k4">Лимит маржи:</b> новые сделки отклоняются при превышении заданного % (1–100) от доступных средств.</li>
+          <li><b class="k4">Вход:</b> большинство голосов включённых индикаторов → LONG или SHORT. Порог считается сам из числа включённых.</li>
+          <li><b class="k1">Общая корзина пары:</b> все сделки пары суммируются. Пока общий плюс растёт (+9 → +15 → +18) — держим.</li>
+          <li><b class="k2">Любое уменьшение от пика</b> (+18 → +17.99) → <b>все сделки пары закрываются сразу</b>.</li>
+          <li><b class="k3">Корзина в минусе</b> — автокомпенсация: разворот сигнала → хедж на объём корзины; сигнал за корзину → усреднение. До выхода в плюс.</li>
+          <li><b class="k3">Макс. риск</b> — стоп корзины и лимит маржи (1–100% средств).</li>
         </ol></div>
       </details>
     </div>
@@ -417,7 +318,11 @@ details[open] summary::after{transform:rotate(180deg)}
             <button class="btn btnSell" id="btnMSell">▼ SELL</button>
           </div>
         </div>
-        <div class="selInfo" id="selInfo">1 пункт = — · позиций: 0</div>
+        <div class="basketBar">
+          <span>КОРЗИНА: <b id="bCnt">0</b> сделок</span>
+          <span>Σ P/L: <b id="bPL">$0.00</b></span>
+          <span>ПИК: <b id="bPeak">$0.00</b></span>
+        </div>
       </section>
 
       <section class="card sig">
@@ -463,33 +368,24 @@ details[open] summary::after{transform:rotate(180deg)}
 <script>
 /* ================= CORE ================= */
 const $=id=>document.getElementById(id);
-const el={dot:$('dot'),connTxt:$('connTxt'),hBal:$('hBal'),hEq:$('hEq'),hLoad:$('hLoad'),hLvl:$('hLvl'),
+const el={dot:$('dot'),connTxt:$('connTxt'),hBal:$('hBal'),hEq:$('hEq'),hLoad:$('hLoad'),
  aBal:$('aBal'),aEq:$('aEq'),aSpl:$('aSpl'),aLoad:$('aLoad'),aUsed:$('aUsed'),aFree:$('aFree'),
- aLimit:$('aLimit'),aLvl:$('aLvl'),
+ aLimit:$('aLimit'),aBStop:$('aBStop'),
  depIn:$('depIn'),btnDep:$('btnDep'),btnRst:$('btnRst'),
+ size:$('size'),risk:$('risk'),riskLbl:$('riskLbl'),
  watch:$('watch'),wCount:$('wCount'),addSel:$('addSel'),btnAdd:$('btnAdd'),
- selLbl:$('selLbl'),selArr:$('selArr'),selPrice:$('selPrice'),selChg:$('selChg'),selInfo:$('selInfo'),
+ selLbl:$('selLbl'),selArr:$('selArr'),selPrice:$('selPrice'),selChg:$('selChg'),
+ bCnt:$('bCnt'),bPL:$('bPL'),bPeak:$('bPeak'),
  btnMBuy:$('btnMBuy'),btnMSell:$('btnMSell'),
  verdict:$('verdict'),mfill:$('mfill'),votes:$('votes'),tiles:$('tiles'),
  chartSym:$('chartSym'),efLbl:$('efLbl'),esLbl:$('esLbl'),cv:$('cv'),
  tabPos:$('tabPos'),tabHist:$('tabHist'),tabLog:$('tabLog'),posCnt:$('posCnt'),
- sl:$('sl'),size:$('size'),trailV:$('trailV'),trailU:$('trailU'),cool:$('cool'),
- margPct:$('margPct'),step:$('step'),bTake:$('bTake'),bStop:$('bStop'),guard:$('guard'),
- thr:$('thr'),emaF:$('emaF'),emaS:$('emaS'),
- btPeriod:$('btPeriod'),btDep:$('btDep'),btnBT:$('btnBT'),btnFit:$('btnFit'),
- autoRefit:$('autoRefit'),fitEvery:$('fitEvery'),fitTime:$('fitTime'),fitSymLbl:$('fitSymLbl'),
- fitRes:$('fitRes'),fitSym:$('fitSym'),btnProfRst:$('btnProfRst'),
- fThr:$('fThr'),fSl:$('fSl'),fTr:$('fTr'),fSt:$('fSt'),fTk:$('fTk'),fPL:$('fPL'),fitNote:$('fitNote'),
- btRes:$('btRes'),btPL:$('btPL'),btPCT:$('btPCT'),btEQ:$('btEQ'),btTr:$('btTr'),btWR:$('btWR'),
- btDD:$('btDD'),btCv:$('btCv'),btNote:$('btNote'),
  btnStart:$('btnStart'),btnStop:$('btnStop'),btnAll:$('btnAll'),allPl:$('allPl'),
  footMeta:$('footMeta'),flash:$('flash')};
 
 const ALL=['btcusdt','ethusdt','solusdt','bnbusdt','xrpusdt','dogeusdt','adausdt','ltcusdt','avaxusdt','linkusdt'];
 const FB={btcusdt:.01,ethusdt:.01,solusdt:.001,bnbusdt:.01,xrpusdt:.0001,dogeusdt:.00001,adausdt:.0001,ltcusdt:.01,avaxusdt:.001,linkusdt:.001};
-const VOL_WIN=30000, CANDLE_MS=2000, MAX_AVG=5;
-const PERIODS={'6h':['1m',360,60],'1d':['5m',288,300],'1w':['15m',672,900],'1M':['1h',720,3600]};
-const FIT={busy:false};
+const VOL_WIN=30000, CANDLE_MS=2000, MAX_BASKET=6, EMA_F=9, EMA_S=21;
 
 const S={sel:'btcusdt',run:false,pid:0,positions:[],balance:10000,startBal:10000,ws:null,dirty:true};
 const SYM=new Map();
@@ -506,15 +402,11 @@ const TILE={};
 const dec=st=>{const s=String(st.pip),i=s.indexOf('.');return i<0?0:Math.min(8,s.length-i-1)};
 const holdStr=ms=>{const s=Math.floor(ms/1000);return s<60?s+'с':Math.floor(s/60)+'м '+(s%60)+'с'};
 function setText(e,s){if(e&&e._t!==s){e._t=s;e.textContent=s}}
+const riskPct=()=>+el.risk.value;
+const riskUsd=()=>equity()*riskPct()/100;
 function newSym(sym){return{sym,pip:FB[sym]||.01,price:0,prev:0,dayOpen:0,prices:[],qs:[],candles:[],
  vol:[],volB:0,volS:0,vwapPV:0,vwapV:0,chart:[],lastSample:0,sig:null,lastSig:0,
- active:true,bot:true,coolUntil:0,lastWarn:0,basketPeak:0,
- profile:null,fitFitness:undefined,fitInfo:null,fittedAt:0}}
-
-/* профиль пары: подобранный или ручной */
-const cfgOf=st=>st.profile?{...st.profile}:
- {thr:+el.thr.value,sl:+el.sl.value,trailV:+el.trailV.value,trailU:el.trailU.value,
-  step:+el.step.value,bTake:+el.bTake.value};
+ active:true,coolUntil:0,lastWarn:0,peak:0}}
 
 /* ================= MATH ================= */
 const sma=(a,n)=>{if(a.length<n)return null;let s=0;for(let i=a.length-n;i<a.length;i++)s+=a[i];return s/n};
@@ -549,14 +441,14 @@ function adx(cs,p){p=p||14;if(cs.length<p*2+2)return null;
  let a=dxs.slice(0,p).reduce((x,y)=>x+y,0)/p;
  for(let i=p;i<dxs.length;i++)a=(a*(p-1)+dxs[i])/p;
  return{diP:dmp/atr*100,diM:dmm/atr*100,adx:a}}
-function mfi(st,n){const v=st.prices,q=st.qs,L=v.length;if(L<n+1)return null;
+function mfiTick(st,n){const v=st.prices,q=st.qs,L=v.length;if(L<n+1)return null;
  let pos=0,neg=0;
  for(let i=L-n;i<L;i++){const mf=v[i]*q[i];if(v[i]>v[i-1])pos+=mf;else neg+=mf}
  return neg===0?100:100-100/(1+pos/neg)}
 
 function computeSig(st){
  const v=st.prices,n=v.length,c=v[n-1],pip=st.pip,L={};
- if(n>=+el.emaS.value+2){const dp=(emaLast(v,+el.emaF.value)-emaLast(v,+el.emaS.value))/pip;
+ if(n>=EMA_S+2){const dp=(emaLast(v,EMA_F)-emaLast(v,EMA_S))/pip;
   L.ema={val:(dp>=0?'+':'')+dp.toFixed(0)+'п',vote:dp>=0?1:-1}}else L.ema={val:'…',vote:0};
  if(n>=20){const dp=(sma(v,10)-sma(v,20))/pip;L.sma={val:(dp>=0?'+':'')+dp.toFixed(0)+'п',vote:dp>=0?1:-1}}else L.sma={val:'…',vote:0};
  if(n>=35){const h=macdCalc(v).hist/pip;L.macd={val:(h>=0?'+':'')+h.toFixed(1)+'п',vote:h>=0?1:-1}}else L.macd={val:'…',vote:0};
@@ -583,7 +475,7 @@ function computeSig(st){
  if(n>=35){const dp=(sma(v,5)-sma(v,35))/pip;L.ao={val:(dp>=0?'+':'')+dp.toFixed(1)+'п',vote:dp>=0?1:-1}}else L.ao={val:'…',vote:0};
  if(st.vwapV>0){const dp=(c-st.vwapPV/st.vwapV)/pip;
   L.vwap={val:(dp>=0?'+':'')+dp.toFixed(0)+'п',vote:dp>3?1:dp<-3?-1:0}}else L.vwap={val:'…',vote:0};
- const mf=mfi(st,60);
+ const mf=mfiTick(st,60);
  if(mf!=null)L.mfi={val:mf.toFixed(0),vote:mf<=20?1:mf>=80?-1:0};else L.mfi={val:'…',vote:0};
  if(n>=121){let o1=0,o2=0;
   for(let i=n-120;i<n-60;i++)o1+=Math.sign(v[i]-v[i-1])*st.qs[i];
@@ -628,351 +520,111 @@ function onTick(sym,p,q,m){
  st.vwapPV+=p*q;st.vwapV+=q;
  if(now-st.lastSample>250){st.chart.push(p);if(st.chart.length>480)st.chart.shift();st.lastSample=now;
   if(sym===S.sel)S.dirty=true}
- if(S.run){manageSym(st);if(st.active&&st.bot)engine(st)}
+ if(S.run){manageBasket(st);if(st.active)engine(st)}
 }
 
-/* ================= AUTONOMOUS ENGINE ================= */
+/* ================= BASKET ENGINE ================= */
 const dirOf=p=>p.side==='LONG'?1:-1;
 const plOf=p=>{const st=SYM.get(p.sym);if(!st||!st.price)return 0;
  return dirOf(p)*(st.price-p.entry)*p.qty};
-const basketOf=sym=>S.positions.filter(p=>p.sym===sym&&p.origin==='bot');
-const basketPL=list=>list.reduce((s,p)=>s+plOf(p),0);
+const basketOf=sym=>S.positions.filter(p=>p.sym===sym);
+const basketPL=sym=>basketOf(sym).reduce((s,p)=>s+plOf(p),0);
+const majority=m=>Math.max(2,Math.ceil(m/2));
 
-function engine(st){
- if(Date.now()<st.coolUntil||!st.sig||!st.sig.maxOn)return;
- const cfg=cfgOf(st);
- const thr=cfg.thr,sc=st.sig.score;
- if(Math.abs(sc)<thr)return;
- const side=sc>0?'LONG':'SHORT';
- const my=basketOf(st.sym);
-
- if(!my.length){
-  openPos(st,side,'bot','сигнал '+(sc>0?'+':'')+sc+'/'+st.sig.maxOn);
+/* правило корзины: рост — держим, любое уменьшение от пика — закрываем всё */
+function manageBasket(st){
+ const B=basketOf(st.sym);
+ if(!B.length){st.peak=0;return}
+ const pl=B.reduce((s,p)=>s+plOf(p),0);
+ if(pl>st.peak)st.peak=pl;
+ if(st.peak>0&&pl<st.peak){
+  closeBasket(st,'фиксация корзины '+(pl>=0?'+':'−')+'$'+Math.abs(pl).toFixed(2)+' (пик +$'+st.peak.toFixed(2)+')');
   return;
  }
- const pl=basketPL(my);
- if(pl>=0)return;
+ const ru=riskUsd();
+ if(pl<=-ru)closeBasket(st,'макс риск −$'+Math.abs(pl).toFixed(2));
+}
 
- const netQty=my.reduce((s,p)=>s+dirOf(p)*p.qty,0);
- const domSide=netQty>=0?'LONG':'SHORT';
+/* входы и автокомпенсация */
+function engine(st){
+ if(Date.now()<st.coolUntil||!st.sig||!st.sig.maxOn)return;
+ const maj=majority(st.sig.maxOn);
+ const sc=st.sig.score;
+ if(Math.abs(sc)<maj)return;
+ const side=sc>0?'LONG':'SHORT';
+ const B=basketOf(st.sym);
 
- if(side!==domSide){
-  const usd=Math.abs(netQty)*st.price;
-  if(usd>=10){openPos(st,side,'bot','разворот: хедж корзины',usd);return}
- }
- if(side===domSide){
-  const sp=my.filter(p=>p.side===domSide);
-  if(sp.length<MAX_AVG){
+ if(!B.length){openPos(st,side,'сигнал '+(sc>0?'+':'')+sc+'/'+st.sig.maxOn);return}
+
+ const pl=B.reduce((s,p)=>s+plOf(p),0);
+ if(pl>=0)return; /* в плюсе — работает правило пика */
+ if(B.length>=MAX_BASKET)return;
+
+ const net=B.reduce((s,p)=>s+dirOf(p)*p.qty,0);
+ const dom=net>=0?'LONG':'SHORT';
+
+ if(side!==dom){
+  /* разворот против корзины → хедж на её объём */
+  const usd=Math.max(+el.size.value,Math.abs(net)*st.price);
+  openPos(st,side,'компенсация: хедж корзины',usd);
+ }else{
+  /* сигнал за корзину → усреднение с автосагом */
+  const sp=B.filter(p=>p.side===dom);
+  if(Math.abs(sc)>=2){
    const last=sp.reduce((a,b)=>a.t>b.t?a:b);
-   const step=cfg.step*(1+0.6*(sp.length-1));
-   const dist=domSide==='LONG'?(last.entry-st.price)/st.pip:(st.price-last.entry)/st.pip;
-   if(dist>=step)openPos(st,domSide,'bot','усреднение #'+(sp.length+1)+' (шаг '+step.toFixed(0)+'п)');
+   const step=st.pip*(30+20*(sp.length-1));
+   const dist=dom==='LONG'?(last.entry-st.price)/st.pip:(st.price-last.entry)/st.pip;
+   if(dist>=step)openPos(st,dom,'компенсация: усреднение #'+(sp.length+1));
   }
  }
 }
 
-function manageSym(st){
- const bots=basketOf(st.sym);
- if(!bots.length){st.basketPeak=0;return}
- const cfg=cfgOf(st);
-
- if(bots.length>=2){
-  const pl=basketPL(bots);
-  if(pl>st.basketPeak)st.basketPeak=pl;
-  const bTake=cfg.bTake,bStop=+el.bStop.value;
-  if(pl>=bTake){closeBasket(st,'корзина: тейк +$'+pl.toFixed(2));return}
-  if(pl>=0&&(st.basketPeak-pl)>=bTake*0.5){closeBasket(st,'корзина: фиксация у безубытка +$'+pl.toFixed(2));return}
-  if(bStop>0&&pl<=-bStop){closeBasket(st,'корзина: макс. убыток −$'+Math.abs(pl).toFixed(2));return}
-  return;
- }
- const pos=bots[0];
- const d=dirOf(pos);
- const pips=d*(st.price-pos.entry)/st.pip,pl=d*(st.price-pos.entry)*pos.qty;
- if(pl>pos.peak){pos.peak=pl;pos.peakPips=pips}
- const SL=cfg.sl,tU=cfg.trailU,tV=cfg.trailV;
- if(pos.peak>0){
-  const drop=tU==='usd'?pos.peak-pl:(pos.peakPips-pips);
-  if(drop>=tV)closePos(pos,st.price,'откат от пика');
- }else if(pips<=-SL)closePos(pos,st.price,'стоп-лосс');
-}
-
 function closeBasket(st,reason){
  for(const p of [...basketOf(st.sym)])closePos(p,st.price,reason);
- st.basketPeak=0;
+ st.peak=0;st.coolUntil=Date.now()+2000;
 }
 
 const equity=()=>S.balance+S.positions.reduce((s,p)=>s+plOf(p),0);
 const usedM=()=>S.positions.reduce((s,p)=>s+p.qty*p.entry,0);
 const freeM=()=>equity()-usedM();
-const marginCapUsd=()=>equity()*(+el.margPct.value)/100;
 
-function openPos(st,side,origin,reason,sizeUsd){
+function openPos(st,side,reason,sizeUsd){
  const size=sizeUsd||+el.size.value;
  if(!st||!st.price)return;
- const cap=marginCapUsd();
- if(usedM()+size>cap){
+ if(usedM()+size>riskUsd()){
   if(Date.now()-st.lastWarn>5000){st.lastWarn=Date.now();
-   jlog(st.sym,'лимит маржи '+el.margPct.value+'%: сделка отклонена','sys')}
+   jlog(st.sym,'лимит риска '+riskPct()+'%: сделка отклонена','sys')}
   return;
  }
- if(el.guard.checked&&freeM()<size){
-  if(Date.now()-st.lastWarn>5000){st.lastWarn=Date.now();jlog(st.sym,'нет свободных средств: сделка отклонена','sys')}
-  return;
- }
- const pos={id:++S.pid,sym:st.sym,side,entry:st.price,qty:size/st.price,size,peak:0,peakPips:0,t:Date.now(),origin};
+ const pos={id:++S.pid,sym:st.sym,side,entry:st.price,qty:size/st.price,size,t:Date.now()};
  S.positions.push(pos);
- if(origin==='bot')st.coolUntil=Date.now()+(+el.cool.value)*1000;
+ st.coolUntil=Date.now()+1500;
  renderPositions();
  jlog(st.sym,(side==='LONG'?'▲ LONG':'▼ SHORT')+' @ '+st.price.toFixed(dec(st))+' · '+reason,
   side==='LONG'?'long':'short');
- paintSelInfo(st);S.dirty=true;
+ S.dirty=true;
 }
 function closePos(pos,price,reason){
  const st=SYM.get(pos.sym),d=dirOf(pos);
  const pips=d*(price-pos.entry)/st.pip,pl=d*(price-pos.entry)*pos.qty;
  S.balance+=pl;saveBal();
  S.positions=S.positions.filter(p=>p.id!==pos.id);
- if(pos.origin==='bot'&&st)st.coolUntil=Date.now()+(+el.cool.value)*1000;
  histRow(pos,price,pips,pl,reason);
  jlog(pos.sym,'EXIT · '+reason+' · '+(pl>=0?'+':'−')+'$'+Math.abs(pl).toFixed(2),
   pl>0?'win':pl<0?'loss':'flat');
  renderPositions();paintAccount();
- if(st){paintSelInfo(st);if(!st.active&&!hasPos(st.sym))connect()}
+ if(st&&!st.active&&!hasPos(st.sym))connect();
  S.dirty=true;
  el.flash.className='';void el.flash.offsetWidth;
  el.flash.classList.add(pl>=0?'fGood':'fBad');
 }
 
-/* ================= BACKTEST / FIT CORE ================= */
-async function loadKlines(sym,intv,lim){
- const r=await fetch('https://api.binance.com/api/v3/klines?symbol='+sym.toUpperCase()+'&interval='+intv+'&limit='+lim);
- const k=await r.json();
- if(!Array.isArray(k)||k.length<80)throw new Error('нет данных');
- return k.map(x=>({t:x[0],o:+x[1],h:+x[2],l:+x[3],c:+x[4],v:+x[5],bv:+x[9]}));
-}
-
-/* серии голосов индикаторов по свечам (один раз на историю) */
-function buildScores(cs,pip){
- const on={};IND.forEach(i=>on[i.key]=i.on);
- const eF=+el.emaF.value,eS=+el.emaS.value;
- const C=[],H=[],L=[],V=[],BV=[],CS=[];
- const push=(arr,x)=>{arr.push(x);if(arr.length>400)arr.shift()};
- let tpv=0,tv=0;
- const scores=[];
- const hh=(a,n)=>{let m=-1e18;for(let i=Math.max(0,a.length-n);i<a.length;i++)if(a[i]>m)m=a[i];return m};
- const ll=(a,n)=>{let m=1e18;for(let i=Math.max(0,a.length-n);i<a.length;i++)if(a[i]<m)m=a[i];return m};
- for(let i=0;i<cs.length;i++){
-  const c=cs[i];
-  push(C,c.c);push(H,c.h);push(L,c.l);push(V,c.v);push(BV,c.bv);
-  CS.push({h:c.h,l:c.l,c:c.c});if(CS.length>300)CS.shift();
-  tpv+=(c.h+c.l+c.c)/3*c.v;tv+=c.v;
-  const n=C.length,price=C[n-1];
-  if(n<60){scores.push(null);continue}
-  let score=0;
-  const add=(key,vote)=>{if(on[key])score+=vote};
-  if(n>=eS+2)add('ema',emaLast(C,eF)>emaLast(C,eS)?1:-1);
-  if(n>=20)add('sma',sma(C,10)>sma(C,20)?1:-1);
-  if(n>=35)add('macd',macdCalc(C).hist>=0?1:-1);
-  if(n>=26){const t=(hh(H,9)+ll(L,9))/2,k=(hh(H,26)+ll(L,26))/2;add('ichi',t>k?1:-1)}
-  const ps=psar(CS);if(ps)add('psar',ps.up?1:-1);
-  if(n>=40)add('don',price>(hh(H,40)+ll(L,40))/2?1:-1);
-  const a=adx(CS);if(a)add('adx',a.adx>=20?(a.diP>a.diM?1:-1):0);
-  if(n>=20){const r=rsi(C,14);add('rsi',r<=30?1:r>=70?-1:0)}
-  if(n>=14){const K=(price-ll(L,14))/((hh(H,14)-ll(L,14))||1)*100;add('stoch',K<=20?1:K>=80?-1:0)}
-  if(n>=20){const m=sma(C,20);let s2=0;for(let j=n-20;j<n;j++)s2+=(C[j]-m)**2;const sd=Math.sqrt(s2/20);
-   add('bb',price<m-2*sd?1:price>m+2*sd?-1:0)}
-  if(n>=14){const wr=(hh(H,14)-price)/((hh(H,14)-ll(L,14))||1)*-100;add('wr',wr<=-80?1:wr>=-20?-1:0)}
-  if(n>=20){const m=sma(C,20);let md=0;for(let j=n-20;j<n;j++)md+=Math.abs(C[j]-m);md/=20;
-   const cci=md?(price-m)/(0.015*md):0;add('cci',cci<=-100?1:cci>=100?-1:0)}
-  if(n>61){const d=(price-C[n-61])/pip;add('roc',d>1?1:d<-1?-1:0)}
-  if(n>=35)add('ao',sma(C,5)>sma(C,35)?1:-1);
-  if(tv>0){const vw=tpv/tv,dp=(price-vw)/pip;add('vwap',dp>3?1:dp<-3?-1:0)}
-  if(n>=15){let p_=0,n_=0;
-   for(let j=n-14;j<n;j++){const tp=(H[j]+L[j]+C[j])/3,pp=(H[j-1]+L[j-1]+C[j-1])/3,mf=tp*V[j];
-    if(tp>pp)p_+=mf;else n_+=mf}
-   const mf=n_===0?100:100-100/(1+p_/n_);add('mfi',mf<=20?1:mf>=80?-1:0)}
-  if(n>=121){let o1=0,o2=0;
-   for(let j=n-120;j<n-60;j++)o1+=Math.sign(C[j]-C[j-1])*V[j];
-   for(let j=n-60;j<n;j++)o2+=Math.sign(C[j]-C[j-1])*V[j];
-   add('obv',o2>o1?1:-1)}
-  {let b=0,s=0;for(let j=Math.max(0,n-15);j<n;j++){b+=BV[j];s+=V[j]-BV[j]}
-   const tot=b+s;if(tot>0){const pc=(b-s)/tot*100;add('vol',pc>15?1:pc<-15?-1:0)}}
-  scores.push(score);
- }
- return scores;
-}
-
-/* симуляция движка на готовых голосах */
-function simSeries(cs,pip,scores,cfg,bal0,intSec){
- const size=+el.size.value,bStop=+el.bStop.value,margPct=+el.margPct.value;
- const thr=cfg.thr,SL=cfg.sl,tU=cfg.trailU,tV=cfg.trailV,stepP=cfg.step,bTake=cfg.bTake;
- const coolBars=Math.max(1,Math.ceil(+el.cool.value/intSec));
- let balance=bal0,pos=[],basketPeak=0,cool=0;
- const trades=[];const eq=[];let peakEq=bal0,dd=0;
- const dir=p=>p.side==='LONG'?1:-1;
- const plAt=(p,pr)=>dir(p)*(pr-p.entry)*p.qty;
- const usedMB=()=>pos.reduce((s,p)=>s+p.qty*p.entry,0);
- const eqAt=pr=>balance+pos.reduce((s,p)=>s+plAt(p,pr),0);
- const openB=(side,price,usd)=>{const s=usd||size;
-  if(usedMB()+s>eqAt(price)*margPct/100)return false;
-  pos.push({side,entry:price,qty:s/price,peak:0,peakPips:0});cool=coolBars;return true};
- const closeB=(p,price)=>{balance+=plAt(p,price);trades.push(plAt(p,price));pos=pos.filter(x=>x!==p)};
- for(let i=0;i<cs.length;i++){
-  const c=cs[i],price=c.c;
-  if(cool>0)cool--;
-  if(pos.length){
-   for(const p of pos){const best=p.side==='LONG'?c.h:c.l;const pb=plAt(p,best);
-    if(pb>p.peak){p.peak=pb;p.peakPips=dir(p)*(best-p.entry)/pip}}
-   if(pos.length>=2){
-    const pl=pos.reduce((s,p)=>s+plAt(p,price),0);
-    if(pl>basketPeak)basketPeak=pl;
-    if(pl>=bTake||(pl>=0&&basketPeak-pl>=bTake*.5)||(bStop>0&&pl<=-bStop)){
-     for(const p of[...pos])closeB(p,price);basketPeak=0}
-   }else{
-    const p=pos[0],d=dir(p),worst=p.side==='LONG'?c.l:c.h;
-    if(p.peak<=0&&d*(worst-p.entry)/pip<=-SL)closeB(p,p.entry-d*SL*pip);
-    else if(p.peak>0){const pl=plAt(p,price),pips=d*(price-p.entry)/pip;
-     const drop=tU==='usd'?p.peak-pl:(p.peakPips-pips);
-     if(drop>=tV)closeB(p,price)}
-   }
-   if(!pos.length)basketPeak=0;
-  }
-  const sc=scores[i];
-  if(sc!=null&&cool===0&&Math.abs(sc)>=thr){
-   const side=sc>0?'LONG':'SHORT';
-   if(!pos.length)openB(side,price);
-   else{
-    const pl=pos.reduce((s,p)=>s+plAt(p,price),0);
-    if(pl<0){
-     const netQty=pos.reduce((s,p)=>s+dir(p)*p.qty,0);
-     const domSide=netQty>=0?'LONG':'SHORT';
-     if(side!==domSide){const usd=Math.abs(netQty)*price;if(usd>=10)openB(side,price,usd)}
-     else{const sp=pos.filter(p=>p.side===domSide);
-      if(sp.length<5){const last=sp[sp.length-1];
-       const stepX=stepP*(1+0.6*(sp.length-1));
-       const dist=domSide==='LONG'?(last.entry-price)/pip:(price-last.entry)/pip;
-       if(dist>=stepX)openB(domSide,price)}}
-    }
-   }
-  }
-  const e=eqAt(price);eq.push(e);
-  if(e>peakEq)peakEq=e;if(peakEq-e>dd)dd=peakEq-e;
- }
- const lastPx=cs[cs.length-1].c;
- for(const p of[...pos])closeB(p,lastPx);
- const wins=trades.filter(t=>t>0).length;
- return{pl:balance-bal0,trades:trades.length,wins,dd,eq};
-}
-
-/* ================= TEST ================= */
-async function runBacktest(){
- if(FIT.busy)return;FIT.busy=true;el.btnBT.disabled=true;setText(el.btnBT,'ЗАГРУЗКА…');
- const st=SYM.get(S.sel);
- const cfgP=PERIODS[el.btPeriod.value];
- try{
-  const cs=await loadKlines(st.sym,cfgP[0],cfgP[1]);
-  setText(el.btnBT,'РАСЧЁТ…');
-  await new Promise(r=>setTimeout(r,20));
-  const scores=buildScores(cs,st.pip);
-  const cfg=cfgOf(st);
-  const bal0=Math.max(100,+el.btDep.value||10000);
-  const res=simSeries(cs,st.pip,scores,cfg,bal0,cfgP[2]);
-  el.btRes.classList.remove('hidden');
-  setText(el.btPL,(res.pl>=0?'+':'−')+'$'+Math.abs(res.pl).toFixed(2));
-  el.btPL.style.color=res.pl>=0?'var(--grn)':'var(--red)';
-  setText(el.btPCT,(res.pl>=0?'+':'−')+Math.abs(res.pl/bal0*100).toFixed(2)+'%');
-  el.btPCT.style.color=el.btPL.style.color;
-  setText(el.btEQ,'$'+(bal0+res.pl).toFixed(0));
-  setText(el.btTr,String(res.trades));
-  setText(el.btWR,res.trades?(res.wins/res.trades*100).toFixed(0)+'%':'—');
-  setText(el.btDD,'−$'+res.dd.toFixed(2));
-  const periodTxt={'6h':'6 часов · 1м','1d':'1 день · 5м','1w':'7 дней · 15м','1M':'30 дней · 1ч'}[el.btPeriod.value];
-  setText(el.btNote,st.sym.toUpperCase()+' · '+periodTxt+' · свечей: '+cs.length+
-   ' · настройки: '+(st.profile?'профиль пары ⚙':'ручные')+
-   ' · маржа '+el.margPct.value+'% · просадка пика к эквити учтена');
-  drawBTCurve(res.eq,bal0);
-  jlog(st.sym,'тест '+periodTxt+': '+(res.pl>=0?'+':'−')+'$'+Math.abs(res.pl).toFixed(2)+' · сделок '+res.trades,'sys');
- }catch(e){jlog(st.sym,'тест: ошибка загрузки истории','sys')}
- FIT.busy=false;el.btnBT.disabled=false;setText(el.btnBT,'▶ ТЕСТ ТЕКУЩЕЙ');
-}
-
-/* ================= FIT / OPTIMIZER ================= */
-async function fitPair(st,auto){
- if(FIT.busy)return;FIT.busy=true;
- el.btnFit.disabled=true;setText(el.btnFit,'ПОДБОР: '+st.sym.toUpperCase()+'…');
- const cfgP=PERIODS[el.btPeriod.value];
- try{
-  const cs=await loadKlines(st.sym,cfgP[0],cfgP[1]);
-  await new Promise(r=>setTimeout(r,20));
-  const scores=buildScores(cs,st.pip);
-  const bal0=10000;
-  const thrG=[5,6,7,8],slG=[30,50,80,120],trG=[1,3,6,10],stG=[20,40,70,110],tkG=[1,2,4,8];
-  let best=null,combos=0;const t0=performance.now();
-  for(const thr of thrG)for(const sl of slG)for(const trailV of trG)
-   for(const step of stG)for(const bTake of tkG){
-    const r=simSeries(cs,st.pip,scores,{thr,sl,trailV,trailU:'pips',step,bTake},bal0,cfgP[2]);
-    const fit=r.pl-r.dd*0.7-(r.trades<3?100:0);
-    combos++;
-    if(!best||fit>best.fit)best={fit,thr,sl,trailV,step,bTake,r};
-    if(combos%256===0)await new Promise(r=>setTimeout(r,0));
-  }
-  const ms=performance.now()-t0;
-  const prev=st.fitFitness;
-  if(auto&&st.profile&&prev>0&&best.fit<prev*1.1){
-   jlog(st.sym,'автоподбор: параметры сохранены (новый вариант не лучше)','sys');
-   st.fittedAt=Date.now();
-  }else{
-   st.profile={thr:best.thr,sl:best.sl,trailV:best.trailV,trailU:'pips',step:best.step,bTake:best.bTake};
-   st.fitFitness=best.fit;
-   st.fitInfo={pl:best.r.pl,dd:best.r.dd,trades:best.r.trades,wins:best.r.wins,combos,ms};
-   st.fittedAt=Date.now();
-   if(st._f)st._f.classList.remove('hidden');
-   jlog(st.sym,(auto?'автоподбор':'подбор')+': голоса '+best.thr+' · SL '+best.sl+'п · трейлинг '+best.trailV+
-    'п · шаг '+best.step+'п · тейк $'+best.bTake+' → '+(best.r.pl>=0?'+':'−')+'$'+Math.abs(best.r.pl).toFixed(2),
-    best.r.pl>=0?'win':'loss');
-   if(st.sym===S.sel)paintProfile(st);
-  }
- }catch(e){jlog(st.sym,'подбор: ошибка загрузки истории','sys')}
- FIT.busy=false;el.btnFit.disabled=false;setText(el.btnFit,'⚙ ПОДБОР ПАРАМЕТРОВ');
- if(S.sel===st.sym)paintProfile(st);
-}
-
-function paintProfile(st){
- setText(el.fitSymLbl,st.sym.toUpperCase());
- setText(el.fitTime,st.fittedAt?('обновлён '+new Date(st.fittedAt).toLocaleTimeString('ru-RU',{hour12:false})):'не подобран');
- if(!st.profile){el.fitRes.classList.add('hidden');return}
- el.fitRes.classList.remove('hidden');
- setText(el.fitSym,st.sym.toUpperCase());
- setText(el.fThr,'≥ '+st.profile.thr);
- setText(el.fSl,st.profile.sl);
- setText(el.fTr,st.profile.trailV);
- setText(el.fSt,st.profile.step);
- setText(el.fTk,st.profile.bTake);
- const fi=st.fitInfo;
- setText(el.fPL,(fi.pl>=0?'+':'−')+'$'+Math.abs(fi.pl).toFixed(2));
- el.fPL.style.color=fi.pl>=0?'var(--grn)':'var(--red)';
- setText(el.fitNote,'перебрано '+fi.combos+' комбинаций за '+fi.ms.toFixed(0)+' мс · сделок '+fi.trades+
-  ' · winrate '+(fi.trades?(fi.wins/fi.trades*100).toFixed(0)+'%':'—')+
-  ' · просадка $'+fi.dd.toFixed(2)+' · профиль применён к живой торговле пары');
-}
-
-/* автоподбор в реальном времени */
-setInterval(()=>{
- if(!el.autoRefit.checked||FIT.busy)return;
- const now=Date.now(),every=+el.fitEvery.value*60000;
- for(const st of SYM.values()){
-  if(st.active&&(now-(st.fittedAt||0))>every){fitPair(st,true);break}
- }
-},30000);
-
 /* ================= ACCOUNT ================= */
 function saveBal(){try{localStorage.setItem('scBal',S.balance)}catch(e){}}
 function paintAccount(){
  const eq=equity(),used=usedM(),free=eq-used,spl=eq-S.startBal;
- const lvl=used>0?(eq/used*100):0;
- const cap=marginCapUsd();
  const load=eq>0?(used/eq*100):0;
- const pct=+el.margPct.value;
+ const pct=riskPct();
  setText(el.aBal,'$'+S.balance.toFixed(2));
  setText(el.aEq,'$'+eq.toFixed(2));
  setText(el.aSpl,(spl>=0?'+':'−')+'$'+Math.abs(spl).toFixed(2));
@@ -982,14 +634,12 @@ function paintAccount(){
  setText(el.aUsed,'$'+used.toFixed(0));
  setText(el.aFree,'$'+free.toFixed(2));
  el.aFree.style.color=free<0?'var(--red)':'';
- setText(el.aLimit,'$'+Math.max(0,cap).toFixed(0)+' · '+pct+'%');
- setText(el.aLvl,used>0?lvl.toFixed(0)+'%':'∞');
- el.aLvl.style.color=used>0?(lvl<150?'var(--red)':lvl<300?'var(--amb)':'var(--grn)'):'var(--mut)';
+ setText(el.aLimit,'$'+riskUsd().toFixed(0)+' · '+pct+'%');
+ setText(el.aBStop,'−$'+(S.balance*pct/100).toFixed(0));
  setText(el.hBal,'$'+S.balance.toFixed(0));
  setText(el.hEq,'$'+eq.toFixed(0));
  setText(el.hLoad,load.toFixed(0)+'%');
  el.hLoad.style.color=el.aLoad.style.color;
- setText(el.hLvl,el.aLvl._t);
 }
 
 /* ================= WATCH ================= */
@@ -999,12 +649,10 @@ function renderWatch(){
   const r=document.createElement('div');
   r.className='wrow'+(st.sym===S.sel?' sel':'')+(st.active?'':' off');
   r.innerHTML='<span class="wname">'+st.sym.toUpperCase()+'</span>'+
-   '<i class="wfit'+(st.profile?'':' hidden')+'">⚙</i>'+
    '<span class="wprice">—</span><span class="wchg">—</span><i class="wdot"></i>'+
    '<button class="sw'+(st.active?' on':'')+'" title="вкл/выкл пару"></button>'+
    '<button class="wdel" title="убрать пару">✕</button>';
   st._p=r.querySelector('.wprice');st._c=r.querySelector('.wchg');st._d=r.querySelector('.wdot');
-  st._f=r.querySelector('.wfit');
   r.onclick=e=>{if(e.target.closest('button'))return;selectSym(st.sym)};
   r.querySelector('.sw').onclick=e=>{
    e.stopPropagation();
@@ -1012,10 +660,7 @@ function renderWatch(){
    e.currentTarget.classList.toggle('on',st.active);
    r.classList.toggle('off',!st.active);
    connect();
-   if(!st.active&&hasPos(st.sym))
-    jlog(st.sym,'пара выключена — открытые сделки доторговываются, новые не открываются','sys');
-   else jlog(st.sym,st.active?'пара включена':'пара выключена','sys');
-   if(st.sym===S.sel)paintSelInfo(st);
+   jlog(st.sym,st.active?'пара включена':(hasPos(st.sym)?'пара выключена — корзина доторговывается':'пара выключена'),'sys');
   };
   r.querySelector('.wdel').onclick=e=>{e.stopPropagation();removeSym(st.sym)};
   el.watch.appendChild(r);
@@ -1062,7 +707,6 @@ async function fetchPip(st){
   const d=await r.json();
   st.pip=parseFloat(d.symbols[0].filters.find(x=>x.filterType==='PRICE_FILTER').tickSize);
  }catch(e){}
- if(st.sym===S.sel)paintSelInfo(st);
 }
 
 /* ================= SELECTED SYMBOL ================= */
@@ -1072,7 +716,7 @@ function selectSym(sym){
  const st=SYM.get(sym);
  setText(el.selLbl,sym.toUpperCase()+' · BINANCE SPOT');
  setText(el.chartSym,'ГРАФИК · '+sym.toUpperCase()+' · 1п = '+st.pip);
- paintSymHead(st);paintSelInfo(st);paintProfile(st);
+ paintSymHead(st);
  if(st.sig&&st.active)paintSignal(st);
  else{setText(el.verdict,st.active?'НАКОПЛЕНИЕ ДАННЫХ':'ПАРА ВЫКЛ');el.verdict.className='verdict'}
 }
@@ -1085,16 +729,12 @@ function paintSymHead(st){
  if(st.dayOpen){const ch=(st.price-st.dayOpen)/st.dayOpen*100;
   setText(el.selChg,(ch>=0?'+':'')+ch.toFixed(2)+'%');
   el.selChg.className=ch>=0?'up':'dn'}
-}
-function paintSelInfo(st){
- const my=basketOf(st.sym);
- const n=S.positions.filter(p=>p.sym===st.sym).length;
- let extra=st.profile?' · ⚙ профиль':'';
- if(my.length>=2){
-  const pl=basketPL(my);
-  extra+=' · корзина '+my.length+' шт · Σ '+(pl>=0?'+':'−')+'$'+Math.abs(pl).toFixed(2);
- }
- setText(el.selInfo,'1 пункт = '+st.pip+' · позиций: '+n+extra+(st.active?'':' · пара выкл'));
+ const n=basketOf(st.sym).length,pl=basketPL(st.sym);
+ setText(el.bCnt,String(n));
+ setText(el.bPL,(pl>=0?'+':'−')+'$'+Math.abs(pl).toFixed(2));
+ el.bPL.style.color=pl>=0?'var(--grn)':'var(--red)';
+ setText(el.bPeak,'+$'+st.peak.toFixed(2));
+ el.bPeak.style.color=st.peak>0?'var(--grn2)':'var(--mut)';
 }
 
 /* ================= SIGNAL TILES ================= */
@@ -1124,9 +764,9 @@ function paintSignal(st){
  else{el.mfill.style.width=w+'%';el.mfill.style.left=(50-w)+'%'}
  setText(el.votes,'счёт '+(sc>0?'+':'')+sc+' · вкл. '+st.sig.maxOn+'/'+IND.length);
  el.votes.className=sc>0?'up':sc<0?'dn':'';
- const thr=+el.thr.value;
- if(sc>=thr){setText(el.verdict,'ВХОД LONG ▲');el.verdict.className='verdict vBuy'}
- else if(sc<=-thr){setText(el.verdict,'ВХОД SHORT ▼');el.verdict.className='verdict vSell'}
+ const maj=majority(st.sig.maxOn);
+ if(sc>=maj){setText(el.verdict,'ВХОД LONG ▲');el.verdict.className='verdict vBuy'}
+ else if(sc<=-maj){setText(el.verdict,'ВХОД SHORT ▼');el.verdict.className='verdict vSell'}
  else{setText(el.verdict,'ОЖИДАНИЕ');el.verdict.className='verdict'}
 }
 
@@ -1135,16 +775,12 @@ function renderPositions(){
  el.tabPos.innerHTML='';
  setText(el.posCnt,String(S.positions.length));
  if(!S.positions.length){el.tabPos.innerHTML='<div class="empty">нет открытых позиций</div>';return}
- const cnt={};
- for(const p of S.positions)if(p.origin==='bot')cnt[p.sym]=(cnt[p.sym]||0)+1;
  for(const pos of S.positions){
   const r=document.createElement('div');
   r.className='tr '+(pos.side==='LONG'?'long':'short');
-  const inBasket=pos.origin==='bot'&&cnt[pos.sym]>=2;
   r.innerHTML='<div class="trTop"><b class="chip '+(pos.side==='LONG'?'cLong':'cShort')+'">'+(pos.side==='LONG'?'▲ LONG':'▼ SHORT')+'</b>'+
    '<b class="chip cSym">'+pos.sym.toUpperCase()+'</b>'+
-   (inBasket?'<b class="chip cBsk">КОРЗИНА</b>':'')+
-   '<span class="note">'+(pos.origin==='manual'?'вручную':inBasket?'движок':'бот')+'</span>'+
+   '<span class="note">корзина пары</span>'+
    '<b class="pp">$0.00</b><button class="xb">✕</button></div>'+
    '<div class="trBot"></div>';
   pos._pl=r.querySelector('.pp');pos._info=r.querySelector('.trBot');
@@ -1191,15 +827,14 @@ setInterval(()=>{
  const now=Date.now();
  for(const st of SYM.values()){
   paintWatchRow(st);
-  const need=st.active&&((st.sym===S.sel)||(S.run&&st.bot));
+  const need=st.active&&((st.sym===S.sel)||S.run);
   if(need&&now-st.lastSig>160&&st.prices.length>10){
    st.sig=computeSig(st);st.lastSig=now;
    paintWatchDot(st);
    if(st.sym===S.sel)paintSignal(st)}
-  if(!st.active&&st.sym===S.sel)paintWatchDot(st);
  }
  const sel=SYM.get(S.sel);
- if(sel){paintSymHead(sel);paintSelInfo(sel)}
+ if(sel)paintSymHead(sel);
  updatePosRows();
  paintAccount();
  const tot=S.positions.reduce((s,p)=>s+plOf(p),0);
@@ -1220,39 +855,21 @@ function draw(){
  cx.setTransform(dpr,0,0,dpr,0,0);cx.clearRect(0,0,w,h);
  const st=SYM.get(S.sel);if(!st)return;
  if(st.prices.length>25){
-  setText(el.efLbl,'EMA'+el.emaF.value+' '+emaLast(st.prices,+el.emaF.value).toFixed(dec(st)));
-  setText(el.esLbl,'EMA'+el.emaS.value+' '+emaLast(st.prices,+el.emaS.value).toFixed(dec(st)))}
+  setText(el.efLbl,'EMA9 '+emaLast(st.prices,EMA_F).toFixed(dec(st)));
+  setText(el.esLbl,'EMA21 '+emaLast(st.prices,EMA_S).toFixed(dec(st)))}
  const d=st.chart;if(d.length<2)return;
  let lo=Infinity,hi=-Infinity;
  for(const p of d){if(p<lo)lo=p;if(p>hi)hi=p}
  const myPos=S.positions.filter(p=>p.sym===S.sel);
- const SL=cfgOf(st).sl;
- const lastPos=myPos[myPos.length-1];
- if(lastPos){const dr=dirOf(lastPos);
-  hi=Math.max(hi,lastPos.entry+dr*lastPos.peakPips*st.pip);
-  lo=Math.min(lo,lastPos.entry-dr*SL*st.pip)}
  const pad=(hi-lo)*0.12||st.pip;lo-=pad;hi+=pad;
  const X=i=>i*(w/(d.length-1)),Y=p=>h-((p-lo)/(hi-lo))*h;
  cx.font='9px IBM Plex Mono';cx.fillStyle='#4a5d78';cx.strokeStyle='#182236';cx.lineWidth=1;
  for(let i=0;i<=4;i++){const y=h/4*i;cx.beginPath();cx.moveTo(0,y);cx.lineTo(w,y);cx.stroke();
   cx.fillText((hi-(hi-lo)*i/4).toFixed(dec(st)),4,y-3)}
- if(lastPos){
-  const dr=dirOf(lastPos);
-  const yE=Y(lastPos.entry),yP=Y(lastPos.entry+dr*lastPos.peakPips*st.pip),yS=Y(lastPos.entry-dr*SL*st.pip);
-  cx.fillStyle='rgba(60,227,154,.07)';cx.fillRect(0,Math.min(yE,yP),w,Math.abs(yP-yE));
-  cx.fillStyle='rgba(255,84,112,.07)';cx.fillRect(0,Math.min(yE,yS),w,Math.abs(yS-yE));
-  cx.setLineDash([5,4]);
-  cx.strokeStyle='rgba(255,180,84,.8)';cx.beginPath();cx.moveTo(0,yE);cx.lineTo(w,yE);cx.stroke();
-  cx.fillStyle='#ffb454';cx.fillText('ВХОД',w-36,yE-3);
-  if(lastPos.peakPips>=1){cx.strokeStyle='rgba(60,227,154,.7)';cx.beginPath();cx.moveTo(0,yP);cx.lineTo(w,yP);cx.stroke();
-   cx.fillStyle='#3ce39a';cx.fillText('ПИК +'+lastPos.peakPips.toFixed(0)+'п',w-62,yP+(dr>0?-3:10))}
-  cx.strokeStyle='rgba(255,84,112,.7)';cx.beginPath();cx.moveTo(0,yS);cx.lineTo(w,yS);cx.stroke();
-  cx.fillStyle='#ff5470';cx.fillText('SL −'+SL+'п',w-56,yS+(dr>0?11:-3));
-  cx.setLineDash([]);
- }
  for(const pos of myPos){
   const y=Y(pos.entry);
-  cx.setLineDash([2,4]);cx.strokeStyle='rgba(255,180,84,.35)';
+  cx.setLineDash([4,4]);
+  cx.strokeStyle=pos.side==='LONG'?'rgba(60,227,154,.5)':'rgba(255,84,112,.5)';
   cx.beginPath();cx.moveTo(0,y);cx.lineTo(w,y);cx.stroke();cx.setLineDash([])}
  cx.beginPath();
  d.forEach((p,i)=>{i?cx.lineTo(X(i),Y(p)):cx.moveTo(X(i),Y(p))});
@@ -1267,41 +884,18 @@ function draw(){
 }
 requestAnimationFrame(draw);
 
-function drawBTCurve(eq,bal0){
- const cv=el.btCv,dpr=devicePixelRatio||1,w=cv.clientWidth,h=cv.clientHeight;
- if(!w||!h||eq.length<2)return;
- cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);
- const c=cv.getContext('2d');c.setTransform(dpr,0,0,dpr,0,0);c.clearRect(0,0,w,h);
- let lo=bal0,hi=bal0;
- for(const e of eq){if(e<lo)lo=e;if(e>hi)hi=e}
- if(hi===lo){hi+=1;lo-=1}
- const pad=(hi-lo)*.1;lo-=pad;hi+=pad;
- const X=i=>i*(w/(eq.length-1)),Y=v=>h-((v-lo)/(hi-lo))*h;
- c.setLineDash([4,4]);c.strokeStyle='#3a4c6b';c.lineWidth=1;
- c.beginPath();c.moveTo(0,Y(bal0));c.lineTo(w,Y(bal0));c.stroke();c.setLineDash([]);
- const up=eq[eq.length-1]>=bal0;
- c.strokeStyle=up?'#3ce39a':'#ff5470';c.lineWidth=1.6;c.beginPath();
- eq.forEach((v,i)=>i?c.lineTo(X(i),Y(v)):c.moveTo(X(i),Y(v)));c.stroke();
- c.lineTo(w,h);c.lineTo(0,h);c.closePath();
- const g=c.createLinearGradient(0,0,0,h);
- g.addColorStop(0,up?'rgba(60,227,154,.2)':'rgba(255,84,112,.2)');g.addColorStop(1,'rgba(0,0,0,0)');
- c.fillStyle=g;c.fill();
-}
-
 /* ================= CONTROLS ================= */
 function uiRun(on){
  el.btnStart.classList.toggle('hidden',on);
  el.btnStop.classList.toggle('hidden',!on);
 }
 el.btnStart.onclick=()=>{S.run=true;uiRun(true);
- const prof=[...SYM.values()].filter(s=>s.profile).length;
- jlog('ALL','автопилот включён · пар с профилем: '+prof+'/'+SYM.size+
-  (el.autoRefit.checked?' · автоподбор вкл':''),'sys')};
+ jlog('ALL','автопилот включён · ставка $'+el.size.value+' · риск '+riskPct()+'%','sys')};
 el.btnStop.onclick=()=>{S.run=false;uiRun(false);
- jlog('ALL','автопилот выключен · позиции остались открытыми','sys')};
+ jlog('ALL','автопилот выключен · корзины остались открытыми','sys')};
 el.btnAll.onclick=()=>{for(const p of [...S.positions]){const st=SYM.get(p.sym);closePos(p,st?st.price:p.entry,'закрыто всё')}};
-el.btnMBuy.onclick=()=>openPos(SYM.get(S.sel),'LONG','manual','ручная покупка');
-el.btnMSell.onclick=()=>openPos(SYM.get(S.sel),'SHORT','manual','ручная продажа');
+el.btnMBuy.onclick=()=>openPos(SYM.get(S.sel),'LONG','ручная покупка');
+el.btnMSell.onclick=()=>openPos(SYM.get(S.sel),'SHORT','ручная продажа');
 el.btnDep.onclick=()=>{const v=+el.depIn.value;if(v>0){S.balance+=v;saveBal();paintAccount();
  jlog('ALL','депозит +$'+v.toFixed(2),'sys')}};
 el.btnRst.onclick=()=>{if(S.positions.length){jlog('ALL','сначала закройте все позиции','sys');return}
@@ -1309,14 +903,7 @@ el.btnRst.onclick=()=>{if(S.positions.length){jlog('ALL','сначала зак�
  el.tabHist.innerHTML='<div class="empty">история пуста</div>';
  jlog('ALL','счёт сброшен на $10 000','sys')};
 el.btnAdd.onclick=()=>{if(el.addSel.value)addSym(el.addSel.value)};
-el.btnBT.onclick=runBacktest;
-el.btnFit.onclick=()=>fitPair(SYM.get(S.sel),false);
-el.btnProfRst.onclick=()=>{const st=SYM.get(S.sel);
- st.profile=null;st.fitFitness=undefined;st.fitInfo=null;
- if(st._f)st._f.classList.add('hidden');
- paintProfile(st);paintSelInfo(st);
- jlog(st.sym,'профиль сброшен — пара торгуется по ручным настройкам','sys')};
-el.sl.addEventListener('input',()=>S.dirty=true);
+el.risk.addEventListener('input',()=>setText(el.riskLbl,el.risk.value+'%'));
 document.querySelectorAll('.tbtn').forEach(b=>b.onclick=()=>{
  document.querySelectorAll('.tbtn').forEach(x=>x.classList.remove('on'));
  document.querySelectorAll('.tpanel').forEach(x=>x.classList.remove('on'));
@@ -1343,6 +930,7 @@ setInterval(()=>{if(S.run){
  for(const s of ['btcusdt','ethusdt','solusdt'])SYM.set(s,newSym(s));
  for(const st of SYM.values())st.pip=FB[st.sym]||st.pip;
  buildTiles();renderWatch();selectSym(S.sel);
+ setText(el.riskLbl,el.risk.value+'%');
  paintAccount();
  jlog('ALL','демо-счёт $'+S.balance.toFixed(0)+' · поток котировок подключается…','sys');
  connect();

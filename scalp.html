@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>КОРЗИНА·СКАЛЬП v3 — флип-компенсация · Binance Live</title>
+<title>КОРЗИНА·СКАЛЬП v4 — фиксированная ставка · Binance Live</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='5' y='10' width='6' height='14' fill='%23ff5062'/><rect x='7.5' y='5' width='1' height='24' fill='%23ff5062'/><rect x='20' y='6' width='6' height='16' fill='%233ee08c'/><rect x='22.5' y='2' width='1' height='26' fill='%233ee08c'/></svg>">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
@@ -47,7 +47,7 @@ tailwind.config={theme:{extend:{
   <div class="flex items-center gap-2.5 font-disp font-black text-[15px] tracking-wide whitespace-nowrap">
     <span id="wsLed" class="led-off w-2.5 h-2.5 rounded-full inline-block"></span>
     КОРЗИНА<span class="text-grn">·</span>СКАЛЬП
-    <span class="font-mono font-normal text-[10px] text-mut border border-line2 rounded px-1.5 py-0.5 tracking-widest">PAPER v3.0 · FLIP</span>
+    <span class="font-mono font-normal text-[10px] text-mut border border-line2 rounded px-1.5 py-0.5 tracking-widest">PAPER v4.0 · FIXED BET</span>
   </div>
   <div class="flex items-center gap-2 text-xs text-mut"><span id="wsTxt">подключение…</span><span id="latEl" class="font-mono"></span></div>
   <select id="symSel" class="bg-panel2 border border-line2 rounded px-2.5 py-1.5 font-mono text-[13px] cursor-pointer">
@@ -80,16 +80,14 @@ tailwind.config={theme:{extend:{
   <div class="flex flex-col gap-3 min-w-0">
     <section class="bg-panel border border-line rounded-lg shadow-xl hover:border-line2 transition-colors">
       <h2 class="flex items-center gap-2 text-[10px] font-disp font-bold uppercase tracking-[0.18em] text-mut px-4 py-3 border-b border-line">
-        <span class="w-1.5 h-1.5 bg-cyn"></span>Логика флипа — настройки</h2>
+        <span class="w-1.5 h-1.5 bg-cyn"></span>Настройки · ставка одна</h2>
       <div class="p-4">
         <div class="grid grid-cols-2 gap-2.5">
-          <label class="text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Старт. ордер, $<input id="baseUsd" type="number" value="100" min="10" step="10" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px]"></label>
+          <label class="text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Ставка, $ (всегда)<input id="baseUsd" type="number" value="100" min="10" step="10" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px]"></label>
           <label class="text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Цель корзины, $<input id="tpUsd" type="number" value="0.80" min="0.05" step="0.05" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px]"></label>
-          <label class="text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Шаг пирамиды, %<input id="pyrStep" type="number" value="0.10" min="0.02" step="0.01" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px]"></label>
-          <label class="text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Объём пирамиды, $<input id="pyrUsd" type="number" value="100" min="10" step="10" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px]"></label>
-          <label class="text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Множитель переворота<input id="flipMult" type="number" value="2.0" min="1" step="0.1" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px]"></label>
-          <label class="text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Макс. ордеров<input id="maxOrd" type="number" value="25" min="3" max="60" step="1" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px]"></label>
+          <label class="text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Шаг добавления, %<input id="stepAdd" type="number" value="0.10" min="0.02" step="0.01" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px]"></label>
           <label class="text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Стоп-просадка, $<input id="maxDD" type="number" value="5" min="0.5" step="0.5" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px]"></label>
+          <label class="text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Макс. ставок<input id="maxOrd" type="number" value="25" min="3" max="60" step="1" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px]"></label>
           <label class="text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Пауза, мс<input id="cooldownMs" type="number" value="1500" min="0" step="250" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px]"></label>
           <label class="col-span-2 text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Первый вход
             <select id="dirMode" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px] cursor-pointer">
@@ -107,10 +105,10 @@ tailwind.config={theme:{extend:{
         <label class="flex items-center gap-2 mt-3 text-xs text-mut cursor-pointer"><input id="sndChk" type="checkbox" checked class="accent-[#4cc9f0]"> Звуковые сигналы</label>
 
         <div class="mt-3 pt-3 border-t border-dashed border-line2 text-[11.5px] leading-relaxed text-mut">
-          <b class="text-red2">1.</b> Баланс ушёл из + в − → <b class="text-slate-200">противоположная сделка</b> (нетто × множитель).<br>
-          <b class="text-grn">2.</b> Сделка в плюсе / баланс снова + → <b class="text-slate-200">добавляем такие же</b> (пирамида к цели).<br>
-          <b class="text-amb">3.</b> Добавили и снова в минус → <b class="text-slate-200">пункт 1</b> (новый переворот).<br>
-          <b class="text-cyn">4.</b> Цель достигнута → закрыть всё. Падение на <b class="text-slate-200">$0.01</b> от положительного пика → закрыть всё.
+          <b class="text-cyn">1.</b> Ставка всегда одна и та же: старт, компенсации, пирамида — <b class="text-slate-200">×1</b>.<br>
+          <b class="text-red2">2.</b> Баланс из + в − → противоположная ставка; минус продолжается → <b class="text-slate-200">ещё по одной за шаг</b>.<br>
+          <b class="text-grn">3.</b> Баланс в плюсе → за каждый шаг в прибыль <b class="text-slate-200">ещё одна такая же</b>, и так до цели.<br>
+          <b class="text-amb">4.</b> Цель → закрыть. Падение на <b class="text-slate-200">$0.01</b> от пика → закрыть всё.
         </div>
 
         <div class="mt-3 pt-3 border-t border-dashed border-line2 flex flex-col gap-2">
@@ -145,7 +143,7 @@ tailwind.config={theme:{extend:{
           <div class="flex justify-between gap-3 py-[7px] border-t border-line/70 text-xs"><span class="text-mut">Средняя BUY / SELL</span><b id="sAvg" class="font-mono font-semibold">—</b></div>
           <div class="flex justify-between gap-3 py-[7px] border-t border-line/70 text-xs"><span class="text-mut">Скорость / 0.1% хода</span><b id="sSpeed" class="font-mono font-semibold">—</b></div>
           <div class="flex justify-between gap-3 py-[7px] border-t border-line/70 text-xs"><span class="text-mut">Экспозиция</span><b id="sExp" class="font-mono font-semibold">—</b></div>
-          <div class="flex justify-between gap-3 py-[7px] border-t border-line/70 text-xs"><span class="text-mut">Ордеров (С/Ф/П)</span><b id="sCnt" class="font-mono font-semibold">0</b></div>
+          <div class="flex justify-between gap-3 py-[7px] border-t border-line/70 text-xs"><span class="text-mut">Ставок (С/К/П)</span><b id="sCnt" class="font-mono font-semibold">0</b></div>
         </div>
       </div>
     </section>
@@ -160,14 +158,14 @@ tailwind.config={theme:{extend:{
       <div class="flex flex-wrap gap-x-4 gap-y-1 px-4 py-2.5 border-t border-line text-[11px] text-mut">
         <span><i class="inline-block w-2 h-2 rounded-sm bg-grn mr-1"></i>BUY</span>
         <span><i class="inline-block w-2 h-2 rounded-sm bg-red2 mr-1"></i>SELL</span>
-        <span>С — старт · Ф — переворот · П — пирамида</span>
+        <span>С — старт · К — компенсация · П — пирамида</span>
         <span id="chTime" class="font-mono ml-auto text-dim2"></span>
       </div>
     </section>
 
     <section class="bg-panel border border-line rounded-lg shadow-xl hover:border-line2 transition-colors">
       <h2 class="flex items-center gap-2 text-[10px] font-disp font-bold uppercase tracking-[0.18em] text-mut px-4 py-3 border-b border-line">
-        <span class="w-1.5 h-1.5 bg-red2"></span>Ордера корзины</h2>
+        <span class="w-1.5 h-1.5 bg-red2"></span>Ставки корзины</h2>
       <div class="max-h-[260px] overflow-auto">
         <table class="w-full border-collapse text-xs">
           <thead><tr class="bg-panel">
@@ -176,7 +174,7 @@ tailwind.config={theme:{extend:{
             <th class="sticky top-0 bg-panel text-left font-disp text-[9px] font-bold tracking-[0.13em] uppercase text-mut px-2.5 py-2 border-b border-line">Сторона</th>
             <th class="sticky top-0 bg-panel text-right font-disp text-[9px] font-bold tracking-[0.13em] uppercase text-mut px-2.5 py-2 border-b border-line">Вход</th>
             <th class="sticky top-0 bg-panel text-right font-disp text-[9px] font-bold tracking-[0.13em] uppercase text-mut px-2.5 py-2 border-b border-line">Кол-во</th>
-            <th class="sticky top-0 bg-panel text-right font-disp text-[9px] font-bold tracking-[0.13em] uppercase text-mut px-2.5 py-2 border-b border-line">Объём $</th>
+            <th class="sticky top-0 bg-panel text-right font-disp text-[9px] font-bold tracking-[0.13em] uppercase text-mut px-2.5 py-2 border-b border-line">Ставка $</th>
             <th class="sticky top-0 bg-panel text-right font-disp text-[9px] font-bold tracking-[0.13em] uppercase text-mut px-2.5 py-2 border-b border-line">PnL $</th>
           </tr></thead>
           <tbody id="ordBody"></tbody>
@@ -229,7 +227,7 @@ const fmtS=(n,d=2)=>(n>=0?'+':'−')+fmt(Math.abs(n),d);
 const round2=n=>Math.round(n*100)/100;
 const roundStep=(v,s)=>Math.round(v/s)*s;
 const hhmmss=t=>new Date(t).toLocaleTimeString('ru-RU');
-const LS='basket-scalper.v3';
+const LS='basket-scalper.v4';
 
 /* ═══ state ═══ */
 const S={symbol:'BTCUSDT',price:0,prevPrice:0,tickSize:.01,latency:0,ws:null,retries:0,pollTimer:null,connected:false,
@@ -239,9 +237,8 @@ const S={symbol:'BTCUSDT',price:0,prevPrice:0,tickSize:.01,latency:0,ws:null,ret
 
 function cfg(){return{
   base:Math.max(10,+$('baseUsd').value||100), tp:Math.max(.05,+$('tpUsd').value||.8),
-  pyrStep:Math.max(.02,+$('pyrStep').value||.1), pyrUsd:Math.max(10,+$('pyrUsd').value||100),
-  flipMult:Math.max(1,+$('flipMult').value||2), maxOrders:Math.max(3,+$('maxOrd').value|0||25),
-  maxDD:Math.max(.5,+$('maxDD').value||5), cooldown:Math.max(0,+$('cooldownMs').value|0||1500),
+  step:Math.max(.02,+$('stepAdd').value||.1), maxDD:Math.max(.5,+$('maxDD').value||5),
+  maxOrders:Math.max(3,+$('maxOrd').value|0||25), cooldown:Math.max(0,+$('cooldownMs').value|0||1500),
   dir:$('dirMode').value};}
 
 /* ═══ log / banner / sound ═══ */
@@ -323,56 +320,51 @@ function pushCandle(p,t){
   else{if(p>c.h)c.h=p;if(p<c.l)c.l=p;c.c=p;}
 }
 
-/* ═══ basket engine — FLIP ═══ */
+/* ═══ basket engine — FIXED BET ═══ */
 function basketU(price){if(!S.basket)return 0;let u=0;
   for(const o of S.basket.orders)u+=(o.side==='BUY'?price-o.entry:o.entry-price)*o.qty;return u;}
 function netQty(b){let q=0;for(const o of b.orders)q+=(o.side==='BUY'?o.qty:-o.qty);return q;}
 function totalExp(b){let e=0;for(const o of b.orders)e+=o.usd;return e;}
 
-function _add(side,price,qty,kind){
-  const b=S.basket,entry=roundStep(price,S.tickSize);
-  qty=Math.max(1e-6,Math.round(qty*1e6)/1e6);
+function canAdd(){
+  const b=S.basket,c=cfg();
+  if(b.orders.length>=c.maxOrders){if(!b.warnedLim){b.warnedLim=true;log('warn','Лимит ставок в корзине');}return false;}
+  if(totalExp(b)+c.base>c.base*150){if(!b.warnedLim){b.warnedLim=true;log('warn','Лимит экспозиции');}return false;}
+  return true;
+}
+function _add(side,price,kind){                       /* размер всегда = cfg().base */
+  const b=S.basket,c=cfg(),entry=roundStep(price,S.tickSize);
+  const qty=Math.max(1e-6,Math.round((c.base/entry)*1e6)/1e6);
   const o={id:++S.oid,side,entry,qty,usd:round2(qty*entry),kind,ts:Date.now()};
   b.orders.push(o);b.warnedLim=false;
-  b.lastDir=side;b.lastEntry=entry;b.lastQty=qty;
-  const T={start:'СТАРТ',flip:'⚡ ПЕРЕВОРОТ',pyr:'ПИРАМИДА'};
+  b.lastDir=side;b.lastEntry=entry;
+  const T={start:'СТАРТ',flip:'КОМПЕНСАЦИЯ',pyr:'ПИРАМИДА'};
   log(kind==='flip'?'flip':(side==='BUY'?'buy':'sell'),
     `${T[kind]} ${side==='BUY'?'▲ BUY':'▼ SELL'} #${o.id} · ${fmt(o.qty,6)} @ ${fmt(entry)} · $${fmt(o.usd)}`);
-  beep(kind==='flip'?500:(side==='BUY'?620:440),kind==='flip'?.12:.05,'square',.04);
+  beep(kind==='flip'?500:(side==='BUY'?620:440),kind==='flip'?.1:.05,'square',.04);
   renderOrders();return o;
 }
 function openBasket(dir){
   S.basket={orders:[],peakU:0,openRealized:S.realized,openedAt:Date.now(),
-            flipArmed:true,lastDir:null,lastEntry:0,lastQty:0,warnedLim:false};
+            flipArmed:true,lastDir:null,lastEntry:0,warnedLim:false};
   S.warmWarned=false;
-  log('sys',`Новая корзина · первый вход <b>${dir==='BUY'?'BUY ▲':'SELL ▼'}</b> · $${fmt(cfg().base)}`);
-  _add(dir,S.price,cfg().base/S.price,'start');
+  log('sys',`Новая корзина · вход <b>${dir==='BUY'?'BUY ▲':'SELL ▼'}</b> · ставка $${fmt(cfg().base)}`);
+  _add(dir,S.price,'start');
 }
 function closeBasket(reason,win){
   const b=S.basket,u=round2(basketU(S.price));
   S.realized=round2(S.realized+u);S.baskets++;
   if(win){S.wins++;if(S.best==null||u>S.best)S.best=u;}
   else{S.losses++;if(S.worst==null||u<S.worst)S.worst=u;}
-  const nF=b.orders.filter(o=>o.kind==='flip').length,nP=b.orders.filter(o=>o.kind==='pyr').length;
-  log(win?'ok':'err',`${win?'✔ КОРИНА ЗАКРЫТА':'⛔ КОРИЗИНА ЗАКРЫТА'} [${reason}] · ${fmtS(u)} $ · ордеров ${b.orders.length} (Ф:${nF} П:${nP})`);
+  const nK=b.orders.filter(o=>o.kind==='flip').length,nP=b.orders.filter(o=>o.kind==='pyr').length;
+  log(win?'ok':'err',`${win?'✔ КОРИЗИНА ЗАКРЫТА':'⛔ КОРИЗИНА ЗАКРЫТА'} [${reason}] · ${fmtS(u)} $ · ставок ${b.orders.length} (К:${nK} П:${nP})`);
   banner(win?`КОРЗИНА В КОПИЛКУ ${fmtS(u)} $`:`ЗАКРЫТО ${fmtS(u)} $ · ${reason}`,win);
   win?beep(880,.18):beep(190,.3,'sawtooth',.08);
   S.basket=null;S.lastCloseTs=Date.now();renderOrders();save();
 }
-function doFlip(price){
-  const b=S.basket,c=cfg();
-  if(b.orders.length>=c.maxOrders){if(!b.warnedLim){b.warnedLim=true;log('warn','Лимит ордеров — переворот невозможен');}return;}
-  const net=netQty(b);
-  let dir,baseQty;
-  if(Math.abs(net)>1e-9){dir=net>0?'SELL':'BUY';baseQty=Math.abs(net);}   // против текущей нетто-позиции
-  else{dir=b.lastDir==='BUY'?'SELL':'BUY';baseQty=b.lastQty;}              // лок: против последней сделки
-  let qty=baseQty*c.flipMult;
-  const room=c.base*150-totalExp(b);                                        // предел экспозиции
-  if(qty*price>room)qty=room/price;
-  if(qty*price<10){log('warn','Лимит экспозиции — переворот невозможен');return;}
-  const netNew=net+(dir==='BUY'?qty:-qty);
-  log('flip',`Баланс ушёл в минус → противоположная сделка · нетто ${fmtS(net,6)} → ${fmtS(netNew,6)}`);
-  _add(dir,price,qty,'flip');
+function compDir(){                                    /* противоположно нетто; при локе — противоположно последней */
+  const b=S.basket,net=netQty(b);
+  return net>1e-9?'SELL':net<-1e-9?'BUY':(b.lastDir==='BUY'?'SELL':'BUY');
 }
 function engine(price){
   if(!S.basket){
@@ -385,30 +377,21 @@ function engine(price){
   const u=basketU(price);
   if(u>b.peakU)b.peakU=u;
 
-  /* закрытие: цель */
-  if(u>=c.tp)return closeBasket('цель '+fmt(c.tp)+' $',true);
-  /* закрытие: падение на $0.01 от положительного пика */
-  if(b.peakU>0&&u<=b.peakU-0.01)return closeBasket('просадка $0.01 от пика',u>=0);
-  /* закрытие: абсолютный стоп, если корзина так и не была в плюсе */
-  if(b.peakU===0&&u<=-c.maxDD)return closeBasket('стоп-просадка −'+fmt(c.maxDD)+' $',false);
+  if(u>=c.tp)return closeBasket('цель '+fmt(c.tp)+' $',true);                       /* цель → в копилку */
+  if(b.peakU>0&&u<=b.peakU-0.01)return closeBasket('просадка $0.01 от пика',u>=0); /* защита −1 цент */
+  if(u<=-c.maxDD)return closeBasket('стоп-просадка −'+fmt(c.maxDD)+' $',false);     /* абсолютный стоп */
 
-  /* пункт 1: баланс из + в − → противоположная сделка */
-  if(u<0){if(b.flipArmed){b.flipArmed=false;doFlip(price);}}
-  /* пункты 2–3: сделка в плюсе → добавляем такие же к цели */
-  else{
+  const step=c.step/100;
+  if(u<0){
+    /* баланс ушёл в минус */
+    if(b.flipArmed){b.flipArmed=false;if(canAdd())_add(compDir(),price,'flip');}    /* сразу противоположная ставка */
+    else if(price>=b.lastEntry*(1+step)){if(canAdd())_add('BUY',price,'flip');}     /* движение вверх — ещё ставка вверх */
+    else if(price<=b.lastEntry*(1-step)){if(canAdd())_add('SELL',price,'flip');}    /* движение вниз — ещё ставка вниз */
+  }else{
+    /* баланс не уходит в минус → ставим ещё одну и так далее */
     b.flipArmed=true;
-    if(u>0){
-      const step=c.pyrStep/100;
-      const fav=b.lastDir==='BUY'?price>=b.lastEntry*(1+step):price<=b.lastEntry*(1-step);
-      if(fav){
-        if(b.orders.length>=c.maxOrders){if(!b.warnedLim){b.warnedLim=true;log('warn','Лимит ордеров корзины');}}
-        else{
-          const room=c.base*150-totalExp(b);
-          const usd=Math.min(c.pyrUsd,room);
-          if(usd>=10)_add(b.lastDir,price,usd/price,'pyr');
-        }
-      }
-    }
+    const fav=b.lastDir==='BUY'?price>=b.lastEntry*(1+step):price<=b.lastEntry*(1-step);
+    if(fav&&canAdd())_add(b.lastDir,price,'pyr');
   }
 }
 
@@ -449,8 +432,8 @@ function uiTick(){
     const spd=net*S.price*0.001;
     $('sSpeed').textContent=fmtS(spd)+' $';$('sSpeed').style.color=spd>=0?'#3ee08c':'#ff5062';
     $('sExp').textContent='$ '+fmt(exp);
-    const nF=b.orders.filter(o=>o.kind==='flip').length,nP=b.orders.filter(o=>o.kind==='pyr').length;
-    $('sCnt').textContent=`${b.orders.length}/${c.maxOrders} (1/${nF}/${nP})`;
+    const nK=b.orders.filter(o=>o.kind==='flip').length,nP=b.orders.filter(o=>o.kind==='pyr').length;
+    $('sCnt').textContent=`${b.orders.length}/${c.maxOrders} (1/${nK}/${nP})`;
     const pct=Math.max(0,Math.min(100,u/c.tp*100));
     $('tpBar').style.width=pct+'%';
     $('tpBar').style.background=u<0?'linear-gradient(90deg,#9c2531,#ff5062)':'';
@@ -486,7 +469,7 @@ function uiTick(){
 function renderOrders(){
   const tb=$('ordBody');tb.innerHTML='';S.rowRefs.clear();
   if(!S.basket){$('fCnt').textContent='—';return;}
-  const T={start:['С','text-cyn border-cyn/50 bg-cyn/5'],flip:['Ф','text-amb border-amb/50 bg-amb/5'],pyr:['П','text-grn border-grn/50 bg-grn/5']};
+  const T={start:['С','text-cyn border-cyn/50 bg-cyn/5'],flip:['К','text-amb border-amb/50 bg-amb/5'],pyr:['П','text-grn border-grn/50 bg-grn/5']};
   S.basket.orders.forEach(o=>{
     const tr=document.createElement('tr');tr.className='rowin hover:bg-cyn/5';
     tr.innerHTML=`<td class="px-2.5 py-1.5 font-mono text-left border-b border-line/50">#${o.id}</td>
@@ -528,7 +511,7 @@ function drawChart(){
     ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w-padR+6,y);ctx.stroke();ctx.restore();
     ctx.font='600 9.5px JetBrains Mono';ctx.fillStyle=col;ctx.fillText(txt,w-padR+12,y-4);};
   if(S.basket){
-    const K={start:'С',flip:'Ф',pyr:'П'};
+    const K={start:'С',flip:'К',pyr:'П'};
     S.basket.orders.forEach(o=>{
       const op=(o.side==='BUY'?S.price-o.entry:o.entry-S.price)*o.qty;
       dash(Y(o.entry),o.side==='BUY'?'rgba(62,224,140,.9)':'rgba(255,80,98,.9)',
@@ -561,14 +544,14 @@ function drawEq(){
 /* ═══ persistence ═══ */
 function save(){try{localStorage.setItem(LS,JSON.stringify({
   realized:S.realized,baskets:S.baskets,wins:S.wins,losses:S.losses,best:S.best,worst:S.worst,
-  cfg:{b:$('baseUsd').value,t:$('tpUsd').value,ps:$('pyrStep').value,pu:$('pyrUsd').value,
-       fm:$('flipMult').value,o:$('maxOrd').value,dd:$('maxDD').value,c:$('cooldownMs').value,d:$('dirMode').value}}));}catch(e){}}
+  cfg:{b:$('baseUsd').value,st:$('stepAdd').value,t:$('tpUsd').value,dd:$('maxDD').value,
+       o:$('maxOrd').value,c:$('cooldownMs').value,d:$('dirMode').value}}));}catch(e){}}
 function load(){try{const j=JSON.parse(localStorage.getItem(LS)||'null');if(!j)return;
   S.realized=j.realized||0;S.baskets=j.baskets||0;S.wins=j.wins||0;S.losses=j.losses||0;
   S.best=j.best??null;S.worst=j.worst??null;
-  if(j.cfg){$('baseUsd').value=j.cfg.b;$('tpUsd').value=j.cfg.t;$('pyrStep').value=j.cfg.ps||.1;
-    $('pyrUsd').value=j.cfg.pu||100;$('flipMult').value=j.cfg.fm||2;$('maxOrd').value=j.cfg.o||25;
-    $('maxDD').value=j.cfg.dd||5;$('cooldownMs').value=j.cfg.c;$('dirMode').value=j.cfg.d;}
+  if(j.cfg){$('baseUsd').value=j.cfg.b;$('stepAdd').value=j.cfg.st||.1;$('tpUsd').value=j.cfg.t;
+    $('maxDD').value=j.cfg.dd||5;$('maxOrd').value=j.cfg.o||25;
+    $('cooldownMs').value=j.cfg.c;$('dirMode').value=j.cfg.d;}
   log('sys','Статистика восстановлена из localStorage');}catch(e){}}
 
 /* ═══ controls ═══ */
@@ -576,7 +559,7 @@ $('btnStart').onclick=()=>{
   if(!S.connected&&S.ticks===0){log('warn','Дождитесь подключения к потоку котировок');return;}
   S.running=true;$('btnStart').disabled=true;$('btnStop').disabled=false;
   try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();AC.resume&&AC.resume();}catch(e){}
-  log('ok','▶ Бот запущен · режим ФЛИП-компенсации · PAPER');beep(700,.08);
+  log('ok','▶ Бот запущен · фиксированная ставка · PAPER');beep(700,.08);
 };
 $('btnStop').onclick=()=>{
   S.running=false;$('btnStart').disabled=false;$('btnStop').disabled=true;
@@ -595,14 +578,14 @@ $('symSel').onchange=async e=>{
   log('sys','Переключение на <b>'+sym+'</b>');
   await fetchTick();connect();fetch24();
 };
-['baseUsd','tpUsd','pyrStep','pyrUsd','flipMult','maxOrd','maxDD','cooldownMs','dirMode']
+['baseUsd','stepAdd','tpUsd','maxDD','maxOrd','cooldownMs','dirMode']
   .forEach(id=>$(id).addEventListener('change',save));
 
 /* ═══ init ═══ */
 setInterval(()=>$('clock').textContent=new Date().toLocaleString('ru-RU',{weekday:'short',hour:'2-digit',minute:'2-digit',second:'2-digit'}),1000);
 setInterval(fetch24,10000);setInterval(fetchTape,60000);
 load();
-log('sys','Инициализация v3.0: <b>флип-компенсация</b> — переворот при уходе баланса в минус, пирамида в плюсе.');
+log('sys','Инициализация v4.0: <b>фиксированная ставка</b>, компенсации по одной, пирамида пока баланс в плюсе.');
 log('warn','Режим PAPER: ордера виртуальные, комиссии не учитываются.');
 fetchTick();fetch24();fetchTape();connect();
 </script>

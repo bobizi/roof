@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Автопилот корзин v5.2 · издержки MT5 · Binance</title>
+<title>Автопилот корзин v6 · ATR-фильтры · модель MT5</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
@@ -21,7 +21,7 @@
 
 <header class="flex flex-wrap items-center gap-3 px-4 py-2.5 border-b border-[#30363d]">
   <b class="text-[15px]">Автопилот корзин</b>
-  <span class="text-xs text-gray-500">Binance · модель издержек MT5 · v5.2</span>
+  <span class="text-xs text-gray-500">Binance · издержки MT5 · ATR-фильтры · v6</span>
   <span id="wsTxt" class="text-xs text-gray-400">подключение…</span>
   <span id="latEl" class="mono text-xs text-gray-500"></span>
   <div class="flex-1"></div>
@@ -31,21 +31,25 @@
 <!-- ═══ настройки ═══ -->
 <div class="px-4 py-3 border-b border-[#30363d] flex flex-wrap items-end gap-x-4 gap-y-2">
   <label class="text-[10px] uppercase text-gray-500 flex flex-col gap-1">Ставка $<input id="baseUsd" type="number" value="100" min="10" step="10" class="w-24 bg-[#0d1117] border border-[#30363d] rounded px-2 py-1 mono text-[12px]"></label>
-  <label class="text-[10px] uppercase text-gray-500 flex flex-col gap-1">Цель корзины $<input id="tpUsd" type="number" value="1.00" min="0.05" step="0.05" class="w-24 bg-[#0d1117] border border-[#30363d] rounded px-2 py-1 mono text-[12px]"></label>
-  <label class="text-[10px] uppercase text-gray-500 flex flex-col gap-1">Шаг %<input id="stepAdd" type="number" value="0.10" min="0.02" step="0.01" class="w-20 bg-[#0d1117] border border-[#30363d] rounded px-2 py-1 mono text-[12px]"></label>
-  <label class="text-[10px] uppercase text-gray-500 flex flex-col gap-1">Стоп $<input id="maxDD" type="number" value="5" min="0.5" step="0.5" class="w-20 bg-[#0d1117] border border-[#30363d] rounded px-2 py-1 mono text-[12px]"></label>
+  <label class="text-[10px] uppercase text-gray-500 flex flex-col gap-1">Цель корзины $<input id="tpUsd" type="number" value="1.50" min="0.1" step="0.1" class="w-24 bg-[#0d1117] border border-[#30363d] rounded px-2 py-1 mono text-[12px]"></label>
+  <label class="text-[10px] uppercase text-gray-500 flex flex-col gap-1">Стоп корзины $<input id="maxDD" type="number" value="5" min="0.5" step="0.5" class="w-20 bg-[#0d1117] border border-[#30363d] rounded px-2 py-1 mono text-[12px]"></label>
+  <label class="text-[10px] uppercase text-gray-500 flex flex-col gap-1">Шаг ×ATR<input id="stepMult" type="number" value="1.0" min="0.2" step="0.1" class="w-20 bg-[#0d1117] border border-[#30363d] rounded px-2 py-1 mono text-[12px]"></label>
+  <label class="text-[10px] uppercase text-gray-500 flex flex-col gap-1">Мин. импульс %<input id="impulseMin" type="number" value="0.02" min="0" step="0.01" class="w-20 bg-[#0d1117] border border-[#30363d] rounded px-2 py-1 mono text-[12px]"></label>
+  <label class="text-[10px] uppercase text-gray-500 flex flex-col gap-1">Макс флипов<input id="maxFlips" type="number" value="6" min="1" max="30" class="w-20 bg-[#0d1117] border border-[#30363d] rounded px-2 py-1 mono text-[12px]"></label>
+  <label class="text-[10px] uppercase text-gray-500 flex flex-col gap-1">Трейлинг %<input id="trailPct" type="number" value="50" min="0" max="90" step="5" class="w-20 bg-[#0d1117] border border-[#30363d] rounded px-2 py-1 mono text-[12px]"></label>
+  <label class="text-[10px] uppercase text-gray-500 flex flex-col gap-1">Лимит сессии $<input id="dayLimit" type="number" value="25" min="1" step="1" class="w-20 bg-[#0d1117] border border-[#30363d] rounded px-2 py-1 mono text-[12px]"></label>
   <label class="text-[10px] uppercase text-gray-500 flex flex-col gap-1">Макс ставок<input id="maxOrd" type="number" value="60" min="3" max="200" class="w-20 bg-[#0d1117] border border-[#30363d] rounded px-2 py-1 mono text-[12px]"></label>
-  <label class="text-[10px] uppercase text-gray-500 flex flex-col gap-1">Пауза мс<input id="cooldownMs" type="number" value="1500" min="0" step="250" class="w-20 bg-[#0d1117] border border-[#30363d] rounded px-2 py-1 mono text-[12px]"></label>
+  <label class="text-[10px] uppercase text-gray-500 flex flex-col gap-1">Пауза мс<input id="cooldownMs" type="number" value="2000" min="0" step="250" class="w-20 bg-[#0d1117] border border-[#30363d] rounded px-2 py-1 mono text-[12px]"></label>
   <label class="text-[10px] uppercase text-gray-500 flex flex-col gap-1">Первый вход
     <select id="dirMode" class="bg-[#0d1117] border border-[#30363d] rounded px-2 py-1 mono text-[12px]">
       <option value="auto">Авто EMA</option><option value="BUY">BUY</option><option value="SELL">SELL</option>
     </select></label>
 
   <div class="flex items-end gap-2 pl-2 border-l border-[#30363d]">
-    <span class="text-[10px] uppercase text-amber-500/80 pb-1.5">Издержки MT5:</span>
+    <span class="text-[10px] uppercase text-amber-500/80 pb-1.5">Издержки:</span>
     <label class="text-[10px] uppercase text-gray-500 flex flex-col gap-1">Спред %<input id="spreadPct" type="number" value="0.03" min="0" step="0.01" class="w-20 bg-[#0d1117] border border-[#30363d] rounded px-2 py-1 mono text-[12px]"></label>
-    <label class="text-[10px] uppercase text-gray-500 flex flex-col gap-1">Комиссия $/ставка<input id="commUsd" type="number" value="0.02" min="0" step="0.01" class="w-20 bg-[#0d1117] border border-[#30363d] rounded px-2 py-1 mono text-[12px]"></label>
-    <label class="text-[10px] uppercase text-gray-500 flex flex-col gap-1">Своп $/ставка/день<input id="swapUsd" type="number" value="0.01" min="0" step="0.01" class="w-20 bg-[#0d1117] border border-[#30363d] rounded px-2 py-1 mono text-[12px]"></label>
+    <label class="text-[10px] uppercase text-gray-500 flex flex-col gap-1">Комиссия $<input id="commUsd" type="number" value="0.02" min="0" step="0.01" class="w-20 bg-[#0d1117] border border-[#30363d] rounded px-2 py-1 mono text-[12px]"></label>
+    <label class="text-[10px] uppercase text-gray-500 flex flex-col gap-1">Своп $/день<input id="swapUsd" type="number" value="0.01" min="0" step="0.01" class="w-20 bg-[#0d1117] border border-[#30363d] rounded px-2 py-1 mono text-[12px]"></label>
   </div>
 
   <div class="flex items-end gap-3 pl-2 border-l border-[#30363d]">
@@ -66,6 +70,7 @@
   <div class="bg-[#161b22] border border-[#30363d] rounded p-2">
     <div class="text-[10px] uppercase text-gray-500">Реализовано всего</div>
     <div id="stReal" class="mono text-lg font-bold text-green-400">$0.00</div>
+    <div id="stLim" class="mono text-[11px] text-gray-500">лимит сессии: —</div>
   </div>
   <div class="bg-[#161b22] border border-[#30363d] rounded p-2">
     <div class="text-[10px] uppercase text-gray-500">Расходы всего</div>
@@ -107,8 +112,8 @@
 </section>
 
 <footer class="text-center text-gray-600 text-[11px] px-6 pb-5 leading-relaxed">
-  Модель издержек MT5: вход по ask/bid (спред сразу в PnL), комиссия за ставку, своп за удержание.
-  Защита закрывает корзину, только когда падение от пика превысит все расходы корзины + $0.01.
+  v6: вход только по импульсу · шаг = ATR · лимит флипов против пилы · трейлинг фиксирует прибыль · лимит потерь на сессию.
+  Издержки MT5: спред (ask/bid), комиссия, своп. Защита: падение от пика больше расходов + $0.01 (или ниже трейлинг-пола).
 </footer>
 
 <script>
@@ -119,29 +124,44 @@ const fmtS=(n,d=2)=>(n>=0?'+':'−')+fmt(Math.abs(n),d);
 const round2=n=>Math.round(n*100)/100;
 const roundStep=(v,s)=>Math.round(v/s)*s;
 const hhmmss=()=>new Date().toLocaleTimeString('ru-RU');
-const LS='basket-autopilot.v52';
+const LS='basket-autopilot.v6';
+const CANDLE_MS=10000, CANDLE_N=18;
 
 const PAIRS=['BTCUSDT','ETHUSDT','SOLUSDT','BNBUSDT','XRPUSDT','DOGEUSDT'];
 const sel=new Set(['BTCUSDT','ETHUSDT','SOLUSDT']);
 const P={};
-const G={running:false,baskets:0,wins:0,losses:0,ordWin:0,ordLoss:0,ordWinSum:0,ordLossSum:0,
-         costs:0,eqHist:[],lastEqPush:0,lat:0,oid:0};
+const G={running:false,startEq:0,baskets:0,wins:0,losses:0,ordWin:0,ordLoss:0,
+         ordWinSum:0,ordLossSum:0,costs:0,eqHist:[],lastEqPush:0,lat:0,oid:0};
 let ws=null,retries=0,pollTimer=null;
 
 function cfg(){return{
-  base:Math.max(10,+$('baseUsd').value||100), tp:Math.max(.05,+$('tpUsd').value||1),
-  step:Math.max(.02,+$('stepAdd').value||.1), maxDD:Math.max(.5,+$('maxDD').value||5),
-  maxOrders:Math.max(3,+$('maxOrd').value|0||60), cooldown:Math.max(0,+$('cooldownMs').value|0||1500),
+  base:Math.max(10,+$('baseUsd').value||100), tp:Math.max(.1,+$('tpUsd').value||1.5),
+  maxDD:Math.max(.5,+$('maxDD').value||5), stepMult:Math.max(.2,+$('stepMult').value||1),
+  impulse:Math.max(0,+$('impulseMin').value||0), maxFlips:Math.max(1,+$('maxFlips').value|0||6),
+  trail:Math.max(0,Math.min(90,+$('trailPct').value||0)), dayLimit:Math.max(1,+$('dayLimit').value||25),
+  maxOrders:Math.max(3,+$('maxOrd').value|0||60), cooldown:Math.max(0,+$('cooldownMs').value|0||2000),
   dir:$('dirMode').value,
   spread:Math.max(0,+$('spreadPct').value||0), comm:Math.max(0,+$('commUsd').value||0),
   swap:Math.max(0,+$('swapUsd').value||0)};}
 
 function initPair(sym){if(P[sym])return;
   P[sym]={sym,price:0,prev:0,ticks:0,tickSize:.01,emaF:null,emaS:null,
-    hist:[],lastHist:0,lastUI:0,
+    hist:[],lastHist:0,lastUI:0,cdl:[],
     realized:0,costs:0,baskets:0,wins:0,losses:0,ordWin:0,ordLoss:0,ordWinSum:0,ordLossSum:0,
     basket:null,lastCloseTs:0,warmWarned:false,el:null,rowRefs:new Map()};}
 PAIRS.forEach(initPair);
+
+/* ═══ ATR (средний диапазон 10-сек баров, в % цены) ═══ */
+function updCandle(st,p,now){
+  const cd=st.cdl[st.cdl.length-1];
+  if(!cd||now-cd.t>=CANDLE_MS){st.cdl.push({t:now,h:p,l:p});if(st.cdl.length>CANDLE_N)st.cdl.shift();}
+  else{if(p>cd.h)cd.h=p;if(p<cd.l)cd.l=p;}
+}
+function atrPct(st){
+  if(st.cdl.length<3)return 0;
+  let s=0;for(const c of st.cdl)s+=c.h-c.l;
+  return st.price>0?(s/st.cdl.length)/st.price:0;
+}
 
 /* ═══ лог / баннер / звук ═══ */
 function log(type,msg){
@@ -191,24 +211,26 @@ function stopPoll(){clearInterval(pollTimer);pollTimer=null;}
 
 function onPrice(sym,p,eventTs){
   const st=P[sym];if(!st)return;
+  const now=Date.now();
   st.prev=st.price;st.price=p;st.ticks++;
   G.lat=Math.max(0,Date.now()-eventTs);
   st.emaF=st.emaF==null?p:p+(2/26)*(p-st.emaF);
   st.emaS=st.emaS==null?p:p+(2/100)*(p-st.emaS);
-  const now=Date.now();
+  updCandle(st,p,now);
   if(now-st.lastHist>250){st.lastHist=now;st.hist.push(p);if(st.hist.length>240)st.hist.shift();}
   if(G.running)engine(st,p,now);
-  if(now-st.lastUI>200){st.lastUI=now;$('latEl').textContent=G.lat+' мс';updatePair(st,now);drawSpark(st);
+  if(now-st.lastUI>200){st.lastUI=now;$('latEl').textContent=G.lat+' мс';
+    updatePair(st,now);drawSpark(st);checkSessionLimit();
     if(now-G.lastEqPush>300){G.lastEqPush=now;pushEq();drawEq();renderCosts();}}
 }
 
-/* ═══ модель издержек MT5 ═══ */
+/* ═══ издержки MT5 ═══ */
 function spreadP(){return cfg().spread/100;}
 function bidAsk(price){const s=spreadP();return[price*(1-s/2),price*(1+s/2)];}
 function swapAccrued(b,now){const c=cfg();let s=0;
   for(const o of b.orders)s+=c.swap*(now-o.ts)/86400000;return s;}
 function costsPaid(b,now){return b.spreadPaid+b.commPaid+swapAccrued(b,now);}
-function basketGross(st,price){ /* плавающий PnL по bid/ask, как в MT5 */
+function basketGross(st,price){
   const[bid,ask]=bidAsk(price);let u=0;
   for(const o of st.basket.orders)
     u+=(o.side==='BUY'?(bid-o.entry)*o.qty:(o.entry-ask)*o.qty);
@@ -216,7 +238,7 @@ function basketGross(st,price){ /* плавающий PnL по bid/ask, как �
 function basketNet(st,price,now){const b=st.basket;
   return basketGross(st,price)-b.commPaid-swapAccrued(b,now);}
 
-/* ═══ движок корзины ═══ */
+/* ═══ движок корзины v6 ═══ */
 function netQty(b){let q=0;for(const o of b.orders)q+=(o.side==='BUY'?o.qty:-o.qty);return q;}
 function totalExp(b){let e=0;for(const o of b.orders)e+=o.usd;return e;}
 function countSide(b,s){let n=0;for(const o of b.orders)if(o.side===s)n++;return n;}
@@ -228,13 +250,12 @@ function canAdd(st){const b=st.basket,c=cfg();
 function _add(st,side,price,kind){
   const b=st.basket,c=cfg();
   const[bid,ask]=bidAsk(price);
-  const px=side==='BUY'?ask:bid;                     /* BUY по ask, SELL по bid */
+  const px=side==='BUY'?ask:bid;
   const entry=roundStep(px,st.tickSize);
   const qty=Math.max(1e-6,Math.round((c.base/entry)*1e6)/1e6);
   const o={id:++G.oid,side,entry,qty,usd:round2(qty*entry),kind,ts:Date.now()};
   b.orders.push(o);b.warnedLim=false;b.lastDir=side;b.lastEntry=entry;
-  b.commPaid+=c.comm;                                 /* комиссия за ставку */
-  b.spreadPaid+=(price*spreadP())*qty;                /* стоимость спреда ставки */
+  b.commPaid+=c.comm;b.spreadPaid+=(price*spreadP())*qty;
   const T={start:'СТАРТ',flip:'КОМП',pyr:'ПИРАМ'};
   log(kind==='flip'?'flip':(side==='BUY'?'buy':'sell'),
     `[${st.sym}] ${T[kind]} ${side} #${o.id} @ ${fmt(entry)} · $${fmt(o.usd)}`);
@@ -243,11 +264,11 @@ function _add(st,side,price,kind){
 function addBets(st,side,price,n,kind){let done=0;
   for(let i=0;i<n;i++){if(!canAdd(st))break;_add(st,side,price,kind);done++;}return done;}
 function openBasket(st,dir){
-  st.basket={orders:[],peakU:0,openRealized:st.realized,flipArmed:true,
+  st.basket={orders:[],peakU:0,flipArmed:true,flips:0,
              compDir:null,anchor:st.price,lastDir:null,lastEntry:0,warnedLim:false,
              commPaid:0,spreadPaid:0};
   st.warmWarned=false;clearBets(st);
-  log('sys',`[${st.sym}] новая корзина · ${dir} · $${fmt(cfg().base)}`);
+  log('sys',`[${st.sym}] новая корзина · ${dir} · ATR ${fmt(atrPct(st)*100,3)}%`);
   _add(st,dir,st.price,'start');}
 function closeBasket(st,reason){
   const b=st.basket,price=st.price,now=Date.now();
@@ -263,8 +284,8 @@ function closeBasket(st,reason){
     const op=o.side==='BUY'?(bid-o.entry)*o.qty:(o.entry-ask)*o.qty;
     if(op>=0){w++;st.ordWin++;G.ordWin++;st.ordWinSum+=op;G.ordWinSum+=op;}
     else{l++;st.ordLoss++;G.ordLoss++;st.ordLossSum+=op;G.ordLossSum+=op;}}
-  log(win?'ok':'err',`[${st.sym}] корзина закрыта [${reason}] ${fmtS(u)} $ (расходы $${fmt(cp)}) · ставок ${w}/${l}`);
-  banner(`${st.sym}: ${fmtS(u)} $ · расходы $${fmt(cp)}`,win);
+  log(win?'ok':'err',`[${st.sym}] корзина закрыта [${reason}] ${fmtS(u)} $ (расходы $${fmt(cp)}) · ставок ${w}/${l} · флипов ${b.flips}`);
+  banner(`${st.sym}: ${fmtS(u)} $ · ${reason}`,win);
   win?beep(880,.16):beep(190,.28,'sawtooth',.06);
   st.basket=null;st.lastCloseTs=now;
   clearBets(st);renderStats();save();}
@@ -274,30 +295,39 @@ function enforceInvariant(st,dir,price){
   const done=addBets(st,dir,price,need,'flip');
   if(done>0)log('flip',`[${st.sym}] инвариант: ${dir} +${done} → ${own+done} против ${opp}`);}
 function engine(st,price,now){
+  const c=cfg();
+  const atr=atrPct(st);
   if(!st.basket){
-    if(Date.now()-st.lastCloseTs<cfg().cooldown)return;
-    if(st.ticks<80){if(!st.warmWarned){st.warmWarned=true;log('sys',`[${st.sym}] прогрев EMA…`);}return;}
-    const c=cfg();
+    if(Date.now()-st.lastCloseTs<c.cooldown)return;
+    if(st.ticks<80){if(!st.warmWarned){st.warmWarned=true;log('sys',`[${st.sym}] прогрев…`);}return;}
+    if(!atr)return;
+    /* фильтр: нет импульса — не входим (не кормим пилу) */
+    if(c.impulse>0&&Math.abs(st.emaF-st.emaS)/price<c.impulse/100)return;
     openBasket(st,c.dir==='auto'?(st.emaF>=st.emaS?'BUY':'SELL'):c.dir);return;
   }
-  const b=st.basket,c=cfg();
+  const b=st.basket;
+  const step=Math.max(0.0002,c.stepMult*atr);
   const u=basketNet(st,price,now);
   if(u>b.peakU)b.peakU=u;
-  if(u>=c.tp)return closeBasket(st,'цель '+fmt(c.tp)+' $');
-  /* защита: падение от пика больше ВСЕХ расходов корзины + $0.01 */
-  const allow=costsPaid(b,now)+0.01;
-  if(u<=b.peakU-allow)return closeBasket(st,`защита: пик − расходы − $0.01`);
-  if(u<=-c.maxDD)return closeBasket(st,'стоп-просадка −'+fmt(c.maxDD)+' $');
 
-  const step=c.step/100;
+  if(u>=c.tp)return closeBasket(st,'цель '+fmt(c.tp)+' $');
+  if(u<=-c.maxDD)return closeBasket(st,'стоп −'+fmt(c.maxDD)+' $');
+  if(b.flips>c.maxFlips)return closeBasket(st,`пила: ${b.flips} флипов`);
+  if(b.peakU>0){
+    const costs=costsPaid(b,now);
+    let floor=b.peakU-costs-0.01;                    /* расходы + 1 цент */
+    if(c.trail>0)floor=Math.max(floor,b.peakU*c.trail/100); /* трейлинг: не отдать больше X% пика */
+    if(u<=floor)return closeBasket(st,'фиксация прибыли');
+  }
+
   if(u<0){
     if(b.flipArmed){
-      b.flipArmed=false;b.anchor=price;
+      b.flipArmed=false;b.anchor=price;b.flips++;
       const nb=countSide(b,'BUY'),ns=countSide(b,'SELL');
       b.compDir=nb>ns?'SELL':ns>nb?'BUY':(b.lastDir==='BUY'?'SELL':'BUY');
     }else{
-      if(price>=b.anchor*(1+step)){b.compDir='BUY';b.anchor=price;}
-      else if(price<=b.anchor*(1-step)){b.compDir='SELL';b.anchor=price;}
+      if(price>=b.anchor*(1+step)){if(b.compDir!=='BUY')b.flips++;b.compDir='BUY';b.anchor=price;}
+      else if(price<=b.anchor*(1-step)){if(b.compDir!=='SELL')b.flips++;b.compDir='SELL';b.anchor=price;}
     }
     if(b.compDir)enforceInvariant(st,b.compDir,price);
   }else{
@@ -305,6 +335,23 @@ function engine(st,price,now){
     const fav=b.lastDir==='BUY'?price>=b.lastEntry*(1+step):price<=b.lastEntry*(1-step);
     if(fav&&canAdd(st))_add(st,b.lastDir,price,'pyr');
   }
+}
+
+/* ═══ лимит потерь сессии ═══ */
+function totalEquity(){
+  let eq=0;for(const k in P){eq+=P[k].realized;
+    if(P[k].basket)eq+=basketNet(P[k],P[k].price,Date.now());}
+  return eq;}
+function checkSessionLimit(){
+  if(!G.running)return;
+  const eq=totalEquity(),lim=cfg().dayLimit,left=eq-G.startEq;
+  $('stLim').textContent=`лимит сессии: ${fmtS(left)} / −${fmt(lim)}`;
+  $('stLim').style.color=left<-lim*0.6?'#f87171':'';
+  if(left<=-lim){
+    G.running=false;$('btnStart').disabled=false;$('btnStop').disabled=true;
+    log('err',`⛔ СТОП: лимит потерь сессии −$${fmt(lim)} достигнут. Автопилот остановлен.`);
+    banner(`ЛИМИТ ПОТЕРЬ −$${fmt(lim)} — автопилот остановлен`,false);
+    beep(160,.4,'sawtooth',.08);}
 }
 
 /* ═══ UI: карточки пар ═══ */
@@ -339,6 +386,7 @@ function buildCards(){
           <div class="real mono text-sm font-semibold">$0.00</div></div>
       </div>
       <div class="h-1.5 bg-[#0d1117] border border-[#30363d] rounded overflow-hidden"><div class="prog h-full w-0 bg-green-600"></div></div>
+      <div class="ainfo mono text-[11px] text-gray-500">—</div>
       <div class="grid grid-cols-2 gap-x-4 text-xs">
         <div class="flex justify-between border-t border-[#21262d] py-1"><span class="text-gray-500">Ставки B/S</span><span class="kvBS mono">—</span></div>
         <div class="flex justify-between border-t border-[#21262d] py-1"><span class="text-gray-500">Нетто</span><span class="kvNet mono">—</span></div>
@@ -354,6 +402,7 @@ function buildCards(){
     host.appendChild(d);
     st.el={status:d.querySelector('.status'),bid:d.querySelector('.bid'),ask:d.querySelector('.ask'),
       pnl:d.querySelector('.pnl'),real:d.querySelector('.real'),prog:d.querySelector('.prog'),
+      ainfo:d.querySelector('.ainfo'),
       kvBS:d.querySelector('.kvBS'),kvNet:d.querySelector('.kvNet'),kvPeak:d.querySelector('.kvPeak'),
       kvGuard:d.querySelector('.kvGuard'),kvExp:d.querySelector('.kvExp'),kvCnt:d.querySelector('.kvCnt'),
       costs:d.querySelector('.costs'),ow:d.querySelector('.ow'),ol:d.querySelector('.ol'),
@@ -378,15 +427,18 @@ function appendBet(st,o){
 function updatePair(st,now){
   const e=st.el;if(!e)return;
   const[bid,ask]=bidAsk(st.price);
+  const atr=atrPct(st),c=cfg();
   e.bid.textContent=fmt(bid);e.ask.textContent=fmt(ask);
   e.real.textContent=fmtS(st.realized)+' $';
   e.real.style.color=st.realized>=0?'#4ade80':'#f87171';
   e.ow.textContent=st.ordWin;e.ol.textContent=st.ordLoss;
+  e.ainfo.textContent=`ATR ${fmt(atr*100,3)}% · шаг ${fmt(Math.max(.0002,c.stepMult*atr)*100,3)}% · `+
+    (st.basket?`флипы ${st.basket.flips}/${c.maxFlips}`:`импульс для входа ≥ ${fmt(c.impulse,2)}%`);
   if(st.basket){
-    const b=st.basket,c=cfg();
+    const b=st.basket;
     const u=basketNet(st,st.price,now);
     const cp=costsPaid(b,now);
-    const allow=cp+0.01;
+    let floor=b.peakU-cp-0.01;if(c.trail>0&&b.peakU>0)floor=Math.max(floor,b.peakU*c.trail/100);
     e.pnl.textContent=fmtS(u)+' $';e.pnl.style.color=u>=0?'#4ade80':'#f87171';
     e.prog.style.width=Math.max(0,Math.min(100,u/c.tp*100))+'%';
     e.prog.style.background=u<0?'#dc2626':'';
@@ -395,7 +447,7 @@ function updatePair(st,now){
     e.kvNet.textContent=Math.abs(net)<1e-9?'лок':fmtS(net,4);
     e.kvNet.style.color=net>0?'#4ade80':net<0?'#f87171':'#fbbf24';
     e.kvPeak.textContent=fmtS(b.peakU)+' $';
-    e.kvGuard.textContent=`${fmt(u-(b.peakU-allow))} / ${fmt(u+c.maxDD)}`;
+    e.kvGuard.textContent=b.peakU>0?`${fmt(u-floor)} / ${fmt(u+c.maxDD)}`:`— / ${fmt(u+c.maxDD)}`;
     e.kvExp.textContent='$'+fmt(totalExp(b));
     e.kvCnt.textContent=`${b.orders.length}/${c.maxOrders}`;
     const sw=swapAccrued(b,now);
@@ -439,9 +491,7 @@ function renderCosts(){
   $('stCostsOpen').textContent='в корзинах: $'+fmt(open);
 }
 function pushEq(){
-  let eq=0;for(const k in P){eq+=P[k].realized;
-    if(P[k].basket)eq+=basketNet(P[k],P[k].price,Date.now());}
-  G.eqHist.push(round2(eq));if(G.eqHist.length>320)G.eqHist.shift();
+  G.eqHist.push(round2(totalEquity()));if(G.eqHist.length>320)G.eqHist.shift();
 }
 
 /* ═══ графики ═══ */
@@ -478,15 +528,18 @@ function save(){try{
   localStorage.setItem(LS,JSON.stringify({
     G:{baskets:G.baskets,wins:G.wins,losses:G.losses,ordWin:G.ordWin,ordLoss:G.ordLoss,
        ordWinSum:G.ordWinSum,ordLossSum:G.ordLossSum,costs:G.costs},
-    pairs,cfg:{b:$('baseUsd').value,t:$('tpUsd').value,s:$('stepAdd').value,d:$('maxDD').value,
+    pairs,cfg:{b:$('baseUsd').value,t:$('tpUsd').value,d:$('maxDD').value,sm:$('stepMult').value,
+       im:$('impulseMin').value,mf:$('maxFlips').value,tr:$('trailPct').value,dl:$('dayLimit').value,
        o:$('maxOrd').value,c:$('cooldownMs').value,m:$('dirMode').value,
        sp:$('spreadPct').value,cm:$('commUsd').value,sw:$('swapUsd').value},
     sel:[...sel]}));}catch(e){}}
 function load(){try{const j=JSON.parse(localStorage.getItem(LS)||'null');if(!j)return;
   Object.assign(G,j.G||{});
   if(j.pairs)for(const k in j.pairs){initPair(k);Object.assign(P[k],j.pairs[k]);}
-  if(j.cfg){$('baseUsd').value=j.cfg.b;$('tpUsd').value=j.cfg.t;$('stepAdd').value=j.cfg.s;
-    $('maxDD').value=j.cfg.d;$('maxOrd').value=j.cfg.o;$('cooldownMs').value=j.cfg.c;$('dirMode').value=j.cfg.m;
+  if(j.cfg){$('baseUsd').value=j.cfg.b;$('tpUsd').value=j.cfg.t;$('maxDD').value=j.cfg.d;
+    $('stepMult').value=j.cfg.sm||1;$('impulseMin').value=j.cfg.im||0.02;$('maxFlips').value=j.cfg.mf||6;
+    $('trailPct').value=j.cfg.tr||50;$('dayLimit').value=j.cfg.dl||25;
+    $('maxOrd').value=j.cfg.o;$('cooldownMs').value=j.cfg.c;$('dirMode').value=j.cfg.m;
     if(j.cfg.sp!=null)$('spreadPct').value=j.cfg.sp;
     if(j.cfg.cm!=null)$('commUsd').value=j.cfg.cm;
     if(j.cfg.sw!=null)$('swapUsd').value=j.cfg.sw;}
@@ -495,16 +548,18 @@ function load(){try{const j=JSON.parse(localStorage.getItem(LS)||'null');if(!j)r
 
 /* ═══ управление ═══ */
 $('btnStart').onclick=()=>{
-  G.running=true;$('btnStart').disabled=true;$('btnStop').disabled=false;
+  G.running=true;G.startEq=totalEquity();
+  $('btnStart').disabled=true;$('btnStop').disabled=false;
   try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();AC.resume&&AC.resume();}catch(e){}
-  log('ok','▶ Автопилот запущен: '+[...sel].join(', ')+' · издержки MT5 активны');beep(700,.08);};
+  log('ok',`▶ Автопилот запущен: ${[...sel].join(', ')} · старт эквити ${fmtS(G.startEq)} $ · лимит сессии −$${fmt(cfg().dayLimit)}`);
+  beep(700,.08);};
 $('btnStop').onclick=()=>{
   G.running=false;$('btnStart').disabled=false;$('btnStop').disabled=true;
   log('warn','■ Автопилот остановлен (корзины заморожены)');beep(340,.1);};
 $('btnReset').onclick=()=>{
   if(!confirm('Сбросить всю статистику?'))return;
   localStorage.removeItem(LS);location.reload();};
-['baseUsd','tpUsd','stepAdd','maxDD','maxOrd','cooldownMs','dirMode','spreadPct','commUsd','swapUsd']
+['baseUsd','tpUsd','maxDD','stepMult','impulseMin','maxFlips','trailPct','dayLimit','maxOrd','cooldownMs','dirMode','spreadPct','commUsd','swapUsd']
   .forEach(id=>$(id).addEventListener('change',save));
 
 /* ═══ init ═══ */
@@ -513,7 +568,7 @@ setTimeout(()=>{for(const sym of sel){
   fetch(`https://api.binance.com/api/v3/exchangeInfo?symbol=${sym}`).then(r=>r.json()).then(j=>{
     P[sym].tickSize=parseFloat(j.filters.find(f=>f.filterType==='PRICE_FILTER').tickSize)||.01;}).catch(()=>{});}},800);
 load();buildPairBox();buildCards();renderStats();connect();drawEq();
-log('sys','Автопилот v5.2: издержки MT5 (спред/комиссия/своп) + защита «расходы + $0.01».');
+log('sys','Автопилот v6: фильтр импульса + ATR-шаг + лимит флипов + трейлинг + лимит сессии.');
 </script>
 </body>
 </html>

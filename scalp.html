@@ -3,218 +3,99 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>КОРЗИНА·СКАЛЬП v4.2 — на одну больше · Binance Live</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='5' y='10' width='6' height='14' fill='%23ff5062'/><rect x='7.5' y='5' width='1' height='24' fill='%23ff5062'/><rect x='20' y='6' width='6' height='16' fill='%233ee08c'/><rect x='22.5' y='2' width='1' height='26' fill='%233ee08c'/></svg>">
+<title>Автопилот корзин · Binance · мультипара</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<script>
-tailwind.config={theme:{extend:{
-  colors:{ink:'#0a0e13',panel:'#10161f',panel2:'#0c1219',line:'#1c2735',line2:'#2b3b4f',
-          grn:'#3ee08c',red2:'#ff5062',amb:'#ffb224',cyn:'#4cc9f0',mut:'#7d8ca0',dim2:'#546478'},
-  fontFamily:{mono:['JetBrains Mono','monospace'],disp:['Unbounded','sans-serif'],sans:['IBM Plex Sans','sans-serif']}
-}}}
-</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-  body{background-image:radial-gradient(1100px 500px at 88% -8%,rgba(255,80,98,.06),transparent 60%),
-                        radial-gradient(900px 460px at 8% -8%,rgba(62,224,140,.06),transparent 60%)}
-  body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
-    background-image:linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),
-                     linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);background-size:44px 44px}
-  @keyframes mq{to{transform:translateX(-50%)}}
-  .tape-track{animation:mq 55s linear infinite}.tape:hover .tape-track{animation-play-state:paused}
-  @keyframes ledp{0%,100%{box-shadow:0 0 0 0 rgba(62,224,140,.5)}50%{box-shadow:0 0 0 6px rgba(62,224,140,0)}}
-  .led-ok{background:#3ee08c;animation:ledp 1.6s infinite}.led-warn{background:#ffb224;animation:ledp 1s infinite}
-  .led-err{background:#ff5062;animation:ledp .7s infinite}.led-off{background:#546478}
-  @keyframes blinkc{50%{opacity:.5}}.chip-live{animation:blinkc 1s infinite}
-  @keyframes rowin{from{background:rgba(76,201,240,.16)}}.rowin{animation:rowin .7s}
-  @keyframes lgin{from{opacity:0;transform:translateX(-7px)}}.lgin{animation:lgin .3s}
-  .px-up{color:#3ee08c!important;text-shadow:0 0 22px rgba(62,224,140,.5)}
-  .px-down{color:#ff5062!important;text-shadow:0 0 22px rgba(255,80,98,.5)}
-  #banner{transition:transform .4s cubic-bezier(.2,.9,.3,1.25),opacity .3s;transform:translate(-50%,-80px);opacity:0}
+  body{font-family:'IBM Plex Sans',system-ui,sans-serif}
+  .mono{font-family:'JetBrains Mono',monospace;font-variant-numeric:tabular-nums}
+  input,select{outline:none}input:focus,select:focus{border-color:#3b82f6!important}
+  ::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:#30363d;border-radius:4px}
+  #banner{transition:transform .3s,opacity .3s;transform:translate(-50%,-70px);opacity:0}
   #banner.show{transform:translate(-50%,0);opacity:1}
-  ::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:#26364a;border-radius:4px}
-  input,select{outline:none}input:focus,select:focus{border-color:#4cc9f0!important;box-shadow:0 0 0 3px rgba(76,201,240,.12)}
 </style>
 </head>
-<body class="bg-ink text-slate-200 font-sans text-sm min-h-screen relative">
+<body class="bg-[#0d1117] text-gray-200 text-sm min-h-screen">
 
-<div id="banner" class="fixed top-4 left-1/2 z-50 font-disp text-xs font-bold tracking-wider px-6 py-3 rounded-md border pointer-events-none"></div>
+<div id="banner" class="fixed top-3 left-1/2 z-50 mono text-xs font-semibold px-4 py-2 rounded border pointer-events-none"></div>
 
-<header class="relative z-10 flex flex-wrap items-center gap-x-6 gap-y-2 px-5 py-3 border-b border-line bg-panel/90">
-  <div class="flex items-center gap-2.5 font-disp font-black text-[15px] tracking-wide whitespace-nowrap">
-    <span id="wsLed" class="led-off w-2.5 h-2.5 rounded-full inline-block"></span>
-    КОРЗИНА<span class="text-grn">·</span>СКАЛЬП
-    <span class="font-mono font-normal text-[10px] text-mut border border-line2 rounded px-1.5 py-0.5 tracking-widest">PAPER v4.2 · +1 OVER</span>
-  </div>
-  <div class="flex items-center gap-2 text-xs text-mut"><span id="wsTxt">подключение…</span><span id="latEl" class="font-mono"></span></div>
-  <select id="symSel" class="bg-panel2 border border-line2 rounded px-2.5 py-1.5 font-mono text-[13px] cursor-pointer">
-    <option>BTCUSDT</option><option>ETHUSDT</option><option>SOLUSDT</option><option>BNBUSDT</option>
-    <option>XRPUSDT</option><option>DOGEUSDT</option><option>ADAUSDT</option><option>AVAXUSDT</option>
-    <option>LINKUSDT</option><option>LTCUSDT</option><option>TONUSDT</option><option>TRXUSDT</option>
-  </select>
-  <div class="flex items-baseline gap-4">
-    <div id="price" class="font-mono font-extrabold text-4xl leading-none transition-colors">—</div>
-    <div class="hidden md:flex gap-5 text-[11px] text-mut">
-      <div>24ч<b id="chgEl" class="block font-mono font-semibold text-xs text-slate-200">—</b></div>
-      <div>Макс<b id="hiEl" class="block font-mono font-semibold text-xs text-slate-200">—</b></div>
-      <div>Мин<b id="loEl" class="block font-mono font-semibold text-xs text-slate-200">—</b></div>
-      <div>Объём<b id="volEl" class="block font-mono font-semibold text-xs text-slate-200">—</b></div>
-    </div>
-  </div>
+<!-- ═══ верхняя панель ═══ -->
+<header class="flex flex-wrap items-center gap-3 px-4 py-2.5 border-b border-[#30363d]">
+  <b class="text-[15px]">Автопилот корзин</b>
+  <span class="text-xs text-gray-500">Binance · paper</span>
+  <span id="wsTxt" class="text-xs text-gray-400">подключение…</span>
+  <span id="latEl" class="mono text-xs text-gray-500"></span>
   <div class="flex-1"></div>
-  <div id="clock" class="font-mono text-[13px] text-mut"></div>
+  <span id="clock" class="mono text-xs text-gray-400"></span>
 </header>
 
-<div class="tape relative z-10 overflow-hidden border-b border-line bg-[#0b1118]">
-  <div id="tape" class="tape-track flex gap-10 w-max py-1.5 font-mono text-xs"></div>
+<!-- ═══ настройки ═══ -->
+<div class="px-4 py-3 border-b border-[#30363d] flex flex-wrap items-end gap-x-4 gap-y-2">
+  <label class="text-[10px] uppercase text-gray-500 flex flex-col gap-1">Ставка $<input id="baseUsd" type="number" value="100" min="10" step="10" class="w-24 bg-[#0d1117] border border-[#30363d] rounded px-2 py-1 mono text-[12px]"></label>
+  <label class="text-[10px] uppercase text-gray-500 flex flex-col gap-1">Цель корзины $<input id="tpUsd" type="number" value="0.80" min="0.05" step="0.05" class="w-24 bg-[#0d1117] border border-[#30363d] rounded px-2 py-1 mono text-[12px]"></label>
+  <label class="text-[10px] uppercase text-gray-500 flex flex-col gap-1">Шаг %<input id="stepAdd" type="number" value="0.10" min="0.02" step="0.01" class="w-20 bg-[#0d1117] border border-[#30363d] rounded px-2 py-1 mono text-[12px]"></label>
+  <label class="text-[10px] uppercase text-gray-500 flex flex-col gap-1">Стоп $<input id="maxDD" type="number" value="5" min="0.5" step="0.5" class="w-20 bg-[#0d1117] border border-[#30363d] rounded px-2 py-1 mono text-[12px]"></label>
+  <label class="text-[10px] uppercase text-gray-500 flex flex-col gap-1">Макс ставок<input id="maxOrd" type="number" value="40" min="3" max="100" class="w-20 bg-[#0d1117] border border-[#30363d] rounded px-2 py-1 mono text-[12px]"></label>
+  <label class="text-[10px] uppercase text-gray-500 flex flex-col gap-1">Пауза мс<input id="cooldownMs" type="number" value="1500" min="0" step="250" class="w-20 bg-[#0d1117] border border-[#30363d] rounded px-2 py-1 mono text-[12px]"></label>
+  <label class="text-[10px] uppercase text-gray-500 flex flex-col gap-1">Первый вход
+    <select id="dirMode" class="bg-[#0d1117] border border-[#30363d] rounded px-2 py-1 mono text-[12px]">
+      <option value="auto">Авто EMA</option><option value="BUY">BUY</option><option value="SELL">SELL</option>
+    </select></label>
+
+  <div class="flex items-end gap-3 pl-2 border-l border-[#30363d]">
+    <span class="text-[10px] uppercase text-gray-500 pb-1.5">Пары:</span>
+    <div id="pairBox" class="flex flex-wrap gap-x-3 gap-y-1"></div>
+  </div>
+
+  <div class="flex gap-2 ml-auto">
+    <button id="btnStart" class="px-4 py-1.5 rounded bg-green-700 hover:bg-green-600 text-white text-xs font-semibold">Старт</button>
+    <button id="btnStop" disabled class="px-4 py-1.5 rounded bg-red-800 hover:bg-red-700 disabled:opacity-40 text-white text-xs font-semibold">Стоп</button>
+    <button id="btnReset" class="px-3 py-1.5 rounded border border-[#30363d] hover:border-gray-400 text-xs">Сброс</button>
+    <label class="flex items-center gap-1.5 text-xs text-gray-400 cursor-pointer"><input id="sndChk" type="checkbox" checked class="accent-blue-500">звук</label>
+  </div>
 </div>
 
-<main class="relative z-10 grid gap-3 p-3 max-w-[1760px] mx-auto xl:grid-cols-[308px_minmax(0,1fr)_344px] items-start">
-
-  <!-- LEFT -->
-  <div class="flex flex-col gap-3 min-w-0">
-    <section class="bg-panel border border-line rounded-lg shadow-xl hover:border-line2 transition-colors">
-      <h2 class="flex items-center gap-2 text-[10px] font-disp font-bold uppercase tracking-[0.18em] text-mut px-4 py-3 border-b border-line">
-        <span class="w-1.5 h-1.5 bg-cyn"></span>Настройки · ставка одна</h2>
-      <div class="p-4">
-        <div class="grid grid-cols-2 gap-2.5">
-          <label class="text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Ставка, $ (всегда)<input id="baseUsd" type="number" value="100" min="10" step="10" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px]"></label>
-          <label class="text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Цель корзины, $<input id="tpUsd" type="number" value="0.80" min="0.05" step="0.05" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px]"></label>
-          <label class="text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Шаг движения, %<input id="stepAdd" type="number" value="0.10" min="0.02" step="0.01" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px]"></label>
-          <label class="text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Стоп-просадка, $<input id="maxDD" type="number" value="5" min="0.5" step="0.5" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px]"></label>
-          <label class="text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Макс. ставок<input id="maxOrd" type="number" value="40" min="3" max="100" step="1" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px]"></label>
-          <label class="text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Пауза, мс<input id="cooldownMs" type="number" value="1500" min="0" step="250" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px]"></label>
-          <label class="col-span-2 text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Первый вход
-            <select id="dirMode" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px] cursor-pointer">
-              <option value="auto">Авто — моментум EMA</option>
-              <option value="BUY">Только BUY</option>
-              <option value="SELL">Только SELL</option>
-            </select></label>
-        </div>
-
-        <div class="flex gap-2 mt-3.5">
-          <button id="btnStart" class="flex-1 font-disp text-[11px] font-bold uppercase tracking-[0.12em] py-2.5 rounded-md bg-gradient-to-b from-grn to-[#128254] text-[#04140b] border border-grn hover:brightness-110 hover:shadow-[0_6px_20px_rgba(62,224,140,.28)] active:translate-y-px transition">▶ Старт</button>
-          <button id="btnStop" disabled class="flex-1 font-disp text-[11px] font-bold uppercase tracking-[0.12em] py-2.5 rounded-md bg-gradient-to-b from-[#d8404f] to-[#9c2531] text-white border border-red2 disabled:opacity-35 hover:shadow-[0_6px_20px_rgba(255,80,98,.28)] active:translate-y-px transition">■ Стоп</button>
-          <button id="btnReset" title="Сброс статистики" class="px-3.5 rounded-md border border-line2 bg-panel2 hover:border-cyn active:translate-y-px transition">⟲</button>
-        </div>
-        <label class="flex items-center gap-2 mt-3 text-xs text-mut cursor-pointer"><input id="sndChk" type="checkbox" checked class="accent-[#4cc9f0]"> Звуковые сигналы</label>
-
-        <div class="mt-3 pt-3 border-t border-dashed border-line2 text-[11.5px] leading-relaxed text-mut">
-          <b class="text-cyn">1.</b> Ставка всегда одна и та же: старт, компенсации, пирамида — <b class="text-slate-200">×1</b>.<br>
-          <b class="text-red2">2.</b> Баланс в минусе → добор ставок так, чтобы <b class="text-slate-200">нужная сторона была на 1 больше противоположной</b>: добавить = противоположных + 1 − своих. На каждый шаг движения — поддержание правила.<br>
-          <b class="text-grn">3.</b> Баланс в плюсе → за каждый шаг в прибыль <b class="text-slate-200">ещё одна такая же</b>, и так до цели.<br>
-          <b class="text-amb">4.</b> Цель → закрыть. Падение на <b class="text-slate-200">$0.01</b> от пика → закрыть всё.
-        </div>
-
-        <div class="mt-3 pt-3 border-t border-dashed border-line2 flex flex-col gap-2">
-          <input id="apiEp" placeholder="https://ваш-прокси/api/order (live)" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[11px]">
-          <input id="apiKey" type="password" placeholder="API key → только на ваш прокси" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[11px]">
-          <div class="text-[10.5px] leading-snug text-dim2">Реальные ордера из браузера блокирует CORS — для live нужен сервер-прокси.</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="bg-panel border border-line rounded-lg shadow-xl hover:border-line2 transition-colors">
-      <h2 class="flex items-center gap-2 text-[10px] font-disp font-bold uppercase tracking-[0.18em] text-mut px-4 py-3 border-b border-line">
-        <span class="w-1.5 h-1.5 bg-grn"></span>Активная корзина</h2>
-      <div class="p-4">
-        <div class="flex items-center gap-2 mb-3 flex-wrap">
-          <span id="sState" class="font-disp text-[9.5px] font-bold tracking-[0.14em] px-2.5 py-1.5 rounded border border-line2 text-mut">ОЖИДАНИЕ</span>
-          <span id="sMode" class="hidden font-disp text-[9.5px] font-bold tracking-[0.14em] px-2.5 py-1.5 rounded border"></span>
-        </div>
-        <div class="text-[10px] uppercase tracking-[0.14em] text-mut mb-1">Общий баланс корзины (PnL)</div>
-        <div id="sU" class="font-mono font-extrabold text-[32px] leading-none">+0.00</div>
-        <div class="mt-3">
-          <div class="flex justify-between text-[10px] uppercase tracking-[0.14em] text-mut"><span>Прогресс к цели</span><span id="tpPct" class="font-mono">0%</span></div>
-          <div class="h-[7px] mt-1.5 bg-[#0b1119] border border-line rounded overflow-hidden">
-            <div id="tpBar" class="h-full w-0 bg-gradient-to-r from-[#128254] to-grn transition-[width] duration-200"></div>
-          </div>
-        </div>
-        <div class="mt-3.5">
-          <div class="flex justify-between gap-3 py-[7px] border-t border-line/70 text-xs"><span class="text-mut">Ставки BUY / SELL</span><b id="sCntBS" class="font-mono font-semibold text-cyn">—</b></div>
-          <div class="flex justify-between gap-3 py-[7px] border-t border-line/70 text-xs"><span class="text-mut">Нетто-позиция</span><b id="sNet" class="font-mono font-semibold">—</b></div>
-          <div class="flex justify-between gap-3 py-[7px] border-t border-line/70 text-xs"><span class="text-mut">Пик PnL корзины</span><b id="sPeak" class="font-mono font-semibold text-grn">—</b></div>
-          <div class="flex justify-between gap-3 py-[7px] border-t border-line/70 text-xs"><span class="text-mut">Запас до защиты −$0.01</span><b id="sSpare" class="font-mono font-semibold text-amb">—</b></div>
-          <div class="flex justify-between gap-3 py-[7px] border-t border-line/70 text-xs"><span class="text-mut">До стоп-просадки</span><b id="sDDroom" class="font-mono font-semibold text-red2">—</b></div>
-          <div class="flex justify-between gap-3 py-[7px] border-t border-line/70 text-xs"><span class="text-mut">Средняя BUY / SELL</span><b id="sAvg" class="font-mono font-semibold">—</b></div>
-          <div class="flex justify-between gap-3 py-[7px] border-t border-line/70 text-xs"><span class="text-mut">Скорость / 0.1% хода</span><b id="sSpeed" class="font-mono font-semibold">—</b></div>
-          <div class="flex justify-between gap-3 py-[7px] border-t border-line/70 text-xs"><span class="text-mut">Экспозиция</span><b id="sExp" class="font-mono font-semibold">—</b></div>
-          <div class="flex justify-between gap-3 py-[7px] border-t border-line/70 text-xs"><span class="text-mut">Всего ставок (С/К/П)</span><b id="sCnt" class="font-mono font-semibold">0</b></div>
-        </div>
-      </div>
-    </section>
+<!-- ═══ итог ═══ -->
+<div class="px-4 py-3 border-b border-[#30363d] grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-2">
+  <div class="bg-[#161b22] border border-[#30363d] rounded p-2">
+    <div class="text-[10px] uppercase text-gray-500">Реализовано всего</div>
+    <div id="stReal" class="mono text-lg font-bold text-green-400">$0.00</div>
   </div>
-
-  <!-- CENTER -->
-  <div class="flex flex-col gap-3 min-w-0">
-    <section class="bg-panel border border-line rounded-lg shadow-xl hover:border-line2 transition-colors">
-      <h2 class="flex items-center gap-2 text-[10px] font-disp font-bold uppercase tracking-[0.18em] text-mut px-4 py-3 border-b border-line">
-        <span class="w-1.5 h-1.5 bg-amb"></span>График · <span id="chSym" class="text-slate-200">BTCUSDT</span> · свечи 2с</h2>
-      <canvas id="chart" class="w-full h-[330px] block cursor-crosshair"></canvas>
-      <div class="flex flex-wrap gap-x-4 gap-y-1 px-4 py-2.5 border-t border-line text-[11px] text-mut">
-        <span><i class="inline-block w-2 h-2 rounded-sm bg-grn mr-1"></i>BUY</span>
-        <span><i class="inline-block w-2 h-2 rounded-sm bg-red2 mr-1"></i>SELL</span>
-        <span>С — старт · К — компенсация · П — пирамида</span>
-        <span id="chTime" class="font-mono ml-auto text-dim2"></span>
-      </div>
-    </section>
-
-    <section class="bg-panel border border-line rounded-lg shadow-xl hover:border-line2 transition-colors">
-      <h2 class="flex items-center gap-2 text-[10px] font-disp font-bold uppercase tracking-[0.18em] text-mut px-4 py-3 border-b border-line">
-        <span class="w-1.5 h-1.5 bg-red2"></span>Ставки корзины</h2>
-      <div class="max-h-[260px] overflow-auto">
-        <table class="w-full border-collapse text-xs">
-          <thead><tr class="bg-panel">
-            <th class="sticky top-0 bg-panel text-left font-disp text-[9px] font-bold tracking-[0.13em] uppercase text-mut px-2.5 py-2 border-b border-line">№</th>
-            <th class="sticky top-0 bg-panel text-left font-disp text-[9px] font-bold tracking-[0.13em] uppercase text-mut px-2.5 py-2 border-b border-line">Тип</th>
-            <th class="sticky top-0 bg-panel text-left font-disp text-[9px] font-bold tracking-[0.13em] uppercase text-mut px-2.5 py-2 border-b border-line">Сторона</th>
-            <th class="sticky top-0 bg-panel text-right font-disp text-[9px] font-bold tracking-[0.13em] uppercase text-mut px-2.5 py-2 border-b border-line">Вход</th>
-            <th class="sticky top-0 bg-panel text-right font-disp text-[9px] font-bold tracking-[0.13em] uppercase text-mut px-2.5 py-2 border-b border-line">Кол-во</th>
-            <th class="sticky top-0 bg-panel text-right font-disp text-[9px] font-bold tracking-[0.13em] uppercase text-mut px-2.5 py-2 border-b border-line">Ставка $</th>
-            <th class="sticky top-0 bg-panel text-right font-disp text-[9px] font-bold tracking-[0.13em] uppercase text-mut px-2.5 py-2 border-b border-line">PnL $</th>
-          </tr></thead>
-          <tbody id="ordBody"></tbody>
-          <tfoot><tr>
-            <td class="px-2.5 py-2.5 text-left border-t border-line2 text-mut font-semibold">ИТОГО</td>
-            <td id="fCnt" class="px-2.5 py-2.5 text-left border-t border-line2 text-mut font-mono">—</td>
-            <td class="border-t border-line2"></td><td class="border-t border-line2"></td><td class="border-t border-line2"></td>
-            <td id="fExp" class="px-2.5 py-2.5 text-right border-t border-line2 font-mono font-extrabold">$0.00</td>
-            <td id="fPnl" class="px-2.5 py-2.5 text-right border-t border-line2 font-mono font-extrabold">$0.00</td>
-          </tr></tfoot>
-        </table>
-      </div>
-    </section>
+  <div class="bg-[#161b22] border border-[#30363d] rounded p-2">
+    <div class="text-[10px] uppercase text-gray-500">Ставок выиграно</div>
+    <div id="stOW" class="mono text-lg font-bold text-green-400">0</div>
+    <div id="stOWsum" class="mono text-[11px] text-green-500">+$0.00</div>
   </div>
-
-  <!-- RIGHT -->
-  <div class="flex flex-col gap-3 min-w-0">
-    <section class="bg-panel border border-line rounded-lg shadow-xl hover:border-line2 transition-colors">
-      <h2 class="flex items-center gap-2 text-[10px] font-disp font-bold uppercase tracking-[0.18em] text-mut px-4 py-3 border-b border-line">
-        <span class="w-1.5 h-1.5 bg-grn"></span>Эквити и статистика</h2>
-      <canvas id="eqCanvas" class="w-full h-[76px] block"></canvas>
-      <div class="grid grid-cols-2 gap-px bg-line border-t border-line">
-        <div class="bg-panel2 p-2.5"><div class="text-[9.5px] uppercase tracking-[0.12em] text-dim2 mb-0.5">Реализовано</div><div id="stEq" class="font-mono font-bold text-[15px] text-grn">$0.00</div></div>
-        <div class="bg-panel2 p-2.5"><div class="text-[9.5px] uppercase tracking-[0.12em] text-dim2 mb-0.5">Корзин закрыто</div><div id="stB" class="font-mono font-bold text-[15px]">0</div></div>
-        <div class="bg-panel2 p-2.5"><div class="text-[9.5px] uppercase tracking-[0.12em] text-dim2 mb-0.5">В плюс</div><div id="stW" class="font-mono font-bold text-[15px] text-grn">0</div></div>
-        <div class="bg-panel2 p-2.5"><div class="text-[9.5px] uppercase tracking-[0.12em] text-dim2 mb-0.5">В минус</div><div id="stL" class="font-mono font-bold text-[15px] text-red2">0</div></div>
-        <div class="bg-panel2 p-2.5"><div class="text-[9.5px] uppercase tracking-[0.12em] text-dim2 mb-0.5">Winrate</div><div id="stWR" class="font-mono font-bold text-[15px] text-cyn">—</div></div>
-        <div class="bg-panel2 p-2.5"><div class="text-[9.5px] uppercase tracking-[0.12em] text-dim2 mb-0.5">Лучшая / худшая</div><div id="stBW" class="font-mono font-bold text-xs">— / —</div></div>
-      </div>
-    </section>
-
-    <section class="bg-panel border border-line rounded-lg shadow-xl hover:border-line2 transition-colors">
-      <h2 class="flex items-center gap-2 text-[10px] font-disp font-bold uppercase tracking-[0.18em] text-mut px-4 py-3 border-b border-line">
-        <span class="w-1.5 h-1.5 bg-cyn"></span>Журнал событий</h2>
-      <div id="logBox" class="h-[330px] overflow-y-auto p-3 flex flex-col gap-1 font-mono text-[11.3px] leading-relaxed"></div>
-    </section>
+  <div class="bg-[#161b22] border border-[#30363d] rounded p-2">
+    <div class="text-[10px] uppercase text-gray-500">Ставок проиграно</div>
+    <div id="stOL" class="mono text-lg font-bold text-red-400">0</div>
+    <div id="stOLsum" class="mono text-[11px] text-red-500">−$0.00</div>
   </div>
-</main>
+  <div class="bg-[#161b22] border border-[#30363d] rounded p-2">
+    <div class="text-[10px] uppercase text-gray-500">Итог по ставкам</div>
+    <div id="stONet" class="mono text-lg font-bold">$0.00</div>
+    <div id="stORate" class="mono text-[11px] text-gray-400">—</div>
+  </div>
+  <div class="bg-[#161b22] border border-[#30363d] rounded p-2">
+    <div class="text-[10px] uppercase text-gray-500">Корзины</div>
+    <div id="stB" class="mono text-lg font-bold">0</div>
+    <div class="text-[11px]"><span id="stW" class="text-green-400">0</span>/<span id="stL" class="text-red-400">0</span> <span id="stWR" class="mono text-gray-400">—</span></div>
+  </div>
+  <div class="bg-[#161b22] border border-[#30363d] rounded p-2 col-span-2">
+    <div class="text-[10px] uppercase text-gray-500">Эквити</div>
+    <canvas id="eqCanvas" class="w-full h-9 block"></canvas>
+  </div>
+</div>
 
-<footer class="relative z-10 text-center text-dim2 text-[11px] px-5 pb-6 leading-relaxed">
-  Данные — публичные потоки Binance. Симуляция без комиссий и проскальзывания. Не является инвестиционной рекомендацией.
-</footer>
+<!-- ═══ карточки пар ═══ -->
+<main id="cards" class="p-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3"></main>
+
+<!-- ═══ журнал ═══ -->
+<section class="px-4 pb-4">
+  <div id="logBox" class="h-44 overflow-y-auto bg-[#161b22] border border-[#30363d] rounded p-2 mono text-[11px] leading-relaxed"></div>
+</section>
+
+<footer class="text-center text-gray-600 text-[11px] pb-5">Симуляция без комиссий. Данные — публичные потоки Binance. Для live-ордеров нужен серверный прокси.</footer>
 
 <script>
 'use strict';
@@ -223,13 +104,15 @@ const fmt=(n,d=2)=>Number(n).toLocaleString('ru-RU',{minimumFractionDigits:d,max
 const fmtS=(n,d=2)=>(n>=0?'+':'−')+fmt(Math.abs(n),d);
 const round2=n=>Math.round(n*100)/100;
 const roundStep=(v,s)=>Math.round(v/s)*s;
-const hhmmss=t=>new Date(t).toLocaleTimeString('ru-RU');
-const LS='basket-scalper.v4';
+const hhmmss=()=>new Date().toLocaleTimeString('ru-RU');
+const LS='basket-autopilot.v1';
 
-const S={symbol:'BTCUSDT',price:0,prevPrice:0,tickSize:.01,latency:0,ws:null,retries:0,pollTimer:null,connected:false,
-  emaF:null,emaS:null,ticks:0,candles:[],CANDLE_MS:2000,
-  running:false,realized:0,baskets:0,wins:0,losses:0,best:null,worst:null,
-  basket:null,oid:0,lastCloseTs:0,warmWarned:false,eqHist:[],rowRefs:new Map(),raf:0,lastEqPush:0};
+const PAIRS=['BTCUSDT','ETHUSDT','SOLUSDT','BNBUSDT','XRPUSDT','DOGEUSDT'];
+const sel=new Set(['BTCUSDT','ETHUSDT','SOLUSDT']);
+const P={};                                  /* состояние каждой пары */
+const G={running:false,baskets:0,wins:0,losses:0,ordWin:0,ordLoss:0,ordWinSum:0,ordLossSum:0,
+         eqHist:[],lastEq:0,lastEqPush:0,lat:0};
+let ws=null,retries=0,pollTimer=null;
 
 function cfg(){return{
   base:Math.max(10,+$('baseUsd').value||100), tp:Math.max(.05,+$('tpUsd').value||.8),
@@ -237,25 +120,30 @@ function cfg(){return{
   maxOrders:Math.max(3,+$('maxOrd').value|0||40), cooldown:Math.max(0,+$('cooldownMs').value|0||1500),
   dir:$('dirMode').value};}
 
-const LG={sys:'border-cyn/70 text-cyn',buy:'border-grn/80 text-grn/90',sell:'border-red2/80 text-red2/90',
-  flip:'border-amb text-amb font-semibold',ok:'border-grn text-grn font-semibold',
-  err:'border-red2 text-red2 font-semibold bg-red2/5',warn:'border-amb/70 text-amb/90'};
+function initPair(sym){if(P[sym])return;
+  P[sym]={sym,price:0,prev:0,ticks:0,tickSize:.01,emaF:null,emaS:null,hist:[],lastHist:0,
+    realized:0,baskets:0,wins:0,losses:0,ordWin:0,ordLoss:0,ordWinSum:0,ordLossSum:0,
+    basket:null,lastCloseTs:0,warmWarned:false,el:null,rowRefs:new Map()};}
+PAIRS.forEach(initPair);
+
+/* ═══ лог / баннер / звук ═══ */
 function log(type,msg){
+  const C={sys:'text-sky-400',buy:'text-green-400',sell:'text-red-400',flip:'text-amber-400',
+           ok:'text-green-300 font-semibold',err:'text-red-300 font-semibold',warn:'text-amber-300'};
   const box=$('logBox'),d=document.createElement('div');
-  d.className=`lgin border-l-2 pl-2 ${LG[type]||LG.sys}`;
-  d.innerHTML=`<span class="text-dim2 mr-1.5 text-[10px]">${hhmmss(Date.now())}</span>${msg}`;
-  box.prepend(d);while(box.children.length>240)box.lastChild.remove();
+  d.className=C[type]||'text-gray-300';
+  d.innerHTML=`<span class="text-gray-600">${hhmmss()}</span> ${msg}`;
+  box.prepend(d);while(box.children.length>220)box.lastChild.remove();
 }
 let banT;
 function banner(text,win){
   const b=$('banner');b.textContent=text;
-  b.className='fixed top-4 left-1/2 z-50 font-disp text-xs font-bold tracking-wider px-6 py-3 rounded-md border pointer-events-none show '+
-    (win?'bg-[#0c2b1c] border-grn text-[#8bf7c0] shadow-[0_10px_40px_rgba(62,224,140,.3)]'
-        :'bg-[#331015] border-red2 text-[#ffb0b8] shadow-[0_10px_40px_rgba(255,80,98,.3)]');
-  clearTimeout(banT);banT=setTimeout(()=>b.classList.remove('show'),2600);
+  b.className='fixed top-3 left-1/2 z-50 mono text-xs font-semibold px-4 py-2 rounded border pointer-events-none show '+
+    (win?'bg-[#0c2b1c] border-green-600 text-green-300':'bg-[#331015] border-red-700 text-red-300');
+  clearTimeout(banT);banT=setTimeout(()=>b.classList.remove('show'),2500);
 }
 let AC;
-function beep(f,dur=.13,type='sine',vol=.06){
+function beep(f,dur=.12,type='sine',vol=.05){
   if(!$('sndChk').checked)return;
   try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();
     const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.value=f;g.gain.value=vol;
@@ -263,334 +151,314 @@ function beep(f,dur=.13,type='sine',vol=.06){
     o.connect(g).connect(AC.destination);o.start();o.stop(AC.currentTime+dur);}catch(e){}
 }
 
-function setWs(state,txt){$('wsLed').className='w-2.5 h-2.5 rounded-full inline-block led-'+state;$('wsTxt').textContent=txt;}
+/* ═══ поток котировок (все пары в одном WS) ═══ */
+function setWs(state,txt){$('wsTxt').textContent=txt;$('wsTxt').className='text-xs '+(state==='ok'?'text-green-400':state==='warn'?'text-amber-400':'text-red-400');}
 function connect(){
-  try{S.ws&&S.ws.close()}catch(e){}
+  try{ws&&ws.close()}catch(e){}
+  if(!sel.size){setWs('warn','нет выбранных пар');return;}
   setWs('warn','подключение…');
-  const ws=new WebSocket(`wss://stream.binance.com:9443/stream?streams=${S.symbol.toLowerCase()}@trade`);
-  S.ws=ws;
-  ws.onopen=()=>{S.retries=0;S.connected=true;setWs('ok','Binance WS · live');stopPoll();log('sys',`WebSocket подключен: <b>${S.symbol}</b>`)};
+  const streams=[...sel].map(s=>s.toLowerCase()+'@trade').join('/');
+  ws=new WebSocket('wss://stream.binance.com:9443/stream?streams='+streams);
+  ws.onopen=()=>{retries=0;setWs('ok','live: '+[...sel].map(s=>s.replace('USDT','')).join(', '));stopPoll();};
   ws.onmessage=e=>{const m=JSON.parse(e.data);
-    if(m.data&&m.stream&&m.stream.endsWith('@trade'))onPrice(parseFloat(m.data.p),m.data.T);};
-  ws.onclose=()=>{S.connected=false;setWs('err','соединение потеряно');
-    if(++S.retries===3){log('warn','WS недоступен — переключаюсь на REST-опрос');startPoll();}
-    setTimeout(connect,Math.min(15000,800*Math.pow(2,S.retries)));};
+    if(m.stream&&m.data){const sym=m.stream.split('@')[0].toUpperCase();
+      onPrice(sym,parseFloat(m.data.p),m.data.T);}};
+  ws.onclose=()=>{setWs('err','переподключение…');
+    if(++retries===3){log('warn','WS недоступен — REST-опрос');startPoll();}
+    setTimeout(connect,Math.min(15000,800*Math.pow(2,retries)));};
 }
-function startPoll(){if(S.pollTimer)return;
-  S.pollTimer=setInterval(async()=>{try{
-    const r=await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${S.symbol}`);
-    const j=await r.json();onPrice(parseFloat(j.price),Date.now());setWs('warn','REST-опрос 1с');}catch(e){}},1100);}
-function stopPoll(){clearInterval(S.pollTimer);S.pollTimer=null;}
-async function fetch24(){try{
-  const r=await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${S.symbol}`);const j=await r.json();
-  const c=parseFloat(j.priceChangePercent),el=$('chgEl');
-  el.textContent=fmtS(c,2)+'%';el.style.color=c>=0?'#3ee08c':'#ff5062';
-  $('hiEl').textContent=fmt(parseFloat(j.highPrice));$('loEl').textContent=fmt(parseFloat(j.lowPrice));
-  $('volEl').textContent=fmt(parseFloat(j.quoteVolume)/1e6,1)+'M $';}catch(e){}}
-async function fetchTick(){try{
-  const r=await fetch(`https://api.binance.com/api/v3/exchangeInfo?symbol=${S.symbol}`);const j=await r.json();
-  S.tickSize=parseFloat(j.filters.find(f=>f.filterType==='PRICE_FILTER').tickSize)||.01;}catch(e){S.tickSize=.01}}
-async function fetchTape(){try{
-  const want=['BTCUSDT','ETHUSDT','SOLUSDT','BNBUSDT','XRPUSDT','DOGEUSDT','ADAUSDT','AVAXUSDT','LINKUSDT','LTCUSDT','TONUSDT','TRXUSDT'];
-  const r=await fetch('https://api.binance.com/api/v3/ticker/24hr');const all=await r.json();
-  const map={};all.forEach(t=>map[t.symbol]=t);
-  const html=want.filter(s=>map[s]).map(s=>{const t=map[s],c=parseFloat(t.priceChangePercent);
-    return `<span class="flex gap-2 whitespace-nowrap"><span class="text-slate-200 font-semibold">${s.replace('USDT','')}</span><span class="text-slate-200">${fmt(parseFloat(t.lastPrice))}</span><span style="color:${c>=0?'#3ee08c':'#ff5062'}">${fmtS(c,2)}%</span></span>`;}).join('');
-  $('tape').innerHTML=html+html;}catch(e){}}
+function startPoll(){if(pollTimer)return;
+  pollTimer=setInterval(async()=>{for(const sym of sel){try{
+    const r=await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${sym}`);
+    const j=await r.json();onPrice(sym,parseFloat(j.price),Date.now());}catch(e){}}},1300);}
+function stopPoll(){clearInterval(pollTimer);pollTimer=null;}
 
-function onPrice(p,eventTs){
-  S.prevPrice=S.price;S.price=p;S.ticks++;
-  S.latency=Math.max(0,Date.now()-eventTs);
-  pushCandle(p,eventTs);
-  S.emaF=S.emaF==null?p:p+(2/26)*(p-S.emaF);
-  S.emaS=S.emaS==null?p:p+(2/100)*(p-S.emaS);
-  if(S.running)engine(p);
-  uiTick();
-}
-function pushCandle(p,t){
-  let c=S.candles[S.candles.length-1];
-  if(!c||t-c.t>=S.CANDLE_MS){S.candles.push({t,o:p,h:p,l:p,c:p});if(S.candles.length>170)S.candles.shift();}
-  else{if(p>c.h)c.h=p;if(p<c.l)c.l=p;c.c=p;}
+function onPrice(sym,p,eventTs){
+  const st=P[sym];if(!st)return;
+  st.prev=st.price;st.price=p;st.ticks++;
+  G.lat=Math.max(0,Date.now()-eventTs);$('latEl').textContent=G.lat+' мс';
+  st.emaF=st.emaF==null?p:p+(2/26)*(p-st.emaF);
+  st.emaS=st.emaS==null?p:p+(2/100)*(p-st.emaS);
+  const now=Date.now();
+  if(now-st.lastHist>250){st.lastHist=now;st.hist.push(p);if(st.hist.length>240)st.hist.shift();}
+  if(G.running)engine(st,p);
+  updatePair(st);scheduleDraw();
+  if(now-G.lastEqPush>300){G.lastEqPush=now;pushEq();}
 }
 
-/* ═══ basket engine — инвариант «на одну больше» ═══ */
-function basketU(price){if(!S.basket)return 0;let u=0;
-  for(const o of S.basket.orders)u+=(o.side==='BUY'?price-o.entry:o.entry-price)*o.qty;return u;}
+/* ═══ движок корзины (на пару) ═══ */
+function basketU(st,price){let u=0;for(const o of st.basket.orders)
+  u+=(o.side==='BUY'?price-o.entry:o.entry-price)*o.qty;return u;}
 function netQty(b){let q=0;for(const o of b.orders)q+=(o.side==='BUY'?o.qty:-o.qty);return q;}
 function totalExp(b){let e=0;for(const o of b.orders)e+=o.usd;return e;}
-function countSide(b,side){let n=0;for(const o of b.orders)if(o.side===side)n++;return n;}
+function countSide(b,s){let n=0;for(const o of b.orders)if(o.side===s)n++;return n;}
 
-function canAdd(){
-  const b=S.basket,c=cfg();
-  if(b.orders.length>=c.maxOrders){if(!b.warnedLim){b.warnedLim=true;log('warn','Лимит ставок в корзине');}return false;}
-  if(totalExp(b)+c.base>c.base*200){if(!b.warnedLim){b.warnedLim=true;log('warn','Лимит экспозиции');}return false;}
-  return true;
-}
-function _add(side,price,kind){                       /* размер всегда = cfg().base */
-  const b=S.basket,c=cfg(),entry=roundStep(price,S.tickSize);
+function canAdd(st){const b=st.basket,c=cfg();
+  if(b.orders.length>=c.maxOrders){if(!b.warnedLim){b.warnedLim=true;log('warn',`[${st.sym}] лимит ставок`);}return false;}
+  if(totalExp(b)+c.base>c.base*200){if(!b.warnedLim){b.warnedLim=true;log('warn',`[${st.sym}] лимит экспозиции`);}return false;}
+  return true;}
+function _add(st,side,price,kind){
+  const b=st.basket,c=cfg(),entry=roundStep(price,st.tickSize);
   const qty=Math.max(1e-6,Math.round((c.base/entry)*1e6)/1e6);
-  const o={id:++S.oid,side,entry,qty,usd:round2(qty*entry),kind,ts:Date.now()};
-  b.orders.push(o);b.warnedLim=false;
-  b.lastDir=side;b.lastEntry=entry;
-  const T={start:'СТАРТ',flip:'КОМПЕНСАЦИЯ',pyr:'ПИРАМИДА'};
+  const o={id:++G.oid,side,entry,qty,usd:round2(qty*entry),kind};
+  b.orders.push(o);b.warnedLim=false;b.lastDir=side;b.lastEntry=entry;
+  const T={start:'СТАРТ',flip:'КОМП',pyr:'ПИРАМ'};
   log(kind==='flip'?'flip':(side==='BUY'?'buy':'sell'),
-    `${T[kind]} ${side==='BUY'?'▲ BUY':'▼ SELL'} #${o.id} · ${fmt(o.qty,6)} @ ${fmt(entry)} · $${fmt(o.usd)}`);
-  beep(kind==='flip'?500:(side==='BUY'?620:440),kind==='flip'?.1:.05,'square',.04);
-  renderOrders();return o;
-}
-function addBets(side,price,n,kind){for(let i=0;i<n;i++){if(!canAdd())break;_add(side,price,kind);}}
-/* инвариант: сторона side должна быть на 1 больше противоположной */
-function bringToOne(side,price,reason){
-  const b=S.basket;
-  const own=countSide(b,side),opp=countSide(b,side==='BUY'?'SELL':'BUY');
-  const need=opp+1-own;
-  if(need<=0)return;
-  log('flip',`${reason}: ${side} ×${need} → станет ${opp+1} против ${opp} противоположных`);
-  addBets(side,price,need,'flip');
-}
-function openBasket(dir){
-  S.basket={orders:[],peakU:0,openRealized:S.realized,openedAt:Date.now(),
-            flipArmed:true,lastDir:null,lastEntry:0,warnedLim:false};
-  S.warmWarned=false;
-  log('sys',`Новая корзина · вход <b>${dir==='BUY'?'BUY ▲':'SELL ▼'}</b> · ставка $${fmt(cfg().base)}`);
-  _add(dir,S.price,'start');
-}
-function closeBasket(reason,win){
-  const b=S.basket,u=round2(basketU(S.price));
-  S.realized=round2(S.realized+u);S.baskets++;
-  if(win){S.wins++;if(S.best==null||u>S.best)S.best=u;}
-  else{S.losses++;if(S.worst==null||u<S.worst)S.worst=u;}
-  const nK=b.orders.filter(o=>o.kind==='flip').length,nP=b.orders.filter(o=>o.kind==='pyr').length;
-  log(win?'ok':'err',`${win?'✔ КОРИЗИНА ЗАКРЫТА':'⛔ КОРИЗИНА ЗАКРЫТА'} [${reason}] · ${fmtS(u)} $ · ставок ${b.orders.length} (К:${nK} П:${nP})`);
-  banner(win?`КОРЗИНА В КОПИЛКУ ${fmtS(u)} $`:`ЗАКРЫТО ${fmtS(u)} $ · ${reason}`,win);
-  win?beep(880,.18):beep(190,.3,'sawtooth',.08);
-  S.basket=null;S.lastCloseTs=Date.now();renderOrders();save();
-}
-function engine(price){
-  if(!S.basket){
-    if(Date.now()-S.lastCloseTs<cfg().cooldown)return;
-    if(S.ticks<80){if(!S.warmWarned){log('sys','Прогрев индикаторов EMA…');S.warmWarned=true}return;}
+    `[${st.sym}] ${T[kind]} ${side} #${o.id} @ ${fmt(entry)} · $${fmt(o.usd)}`);
+  beep(kind==='flip'?500:(side==='BUY'?620:440),.05,'square',.03);
+  renderBets(st);return o;}
+function addBets(st,side,price,n,kind){for(let i=0;i<n;i++){if(!canAdd(st))break;_add(st,side,price,kind);}}
+function bringToOne(st,side,price,reason){
+  const b=st.basket,own=countSide(b,side),opp=countSide(b,side==='BUY'?'SELL':'BUY');
+  const need=opp+1-own;if(need<=0)return;
+  log('flip',`[${st.sym}] ${reason}: ${side} ×${need} → ${opp+1} против ${opp}`);
+  addBets(st,side,price,need,'flip');}
+function openBasket(st,dir){
+  st.basket={orders:[],peakU:0,openRealized:st.realized,flipArmed:true,
+             lastDir:null,lastEntry:0,warnedLim:false};
+  st.warmWarned=false;
+  log('sys',`[${st.sym}] новая корзина · ${dir} · $${fmt(cfg().base)}`);
+  _add(st,dir,st.price,'start');}
+function closeBasket(st,reason){
+  const b=st.basket,price=st.price,u=round2(basketU(st,price));
+  const win=u>=0;
+  st.realized=round2(st.realized+u);st.baskets++;
+  if(win)st.wins++;else st.losses++;
+  G.baskets++;win?G.wins++:G.losses++;
+  /* итог по каждой ставке */
+  let w=0,l=0;
+  for(const o of b.orders){
+    const op=(o.side==='BUY'?price-o.entry:o.entry-price)*o.qty;
+    if(op>=0){w++;st.ordWin++;G.ordWin++;st.ordWinSum+=op;G.ordWinSum+=op;}
+    else{l++;st.ordLoss++;G.ordLoss++;st.ordLossSum+=op;G.ordLossSum+=op;}}
+  log(win?'ok':'err',`[${st.sym}] корзина закрыта [${reason}] ${fmtS(u)} $ · ставок ${w} в плюс / ${l} в минус`);
+  banner(`${st.sym}: корзина ${fmtS(u)} $ · ставки ${w}/${l}`,win);
+  win?beep(880,.16):beep(190,.28,'sawtooth',.06);
+  st.basket=null;st.lastCloseTs=Date.now();
+  renderBets(st);renderStats();save();}
+function engine(st,price){
+  if(!st.basket){
+    if(Date.now()-st.lastCloseTs<cfg().cooldown)return;
+    if(st.ticks<80){if(!st.warmWarned){st.warmWarned=true;log('sys',`[${st.sym}] прогрев EMA…`);}return;}
     const c=cfg();
-    openBasket(c.dir==='auto'?(S.emaF>=S.emaS?'BUY':'SELL'):c.dir);return;
+    openBasket(st,c.dir==='auto'?(st.emaF>=st.emaS?'BUY':'SELL'):c.dir);return;
   }
-  const b=S.basket,c=cfg();
-  const u=basketU(price);
+  const b=st.basket,c=cfg();
+  const u=basketU(st,price);
   if(u>b.peakU)b.peakU=u;
-
-  if(u>=c.tp)return closeBasket('цель '+fmt(c.tp)+' $',true);
-  if(b.peakU>0&&u<=b.peakU-0.01)return closeBasket('просадка $0.01 от пика',u>=0);
-  if(u<=-c.maxDD)return closeBasket('стоп-просадка −'+fmt(c.maxDD)+' $',false);
-
+  if(u>=c.tp)return closeBasket(st,'цель '+fmt(c.tp)+' $');
+  if(b.peakU>0&&u<=b.peakU-0.01)return closeBasket(st,'просадка $0.01 от пика');
+  if(u<=-c.maxDD)return closeBasket(st,'стоп-просадка −'+fmt(c.maxDD)+' $');
   const step=c.step/100;
   if(u<0){
-    /* МИНУС: нужная сторона всегда на 1 больше противоположной */
     if(b.flipArmed){
       b.flipArmed=false;
       const nb=countSide(b,'BUY'),ns=countSide(b,'SELL');
       const dir=nb>ns?'SELL':ns>nb?'BUY':(b.lastDir==='BUY'?'SELL':'BUY');
-      bringToOne(dir,price,'Баланс ушёл в минус');
+      bringToOne(st,dir,price,'баланс в минусе');
     }
-    else if(price>=b.lastEntry*(1+step))bringToOne('BUY',price,'Движение вверх');
-    else if(price<=b.lastEntry*(1-step))bringToOne('SELL',price,'Движение вниз');
+    else if(price>=b.lastEntry*(1+step))bringToOne(st,'BUY',price,'движение вверх');
+    else if(price<=b.lastEntry*(1-step))bringToOne(st,'SELL',price,'движение вниз');
   }else{
-    /* ПЛЮС: баланс не уходит в минус → ставим ещё одну и так далее */
     b.flipArmed=true;
     const fav=b.lastDir==='BUY'?price>=b.lastEntry*(1+step):price<=b.lastEntry*(1-step);
-    if(fav&&canAdd())_add(b.lastDir,price,'pyr');
+    if(fav&&canAdd(st))_add(st,b.lastDir,price,'pyr');
   }
 }
+G.oid=0;
 
-/* ═══ UI ═══ */
-function uiTick(){
-  const pEl=$('price');pEl.textContent=fmt(S.price);
-  if(S.price>S.prevPrice)pEl.classList.add('px-up');else if(S.price<S.prevPrice)pEl.classList.add('px-down');
-  setTimeout(()=>pEl.classList.remove('px-up','px-down'),220);
-  $('latEl').textContent=S.connected?`${S.latency} мс`:'';
-  $('chSym').textContent=S.symbol;
-
-  const u=S.basket?basketU(S.price):0;
-  const uEl=$('sU');uEl.textContent=fmtS(u)+' $';uEl.style.color=u>=0?'#3ee08c':'#ff5062';
-
-  if(S.basket){
-    const b=S.basket,c=cfg();
-    $('sState').textContent='АКТИВНА';
-    $('sState').className='chip-live font-disp text-[9.5px] font-bold tracking-[0.14em] px-2.5 py-1.5 rounded border border-cyn/50 text-cyn bg-cyn/5';
-    const m=$('sMode');m.classList.remove('hidden');
-    if(u<0){m.textContent='КОМПЕНСАЦИЯ';m.className='chip-live font-disp text-[9.5px] font-bold tracking-[0.14em] px-2.5 py-1.5 rounded border border-red2/50 text-red2 bg-red2/5';}
-    else if(b.peakU>0){m.textContent='НАБОР ПРИБЫЛИ';m.className='font-disp text-[9.5px] font-bold tracking-[0.14em] px-2.5 py-1.5 rounded border border-grn/50 text-grn bg-grn/5';}
-    else{m.textContent='СТАРТ';m.className='font-disp text-[9.5px] font-bold tracking-[0.14em] px-2.5 py-1.5 rounded border border-line2 text-mut';}
-
+/* ═══ UI: карточки пар ═══ */
+function buildPairBox(){
+  const box=$('pairBox');box.innerHTML='';
+  PAIRS.forEach(sym=>{
+    const l=document.createElement('label');
+    l.className='flex items-center gap-1 text-xs mono cursor-pointer select-none';
+    l.innerHTML=`<input type="checkbox" class="accent-green-500" value="${sym}" ${sel.has(sym)?'checked':''}> ${sym.replace('USDT','')}`;
+    l.querySelector('input').onchange=e=>{
+      const s=e.target.value;
+      if(e.target.checked){sel.add(s);log('sys',`[${s}] пара подключена`);}
+      else{const st=P[s];if(st.basket)closeBasket(st,'отключение пары');sel.delete(s);log('sys',`[${s}] пара отключена`);}
+      buildCards();connect();save();};
+    box.appendChild(l);});
+}
+function buildCards(){
+  const host=$('cards');host.innerHTML='';
+  for(const sym of sel){
+    const st=P[sym];
+    const d=document.createElement('section');
+    d.className='bg-[#161b22] border border-[#30363d] rounded p-3 flex flex-col gap-2';
+    d.innerHTML=`
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2"><b>${sym}</b><span class="status text-[10px] px-1.5 py-0.5 rounded border border-[#30363d] text-gray-400">ОЖИДАНИЕ</span></div>
+        <div class="price mono text-lg font-semibold">—</div>
+      </div>
+      <div class="flex items-end justify-between">
+        <div><div class="text-[10px] uppercase text-gray-500">PnL корзины</div>
+          <div class="pnl mono text-2xl font-bold">+0.00</div></div>
+        <div class="text-right"><div class="text-[10px] uppercase text-gray-500">Реализовано</div>
+          <div class="real mono text-sm font-semibold">$0.00</div></div>
+      </div>
+      <div class="h-1.5 bg-[#0d1117] border border-[#30363d] rounded overflow-hidden"><div class="prog h-full w-0 bg-green-600"></div></div>
+      <div class="grid grid-cols-2 gap-x-4 text-xs">
+        <div class="flex justify-between border-t border-[#21262d] py-1"><span class="text-gray-500">Ставки B/S</span><span class="kvBS mono">—</span></div>
+        <div class="flex justify-between border-t border-[#21262d] py-1"><span class="text-gray-500">Нетто</span><span class="kvNet mono">—</span></div>
+        <div class="flex justify-between border-t border-[#21262d] py-1"><span class="text-gray-500">Пик PnL</span><span class="kvPeak mono">—</span></div>
+        <div class="flex justify-between border-t border-[#21262d] py-1"><span class="text-gray-500">Запас/стоп</span><span class="kvGuard mono">—</span></div>
+        <div class="flex justify-between border-t border-[#21262d] py-1"><span class="text-gray-500">Экспозиция</span><span class="kvExp mono">—</span></div>
+        <div class="flex justify-between border-t border-[#21262d] py-1"><span class="text-gray-500">Ставок всего</span><span class="kvCnt mono">—</span></div>
+      </div>
+      <div class="ostat text-xs">Ставок: <span class="ow text-green-400 mono">0</span> выиграно / <span class="ol text-red-400 mono">0</span> проиграно</div>
+      <canvas class="spark w-full h-10 block"></canvas>
+      <div class="bets max-h-28 overflow-y-auto mono text-[11px] flex flex-col"></div>`;
+    host.appendChild(d);
+    st.el={status:d.querySelector('.status'),price:d.querySelector('.price'),pnl:d.querySelector('.pnl'),
+      real:d.querySelector('.real'),prog:d.querySelector('.prog'),kvBS:d.querySelector('.kvBS'),
+      kvNet:d.querySelector('.kvNet'),kvPeak:d.querySelector('.kvPeak'),kvGuard:d.querySelector('.kvGuard'),
+      kvExp:d.querySelector('.kvExp'),kvCnt:d.querySelector('.kvCnt'),ow:d.querySelector('.ow'),ol:d.querySelector('.ol'),
+      spark:d.querySelector('.spark'),bets:d.querySelector('.bets')};
+    updatePair(st);
+  }
+}
+function updatePair(st){
+  const e=st.el;if(!e)return;
+  e.price.textContent=fmt(st.price);
+  e.price.style.color=st.price>st.prev?'#4ade80':st.price<st.prev?'#f87171':'';
+  e.real.textContent=fmtS(st.realized)+' $';
+  e.real.style.color=st.realized>=0?'#4ade80':'#f87171';
+  e.ow.textContent=st.ordWin;e.ol.textContent=st.ordLoss;
+  if(st.basket){
+    const b=st.basket,c=cfg(),u=basketU(st,st.price);
+    e.pnl.textContent=fmtS(u)+' $';e.pnl.style.color=u>=0?'#4ade80':'#f87171';
+    e.prog.style.width=Math.max(0,Math.min(100,u/c.tp*100))+'%';
+    e.prog.style.background=u<0?'#dc2626':'';
     const nb=countSide(b,'BUY'),ns=countSide(b,'SELL');
-    $('sCntBS').textContent=`${nb} / ${ns}`+(nb===ns?' · ровно':nb>ns?' · BUY +'+(nb-ns):' · SELL +'+(ns-nb));
+    e.kvBS.textContent=`${nb} / ${ns}`;
     const net=netQty(b);
-    $('sNet').textContent=Math.abs(net)<1e-9?'ЛОК (0)':`${fmtS(net,5)} · ${net>0?'LONG':'SHORT'} · $${fmt(Math.abs(net)*S.price)}`;
-    $('sNet').style.color=Math.abs(net)<1e-9?'#ffb224':(net>0?'#3ee08c':'#ff5062');
-    $('sPeak').textContent=fmtS(b.peakU)+' $';
-    if(b.peakU>0){const spare=u-(b.peakU-0.01);
-      $('sSpare').textContent=fmt(spare)+' $';$('sSpare').style.color=spare<0.02?'#ff5062':'#ffb224';
-      $('sDDroom').textContent='—';}
-    else{$('sSpare').textContent='—';
-      const rem=u+c.maxDD;$('sDDroom').textContent=fmt(rem)+' $';$('sDDroom').style.color=rem<c.maxDD*.3?'#ff5062':'#ffb224';}
-
-    let bq=0,be=0,sq=0,se=0,exp=0;
-    for(const o of b.orders){exp+=o.usd;
-      if(o.side==='BUY'){bq+=o.qty;be+=o.entry*o.qty;}else{sq+=o.qty;se+=o.entry*o.qty;}}
-    $('sAvg').textContent=`${bq?fmt(be/bq):'—'} / ${sq?fmt(se/sq):'—'}`;
-    const spd=net*S.price*0.001;
-    $('sSpeed').textContent=fmtS(spd)+' $';$('sSpeed').style.color=spd>=0?'#3ee08c':'#ff5062';
-    $('sExp').textContent='$ '+fmt(exp);
-    const nK=b.orders.filter(o=>o.kind==='flip').length,nP=b.orders.filter(o=>o.kind==='pyr').length;
-    $('sCnt').textContent=`${b.orders.length}/${c.maxOrders} (1/${nK}/${nP})`;
-    const pct=Math.max(0,Math.min(100,u/c.tp*100));
-    $('tpBar').style.width=pct+'%';
-    $('tpBar').style.background=u<0?'linear-gradient(90deg,#9c2531,#ff5062)':'';
-    $('tpPct').textContent=fmt(pct,0)+'%';
-
+    e.kvNet.textContent=Math.abs(net)<1e-9?'лок':fmtS(net,4);
+    e.kvNet.style.color=net>0?'#4ade80':net<0?'#f87171':'#fbbf24';
+    e.kvPeak.textContent=fmtS(b.peakU)+' $';
+    e.kvGuard.textContent=b.peakU>0?fmt(u-(b.peakU-0.01))+' $':fmt(u+c.maxDD)+' $';
+    e.kvExp.textContent='$'+fmt(totalExp(b));
+    e.kvCnt.textContent=`${b.orders.length}/${c.maxOrders}`;
+    let stTxt,stCls;
+    if(u<0){stTxt='КОМПЕНСАЦИЯ';stCls='text-[10px] px-1.5 py-0.5 rounded border border-red-700 text-red-400';}
+    else if(b.peakU>0){stTxt='НАБОР';stCls='text-[10px] px-1.5 py-0.5 rounded border border-green-700 text-green-400';}
+    else{stTxt='СТАРТ';stCls='text-[10px] px-1.5 py-0.5 rounded border border-gray-600 text-gray-400';}
+    e.status.textContent=stTxt;e.status.className='status '+stCls;
     let tot=0;
     for(const o of b.orders){
-      const r=S.rowRefs.get(o.id);if(!r)continue;
-      const op=(o.side==='BUY'?S.price-o.entry:o.entry-S.price)*o.qty;tot+=op;
-      r.p.textContent=fmtS(op);r.p.style.color=op>=0?'#3ee08c':'#ff5062';
-    }
-    $('fExp').textContent='$ '+fmt(exp);
-    $('fPnl').textContent=fmtS(tot)+' $';$('fPnl').style.color=tot>=0?'#3ee08c':'#ff5062';
+      const r=st.rowRefs.get(o.id);if(!r)continue;
+      const op=(o.side==='BUY'?st.price-o.entry:o.entry-st.price)*o.qty;tot+=op;
+      r.textContent=fmtS(op);r.style.color=op>=0?'#4ade80':'#f87171';}
   }else{
-    $('sState').textContent=S.running?'ПАУЗА МЕЖДУ КОРЗИНАМИ':'ОЖИДАНИЕ';
-    $('sState').className='font-disp text-[9.5px] font-bold tracking-[0.14em] px-2.5 py-1.5 rounded border border-line2 text-mut';
-    $('sMode').classList.add('hidden');
-    ['sCntBS','sNet','sPeak','sSpare','sDDroom','sAvg','sExp'].forEach(i=>{$(i).textContent='—';$(i).style.color='';});
-    $('sSpeed').textContent='—';$('sSpeed').style.color='';
-    $('sCnt').textContent='0 / '+(+$('maxOrd').value||40);
-    $('tpBar').style.width='0%';$('tpPct').textContent='0%';
-    $('fCnt').textContent='—';$('fExp').textContent='$0.00';$('fPnl').textContent='$0.00';$('fPnl').style.color='';
+    e.pnl.textContent='+0.00 $';e.pnl.style.color='#9ca3af';
+    e.prog.style.width='0%';
+    ['kvBS','kvNet','kvPeak','kvGuard','kvExp','kvCnt'].forEach(k=>{e[k].textContent='—';e[k].style.color='';});
+    e.status.textContent=G.running?'ПАУЗА':'ОЖИДАНИЕ';
+    e.status.className='status text-[10px] px-1.5 py-0.5 rounded border border-[#30363d] text-gray-400';
   }
-  $('stEq').textContent=fmtS(S.realized)+' $';$('stEq').style.color=S.realized>=0?'#3ee08c':'#ff5062';
-  $('stB').textContent=S.baskets;$('stW').textContent=S.wins;$('stL').textContent=S.losses;
-  $('stWR').textContent=S.baskets?fmt(S.wins/S.baskets*100,0)+'%':'—';
-  $('stBW').innerHTML=`<span class="text-grn">${S.best!=null?fmtS(S.best):'—'}</span> / <span class="text-red2">${S.worst!=null?fmtS(S.worst):'—'}</span>`;
-  const now=Date.now();
-  if(now-S.lastEqPush>260){S.lastEqPush=now;
-    S.eqHist.push(round2(S.realized+u));if(S.eqHist.length>320)S.eqHist.shift();drawEq();}
-  if(!S.raf)S.raf=requestAnimationFrame(()=>{S.raf=0;drawChart();});
 }
-function renderOrders(){
-  const tb=$('ordBody');tb.innerHTML='';S.rowRefs.clear();
-  if(!S.basket){$('fCnt').textContent='—';return;}
-  const T={start:['С','text-cyn border-cyn/50 bg-cyn/5'],flip:['К','text-amb border-amb/50 bg-amb/5'],pyr:['П','text-grn border-grn/50 bg-grn/5']};
-  S.basket.orders.forEach(o=>{
-    const tr=document.createElement('tr');tr.className='rowin hover:bg-cyn/5';
-    tr.innerHTML=`<td class="px-2.5 py-1.5 font-mono text-left border-b border-line/50">#${o.id}</td>
-      <td class="px-2.5 py-1.5 text-left border-b border-line/50"><span class="inline-block w-6 text-center font-disp text-[9px] font-bold px-1 py-0.5 rounded border ${T[o.kind][1]}">${T[o.kind][0]}</span></td>
-      <td class="px-2.5 py-1.5 text-left border-b border-line/50 font-semibold ${o.side==='BUY'?'text-grn':'text-red2'}">${o.side==='BUY'?'BUY ▲':'SELL ▼'}</td>
-      <td class="px-2.5 py-1.5 font-mono text-right border-b border-line/50">${fmt(o.entry)}</td>
-      <td class="px-2.5 py-1.5 font-mono text-right border-b border-line/50">${fmt(o.qty,6)}</td>
-      <td class="px-2.5 py-1.5 font-mono text-right border-b border-line/50">$${fmt(o.usd)}</td>
-      <td class="px-2.5 py-1.5 font-mono text-right border-b border-line/50"></td>`;
-    tb.appendChild(tr);S.rowRefs.set(o.id,{p:tr.lastElementChild});
-  });
-  $('fCnt').textContent=S.basket.orders.length+' шт';
+function renderBets(st){
+  const e=st.el;if(!e)return;
+  e.bets.innerHTML='';st.rowRefs.clear();
+  if(!st.basket)return;
+  const K={start:['С','text-sky-400'],flip:['К','text-amber-400'],pyr:['П','text-green-400']};
+  st.basket.orders.forEach(o=>{
+    const row=document.createElement('div');
+    row.className='flex justify-between gap-2 border-t border-[#21262d] py-0.5';
+    row.innerHTML=`<span class="text-gray-500">#${o.id} <span class="${K[o.kind][1]}">${K[o.kind][0]}</span>
+      <span class="${o.side==='BUY'?'text-green-400':'text-red-400'}">${o.side}</span> @ ${fmt(o.entry)}</span><span class="p"></span>`;
+    e.bets.appendChild(row);
+    st.rowRefs.set(o.id,row.querySelector('.p'));});
 }
 
+/* ═══ итоговая статистика ═══ */
+function renderStats(){
+  let real=0;for(const sym of sel)real+=P[sym].realized;
+  let realAll=0;for(const k in P)realAll+=P[k].realized;
+  const el=$('stReal');el.textContent=fmtS(realAll)+' $';el.style.color=realAll>=0?'#4ade80':'#f87171';
+  $('stOW').textContent=G.ordWin;$('stOWsum').textContent='+$'+fmt(G.ordWinSum);
+  $('stOL').textContent=G.ordLoss;$('stOLsum').textContent='−$'+fmt(Math.abs(G.ordLossSum));
+  const net=G.ordWinSum+G.ordLossSum,tot=G.ordWin+G.ordLoss;
+  const en=$('stONet');en.textContent=fmtS(net)+' $';en.style.color=net>=0?'#4ade80':'#f87171';
+  $('stORate').textContent=tot?`winrate ${fmt(G.ordWin/tot*100,0)}%`:'—';
+  $('stB').textContent=G.baskets;$('stW').textContent=G.wins;$('stL').textContent=G.losses;
+  $('stWR').textContent=G.baskets?fmt(G.wins/G.baskets*100,0)+'%':'—';
+}
+function pushEq(){
+  let eq=0;for(const k in P){eq+=P[k].realized;
+    if(P[k].basket)eq+=basketU(P[k],P[k].price);}
+  G.eqHist.push(round2(eq));if(G.eqHist.length>320)G.eqHist.shift();
+}
+
+/* ═══ графики ═══ */
 function fit(cv){const r=cv.getBoundingClientRect(),d=window.devicePixelRatio||1;
   if(cv.width!==Math.round(r.width*d)||cv.height!==Math.round(r.height*d)){cv.width=Math.round(r.width*d);cv.height=Math.round(r.height*d);}
   const ctx=cv.getContext('2d');ctx.setTransform(d,0,0,d,0,0);return{ctx,w:r.width,h:r.height};}
-function drawChart(){
-  const{ctx,w,h}=fit($('chart'));ctx.clearRect(0,0,w,h);
-  const cs=S.candles.slice(-160);if(cs.length<2)return;
-  const padR=84,padT=12,padB=14;
-  let mn=Infinity,mx=-Infinity;
-  cs.forEach(c=>{if(c.l<mn)mn=c.l;if(c.h>mx)mx=c.h;});
-  if(S.basket)S.basket.orders.forEach(o=>{if(o.entry<mn)mn=o.entry;if(o.entry>mx)mx=o.entry;});
-  const pd=(mx-mn)*.08||1;mn-=pd;mx+=pd;
-  const Y=v=>padT+(mx-v)/(mx-mn)*(h-padT-padB);
-  ctx.font='9.5px JetBrains Mono';ctx.textAlign='left';
-  for(let i=0;i<=4;i++){const v=mn+(mx-mn)*i/4,y=Y(v);
-    ctx.strokeStyle='rgba(255,255,255,.045)';ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w-padR+8,y);ctx.stroke();
-    ctx.fillStyle='#546478';ctx.fillText(fmt(v),w-padR+12,y+3);}
-  const n=cs.length,cw=(w-padR-10)/n,bw=Math.max(1.6,cw*.58);
-  cs.forEach((c,i)=>{const x=6+i*cw+cw/2,up=c.c>=c.o,col=up?'#3ee08c':'#ff5062';
-    ctx.strokeStyle=col;ctx.beginPath();ctx.moveTo(x,Y(c.h));ctx.lineTo(x,Y(c.l));ctx.stroke();
-    ctx.fillStyle=col;const y1=Y(Math.max(c.o,c.c)),y2=Y(Math.min(c.o,c.c));
-    ctx.fillRect(x-bw/2,y1,bw,Math.max(1.2,y2-y1));});
-  const dash=(y,col,txt)=>{if(y<padT-4||y>h-padB+4)return;
-    ctx.save();ctx.setLineDash([5,4]);ctx.strokeStyle=col;ctx.globalAlpha=.85;
-    ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w-padR+6,y);ctx.stroke();ctx.restore();
-    ctx.font='600 9.5px JetBrains Mono';ctx.fillStyle=col;ctx.fillText(txt,w-padR+12,y-4);};
-  if(S.basket){
-    const K={start:'С',flip:'К',pyr:'П'};
-    S.basket.orders.forEach(o=>{
-      const op=(o.side==='BUY'?S.price-o.entry:o.entry-S.price)*o.qty;
-      dash(Y(o.entry),o.side==='BUY'?'rgba(62,224,140,.9)':'rgba(255,80,98,.9)',
-        `${K[o.kind]} ${fmt(o.entry)} ${fmtS(op)}`);});
-  }
-  const yp=Y(S.price);
-  ctx.strokeStyle='rgba(217,228,240,.35)';ctx.beginPath();ctx.moveTo(0,yp);ctx.lineTo(w-padR+6,yp);ctx.stroke();
-  ctx.fillStyle=S.price>=S.prevPrice?'#3ee08c':'#ff5062';
-  ctx.fillRect(w-padR+8,yp-8,padR-12,16);
-  ctx.fillStyle='#0a0e13';ctx.font='800 10px JetBrains Mono';ctx.fillText(fmt(S.price),w-padR+13,yp+3.5);
-  $('chTime').textContent=hhmmss(Date.now());
-}
-function drawEq(){
+let rafPend=false;
+function scheduleDraw(){if(rafPend)return;rafPend=true;requestAnimationFrame(()=>{rafPend=false;drawAll();});}
+function drawAll(){
+  for(const sym of sel){const st=P[sym];if(!st.el)continue;
+    const{ctx,w,h}=fit(st.el.spark);ctx.clearRect(0,0,w,h);
+    const v=st.hist;if(v.length<2)continue;
+    let mn=Math.min(...v),mx=Math.max(...v);if(mx-mn<1e-9){mx+=1;mn-=1;}
+    const up=v[v.length-1]>=v[0],col=up?'#4ade80':'#f87171';
+    ctx.beginPath();
+    v.forEach((x,i)=>{const X=i/(v.length-1)*(w-2)+1,Y=2+(mx-x)/(mx-mn)*(h-4);
+      i?ctx.lineTo(X,Y):ctx.moveTo(X,Y);});
+    ctx.strokeStyle=col;ctx.lineWidth=1.3;ctx.stroke();}
   const{ctx,w,h}=fit($('eqCanvas'));ctx.clearRect(0,0,w,h);
-  const v=S.eqHist;if(v.length<2){ctx.fillStyle='#546478';ctx.font='11px IBM Plex Sans';ctx.fillText('накопление данных…',10,h/2+4);return;}
-  let mn=Math.min(...v),mx=Math.max(...v);if(mx-mn<.02){mx+=.01;mn-=.01;}
-  const Y=x=>4+(mx-x)/(mx-mn)*(h-10),X=i=>i/(v.length-1)*(w-4)+2;
-  const up=v[v.length-1]>=v[0],col=up?'#3ee08c':'#ff5062';
-  ctx.beginPath();ctx.moveTo(X(0),Y(v[0]));v.forEach((x,i)=>ctx.lineTo(X(i),Y(x)));
-  ctx.strokeStyle=col;ctx.lineWidth=1.6;ctx.stroke();
-  ctx.lineTo(w-2,h);ctx.lineTo(2,h);ctx.closePath();
-  const g=ctx.createLinearGradient(0,0,0,h);
-  g.addColorStop(0,up?'rgba(62,224,140,.28)':'rgba(255,80,98,.28)');g.addColorStop(1,'rgba(0,0,0,0)');
-  ctx.fillStyle=g;ctx.fill();ctx.lineWidth=1;
-  if(mn<0&&mx>0){const y0=Y(0);ctx.setLineDash([3,3]);ctx.strokeStyle='rgba(255,255,255,.2)';
-    ctx.beginPath();ctx.moveTo(0,y0);ctx.lineTo(w,y0);ctx.stroke();ctx.setLineDash([]);}
-  ctx.fillStyle=col;ctx.font='800 11px JetBrains Mono';ctx.fillText(fmtS(v[v.length-1])+' $',8,13);
+  const v=G.eqHist;
+  if(v.length>1){
+    let mn=Math.min(...v),mx=Math.max(...v);if(mx-mn<.02){mx+=.01;mn-=.01;}
+    const Y=x=>2+(mx-x)/(mx-mn)*(h-4),X=i=>i/(v.length-1)*(w-2)+1;
+    const up=v[v.length-1]>=v[0];
+    ctx.beginPath();v.forEach((x,i)=>{i?ctx.lineTo(X(i),Y(x)):ctx.moveTo(X(i),Y(x));});
+    ctx.strokeStyle=up?'#4ade80':'#f87171';ctx.lineWidth=1.4;ctx.stroke();}
+  else{ctx.fillStyle='#6b7280';ctx.font='10px IBM Plex Sans';ctx.fillText('накопление…',4,h/2+3);}
 }
 
-function save(){try{localStorage.setItem(LS,JSON.stringify({
-  realized:S.realized,baskets:S.baskets,wins:S.wins,losses:S.losses,best:S.best,worst:S.worst,
-  cfg:{b:$('baseUsd').value,st:$('stepAdd').value,t:$('tpUsd').value,dd:$('maxDD').value,
-       o:$('maxOrd').value,c:$('cooldownMs').value,d:$('dirMode').value}}));}catch(e){}}
+/* ═══ сохранение ═══ */
+function save(){try{
+  const pairs={};for(const k in P)pairs[k]={realized:P[k].realized,baskets:P[k].baskets,wins:P[k].wins,
+    losses:P[k].losses,ordWin:P[k].ordWin,ordLoss:P[k].ordLoss,ordWinSum:P[k].ordWinSum,ordLossSum:P[k].ordLossSum};
+  localStorage.setItem(LS,JSON.stringify({
+    G:{baskets:G.baskets,wins:G.wins,losses:G.losses,ordWin:G.ordWin,ordLoss:G.ordLoss,
+       ordWinSum:G.ordWinSum,ordLossSum:G.ordLossSum},
+    pairs,cfg:{b:$('baseUsd').value,t:$('tpUsd').value,s:$('stepAdd').value,d:$('maxDD').value,
+       o:$('maxOrd').value,c:$('cooldownMs').value,m:$('dirMode').value},
+    sel:[...sel]}));}catch(e){}}
 function load(){try{const j=JSON.parse(localStorage.getItem(LS)||'null');if(!j)return;
-  S.realized=j.realized||0;S.baskets=j.baskets||0;S.wins=j.wins||0;S.losses=j.losses||0;
-  S.best=j.best??null;S.worst=j.worst??null;
-  if(j.cfg){$('baseUsd').value=j.cfg.b;$('stepAdd').value=j.cfg.st||.1;$('tpUsd').value=j.cfg.t;
-    $('maxDD').value=j.cfg.dd||5;$('maxOrd').value=j.cfg.o||40;
-    $('cooldownMs').value=j.cfg.c;$('dirMode').value=j.cfg.d;}
-  log('sys','Статистика восстановлена из localStorage');}catch(e){}}
+  Object.assign(G,j.G||{});
+  if(j.pairs)for(const k in j.pairs){initPair(k);Object.assign(P[k],j.pairs[k]);}
+  if(j.cfg){$('baseUsd').value=j.cfg.b;$('tpUsd').value=j.cfg.t;$('stepAdd').value=j.cfg.s;
+    $('maxDD').value=j.cfg.d;$('maxOrd').value=j.cfg.o;$('cooldownMs').value=j.cfg.c;$('dirMode').value=j.cfg.m;}
+  if(j.sel&&j.sel.length){sel.clear();j.sel.forEach(s=>sel.add(s));}
+  log('sys','Статистика восстановлена');}catch(e){}}
 
+/* ═══ управление ═══ */
 $('btnStart').onclick=()=>{
-  if(!S.connected&&S.ticks===0){log('warn','Дождитесь подключения к потоку котировок');return;}
-  S.running=true;$('btnStart').disabled=true;$('btnStop').disabled=false;
+  G.running=true;$('btnStart').disabled=true;$('btnStop').disabled=false;
   try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();AC.resume&&AC.resume();}catch(e){}
-  log('ok','▶ Бот запущен · инвариант «на одну больше» · PAPER');beep(700,.08);
-};
+  log('ok','▶ Автопилот запущен: '+[...sel].join(', '));beep(700,.08);};
 $('btnStop').onclick=()=>{
-  S.running=false;$('btnStart').disabled=false;$('btnStop').disabled=true;
-  log('warn','■ Бот остановлен'+(S.basket?' · корзина заморожена (не закрыта)':''));beep(340,.1);
-};
+  G.running=false;$('btnStart').disabled=false;$('btnStop').disabled=true;
+  log('warn','■ Автопилот остановлен (корзины заморожены)');beep(340,.1);};
 $('btnReset').onclick=()=>{
-  if(!confirm('Сбросить статистику и реализованный PnL?'))return;
-  localStorage.removeItem(LS);
-  Object.assign(S,{realized:0,baskets:0,wins:0,losses:0,best:null,worst:null,eqHist:[]});
-  log('sys','Статистика сброшена');uiTick();
-};
-$('symSel').onchange=async e=>{
-  const sym=e.target.value;
-  if(S.basket){log('warn','Смена пары — корзина закрывается по рынку');closeBasket('смена инструмента',basketU(S.price)>=0);}
-  S.symbol=sym;S.candles=[];S.ticks=0;S.emaF=S.emaS=null;
-  log('sys','Переключение на <b>'+sym+'</b>');
-  await fetchTick();connect();fetch24();
-};
-['baseUsd','stepAdd','tpUsd','maxDD','maxOrd','cooldownMs','dirMode']
+  if(!confirm('Сбросить всю статистику?'))return;
+  localStorage.removeItem(LS);location.reload();};
+['baseUsd','tpUsd','stepAdd','maxDD','maxOrd','cooldownMs','dirMode']
   .forEach(id=>$(id).addEventListener('change',save));
 
-setInterval(()=>$('clock').textContent=new Date().toLocaleString('ru-RU',{weekday:'short',hour:'2-digit',minute:'2-digit',second:'2-digit'}),1000);
-setInterval(fetch24,10000);setInterval(fetchTape,60000);
-load();
-log('sys','Инициализация v4.2: в минусе нужная сторона всегда <b>на 1 ставку больше</b> противоположной.');
-log('warn','Режим PAPER: ордера виртуальные, комиссии не учитываются.');
-fetchTick();fetch24();fetchTape();connect();
+/* ═══ init ═══ */
+setInterval(()=>$('clock').textContent=new Date().toLocaleString('ru-RU',{hour:'2-digit',minute:'2-digit',second:'2-digit'}),1000);
+setInterval(()=>{for(const sym of sel){const st=P[sym];
+  if(st&&!st.tickFetched){st.tickFetched=true;
+    fetch(`https://api.binance.com/api/v3/exchangeInfo?symbol=${sym}`).then(r=>r.json()).then(j=>{
+      st.tickSize=parseFloat(j.filters.find(f=>f.filterType==='PRICE_FILTER').tickSize)||.01;}).catch(()=>{});}}},4000);
+load();buildPairBox();buildCards();renderStats();connect();
+log('sys','Автопилот v5: у каждой пары своя корзина, ставка фиксированная, инвариант «на одну больше».');
+log('warn','Режим PAPER: комиссии не учитываются.');
 </script>
 </body>
 </html>

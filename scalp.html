@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Автопилот корзин · Binance · мультипара</title>
+<title>Автопилот корзин v5.1 · Binance · мультипара</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
@@ -19,10 +19,9 @@
 
 <div id="banner" class="fixed top-3 left-1/2 z-50 mono text-xs font-semibold px-4 py-2 rounded border pointer-events-none"></div>
 
-<!-- ═══ верхняя панель ═══ -->
 <header class="flex flex-wrap items-center gap-3 px-4 py-2.5 border-b border-[#30363d]">
   <b class="text-[15px]">Автопилот корзин</b>
-  <span class="text-xs text-gray-500">Binance · paper</span>
+  <span class="text-xs text-gray-500">Binance · paper · v5.1</span>
   <span id="wsTxt" class="text-xs text-gray-400">подключение…</span>
   <span id="latEl" class="mono text-xs text-gray-500"></span>
   <div class="flex-1"></div>
@@ -35,7 +34,7 @@
   <label class="text-[10px] uppercase text-gray-500 flex flex-col gap-1">Цель корзины $<input id="tpUsd" type="number" value="0.80" min="0.05" step="0.05" class="w-24 bg-[#0d1117] border border-[#30363d] rounded px-2 py-1 mono text-[12px]"></label>
   <label class="text-[10px] uppercase text-gray-500 flex flex-col gap-1">Шаг %<input id="stepAdd" type="number" value="0.10" min="0.02" step="0.01" class="w-20 bg-[#0d1117] border border-[#30363d] rounded px-2 py-1 mono text-[12px]"></label>
   <label class="text-[10px] uppercase text-gray-500 flex flex-col gap-1">Стоп $<input id="maxDD" type="number" value="5" min="0.5" step="0.5" class="w-20 bg-[#0d1117] border border-[#30363d] rounded px-2 py-1 mono text-[12px]"></label>
-  <label class="text-[10px] uppercase text-gray-500 flex flex-col gap-1">Макс ставок<input id="maxOrd" type="number" value="40" min="3" max="100" class="w-20 bg-[#0d1117] border border-[#30363d] rounded px-2 py-1 mono text-[12px]"></label>
+  <label class="text-[10px] uppercase text-gray-500 flex flex-col gap-1">Макс ставок<input id="maxOrd" type="number" value="60" min="3" max="200" class="w-20 bg-[#0d1117] border border-[#30363d] rounded px-2 py-1 mono text-[12px]"></label>
   <label class="text-[10px] uppercase text-gray-500 flex flex-col gap-1">Пауза мс<input id="cooldownMs" type="number" value="1500" min="0" step="250" class="w-20 bg-[#0d1117] border border-[#30363d] rounded px-2 py-1 mono text-[12px]"></label>
   <label class="text-[10px] uppercase text-gray-500 flex flex-col gap-1">Первый вход
     <select id="dirMode" class="bg-[#0d1117] border border-[#30363d] rounded px-2 py-1 mono text-[12px]">
@@ -109,19 +108,20 @@ const LS='basket-autopilot.v1';
 
 const PAIRS=['BTCUSDT','ETHUSDT','SOLUSDT','BNBUSDT','XRPUSDT','DOGEUSDT'];
 const sel=new Set(['BTCUSDT','ETHUSDT','SOLUSDT']);
-const P={};                                  /* состояние каждой пары */
+const P={};
 const G={running:false,baskets:0,wins:0,losses:0,ordWin:0,ordLoss:0,ordWinSum:0,ordLossSum:0,
-         eqHist:[],lastEq:0,lastEqPush:0,lat:0};
+         eqHist:[],lastEqPush:0,lat:0,oid:0};
 let ws=null,retries=0,pollTimer=null;
 
 function cfg(){return{
   base:Math.max(10,+$('baseUsd').value||100), tp:Math.max(.05,+$('tpUsd').value||.8),
   step:Math.max(.02,+$('stepAdd').value||.1), maxDD:Math.max(.5,+$('maxDD').value||5),
-  maxOrders:Math.max(3,+$('maxOrd').value|0||40), cooldown:Math.max(0,+$('cooldownMs').value|0||1500),
+  maxOrders:Math.max(3,+$('maxOrd').value|0||60), cooldown:Math.max(0,+$('cooldownMs').value|0||1500),
   dir:$('dirMode').value};}
 
 function initPair(sym){if(P[sym])return;
-  P[sym]={sym,price:0,prev:0,ticks:0,tickSize:.01,emaF:null,emaS:null,hist:[],lastHist:0,
+  P[sym]={sym,price:0,prev:0,ticks:0,tickSize:.01,tickFetched:false,emaF:null,emaS:null,
+    hist:[],lastHist:0,lastUI:0,
     realized:0,baskets:0,wins:0,losses:0,ordWin:0,ordLoss:0,ordWinSum:0,ordLossSum:0,
     basket:null,lastCloseTs:0,warmWarned:false,el:null,rowRefs:new Map()};}
 PAIRS.forEach(initPair);
@@ -151,7 +151,7 @@ function beep(f,dur=.12,type='sine',vol=.05){
     o.connect(g).connect(AC.destination);o.start();o.stop(AC.currentTime+dur);}catch(e){}
 }
 
-/* ═══ поток котировок (все пары в одном WS) ═══ */
+/* ═══ поток котировок ═══ */
 function setWs(state,txt){$('wsTxt').textContent=txt;$('wsTxt').className='text-xs '+(state==='ok'?'text-green-400':state==='warn'?'text-amber-400':'text-red-400');}
 function connect(){
   try{ws&&ws.close()}catch(e){}
@@ -161,8 +161,7 @@ function connect(){
   ws=new WebSocket('wss://stream.binance.com:9443/stream?streams='+streams);
   ws.onopen=()=>{retries=0;setWs('ok','live: '+[...sel].map(s=>s.replace('USDT','')).join(', '));stopPoll();};
   ws.onmessage=e=>{const m=JSON.parse(e.data);
-    if(m.stream&&m.data){const sym=m.stream.split('@')[0].toUpperCase();
-      onPrice(sym,parseFloat(m.data.p),m.data.T);}};
+    if(m.stream&&m.data)onPrice(m.stream.split('@')[0].toUpperCase(),parseFloat(m.data.p),m.data.T);};
   ws.onclose=()=>{setWs('err','переподключение…');
     if(++retries===3){log('warn','WS недоступен — REST-опрос');startPoll();}
     setTimeout(connect,Math.min(15000,800*Math.pow(2,retries)));};
@@ -176,17 +175,18 @@ function stopPoll(){clearInterval(pollTimer);pollTimer=null;}
 function onPrice(sym,p,eventTs){
   const st=P[sym];if(!st)return;
   st.prev=st.price;st.price=p;st.ticks++;
-  G.lat=Math.max(0,Date.now()-eventTs);$('latEl').textContent=G.lat+' мс';
+  G.lat=Math.max(0,Date.now()-eventTs);
   st.emaF=st.emaF==null?p:p+(2/26)*(p-st.emaF);
   st.emaS=st.emaS==null?p:p+(2/100)*(p-st.emaS);
   const now=Date.now();
   if(now-st.lastHist>250){st.lastHist=now;st.hist.push(p);if(st.hist.length>240)st.hist.shift();}
   if(G.running)engine(st,p);
-  updatePair(st);scheduleDraw();
-  if(now-G.lastEqPush>300){G.lastEqPush=now;pushEq();}
+  /* отрисовка не чаще 5 раз/сек на пару */
+  if(now-st.lastUI>200){st.lastUI=now;$('latEl').textContent=G.lat+' мс';updatePair(st);drawSpark(st);
+    if(now-G.lastEqPush>300){G.lastEqPush=now;pushEq();drawEq();}}
 }
 
-/* ═══ движок корзины (на пару) ═══ */
+/* ═══ движок корзины ═══ */
 function basketU(st,price){let u=0;for(const o of st.basket.orders)
   u+=(o.side==='BUY'?price-o.entry:o.entry-price)*o.qty;return u;}
 function netQty(b){let q=0;for(const o of b.orders)q+=(o.side==='BUY'?o.qty:-o.qty);return q;}
@@ -194,8 +194,8 @@ function totalExp(b){let e=0;for(const o of b.orders)e+=o.usd;return e;}
 function countSide(b,s){let n=0;for(const o of b.orders)if(o.side===s)n++;return n;}
 
 function canAdd(st){const b=st.basket,c=cfg();
-  if(b.orders.length>=c.maxOrders){if(!b.warnedLim){b.warnedLim=true;log('warn',`[${st.sym}] лимит ставок`);}return false;}
-  if(totalExp(b)+c.base>c.base*200){if(!b.warnedLim){b.warnedLim=true;log('warn',`[${st.sym}] лимит экспозиции`);}return false;}
+  if(b.orders.length>=c.maxOrders){if(!b.warnedLim){b.warnedLim=true;log('warn',`[${st.sym}] лимит ставок — инвариант может не выполняться`);}return false;}
+  if(totalExp(b)+c.base>c.base*300){if(!b.warnedLim){b.warnedLim=true;log('warn',`[${st.sym}] лимит экспозиции`);}return false;}
   return true;}
 function _add(st,side,price,kind){
   const b=st.basket,c=cfg(),entry=roundStep(price,st.tickSize);
@@ -206,17 +206,14 @@ function _add(st,side,price,kind){
   log(kind==='flip'?'flip':(side==='BUY'?'buy':'sell'),
     `[${st.sym}] ${T[kind]} ${side} #${o.id} @ ${fmt(entry)} · $${fmt(o.usd)}`);
   beep(kind==='flip'?500:(side==='BUY'?620:440),.05,'square',.03);
-  renderBets(st);return o;}
-function addBets(st,side,price,n,kind){for(let i=0;i<n;i++){if(!canAdd(st))break;_add(st,side,price,kind);}}
-function bringToOne(st,side,price,reason){
-  const b=st.basket,own=countSide(b,side),opp=countSide(b,side==='BUY'?'SELL':'BUY');
-  const need=opp+1-own;if(need<=0)return;
-  log('flip',`[${st.sym}] ${reason}: ${side} ×${need} → ${opp+1} против ${opp}`);
-  addBets(st,side,price,need,'flip');}
+  appendBet(st,o);return o;}
+function addBets(st,side,price,n,kind){let done=0;
+  for(let i=0;i<n;i++){if(!canAdd(st))break;_add(st,side,price,kind);done++;}return done;}
 function openBasket(st,dir){
   st.basket={orders:[],peakU:0,openRealized:st.realized,flipArmed:true,
-             lastDir:null,lastEntry:0,warnedLim:false};
+             compDir:null,anchor:st.price,lastDir:null,lastEntry:0,warnedLim:false};
   st.warmWarned=false;
+  clearBets(st);
   log('sys',`[${st.sym}] новая корзина · ${dir} · $${fmt(cfg().base)}`);
   _add(st,dir,st.price,'start');}
 function closeBasket(st,reason){
@@ -225,7 +222,6 @@ function closeBasket(st,reason){
   st.realized=round2(st.realized+u);st.baskets++;
   if(win)st.wins++;else st.losses++;
   G.baskets++;win?G.wins++:G.losses++;
-  /* итог по каждой ставке */
   let w=0,l=0;
   for(const o of b.orders){
     const op=(o.side==='BUY'?price-o.entry:o.entry-price)*o.qty;
@@ -235,7 +231,16 @@ function closeBasket(st,reason){
   banner(`${st.sym}: корзина ${fmtS(u)} $ · ставки ${w}/${l}`,win);
   win?beep(880,.16):beep(190,.28,'sawtooth',.06);
   st.basket=null;st.lastCloseTs=Date.now();
-  renderBets(st);renderStats();save();}
+  clearBets(st);renderStats();save();}
+
+/* инвариант: сторона dir на 1 больше противоположной; добираем пока не выполнено */
+function enforceInvariant(st,dir,price,reason){
+  const b=st.basket,own=countSide(b,dir),opp=countSide(b,dir==='BUY'?'SELL':'BUY');
+  const need=opp+1-own;
+  if(need<=0)return;
+  const done=addBets(st,dir,price,need,'flip');
+  if(done>0)log('flip',`[${st.sym}] ${reason}: ${dir} +${done} → ${own+done} против ${opp}`);
+}
 function engine(st,price){
   if(!st.basket){
     if(Date.now()-st.lastCloseTs<cfg().cooldown)return;
@@ -249,23 +254,27 @@ function engine(st,price){
   if(u>=c.tp)return closeBasket(st,'цель '+fmt(c.tp)+' $');
   if(b.peakU>0&&u<=b.peakU-0.01)return closeBasket(st,'просадка $0.01 от пика');
   if(u<=-c.maxDD)return closeBasket(st,'стоп-просадка −'+fmt(c.maxDD)+' $');
+
   const step=c.step/100;
   if(u<0){
+    /* МИНУС: определяем нужную сторону и держим её на 1 больше — каждый тик */
     if(b.flipArmed){
-      b.flipArmed=false;
+      b.flipArmed=false;b.anchor=price;
       const nb=countSide(b,'BUY'),ns=countSide(b,'SELL');
-      const dir=nb>ns?'SELL':ns>nb?'BUY':(b.lastDir==='BUY'?'SELL':'BUY');
-      bringToOne(st,dir,price,'баланс в минусе');
+      b.compDir=nb>ns?'SELL':ns>nb?'BUY':(b.lastDir==='BUY'?'SELL':'BUY');
+    }else{
+      if(price>=b.anchor*(1+step)){b.compDir='BUY';b.anchor=price;}
+      else if(price<=b.anchor*(1-step)){b.compDir='SELL';b.anchor=price;}
     }
-    else if(price>=b.lastEntry*(1+step))bringToOne(st,'BUY',price,'движение вверх');
-    else if(price<=b.lastEntry*(1-step))bringToOne(st,'SELL',price,'движение вниз');
+    if(b.compDir)enforceInvariant(st,b.compDir,price,
+      b.flipArmed===false&&countSide(b,b.compDir)+countSide(b,b.compDir==='BUY'?'SELL':'BUY')===b.orders.length?'баланс в минусе':'движение');
   }else{
-    b.flipArmed=true;
+    /* ПЛЮС: пирамида по одной за шаг */
+    b.flipArmed=true;b.compDir=null;b.anchor=price;
     const fav=b.lastDir==='BUY'?price>=b.lastEntry*(1+step):price<=b.lastEntry*(1-step);
     if(fav&&canAdd(st))_add(st,b.lastDir,price,'pyr');
   }
 }
-G.oid=0;
 
 /* ═══ UI: карточки пар ═══ */
 function buildPairBox(){
@@ -293,7 +302,7 @@ function buildCards(){
         <div class="price mono text-lg font-semibold">—</div>
       </div>
       <div class="flex items-end justify-between">
-        <div><div class="text-[10px] uppercase text-gray-500">PnL корзины</div>
+        <div><div class="text-[10px] uppercase text-gray-500">PнL корзины</div>
           <div class="pnl mono text-2xl font-bold">+0.00</div></div>
         <div class="text-right"><div class="text-[10px] uppercase text-gray-500">Реализовано</div>
           <div class="real mono text-sm font-semibold">$0.00</div></div>
@@ -302,7 +311,7 @@ function buildCards(){
       <div class="grid grid-cols-2 gap-x-4 text-xs">
         <div class="flex justify-between border-t border-[#21262d] py-1"><span class="text-gray-500">Ставки B/S</span><span class="kvBS mono">—</span></div>
         <div class="flex justify-between border-t border-[#21262d] py-1"><span class="text-gray-500">Нетто</span><span class="kvNet mono">—</span></div>
-        <div class="flex justify-between border-t border-[#21262d] py-1"><span class="text-gray-500">Пик PnL</span><span class="kvPeak mono">—</span></div>
+        <div class="flex justify-between border-t border-[#21262d] py-1"><span class="text-gray-500">Пик PнL</span><span class="kvPeak mono">—</span></div>
         <div class="flex justify-between border-t border-[#21262d] py-1"><span class="text-gray-500">Запас/стоп</span><span class="kvGuard mono">—</span></div>
         <div class="flex justify-between border-t border-[#21262d] py-1"><span class="text-gray-500">Экспозиция</span><span class="kvExp mono">—</span></div>
         <div class="flex justify-between border-t border-[#21262d] py-1"><span class="text-gray-500">Ставок всего</span><span class="kvCnt mono">—</span></div>
@@ -316,8 +325,22 @@ function buildCards(){
       kvNet:d.querySelector('.kvNet'),kvPeak:d.querySelector('.kvPeak'),kvGuard:d.querySelector('.kvGuard'),
       kvExp:d.querySelector('.kvExp'),kvCnt:d.querySelector('.kvCnt'),ow:d.querySelector('.ow'),ol:d.querySelector('.ol'),
       spark:d.querySelector('.spark'),bets:d.querySelector('.bets')};
-    updatePair(st);
+    st.rowRefs.clear();
+    if(st.basket)st.basket.orders.forEach(o=>appendBet(st,o));
+    updatePair(st);drawSpark(st);
   }
+}
+function clearBets(st){if(st.el)st.el.bets.innerHTML='';st.rowRefs.clear();}
+function appendBet(st,o){
+  if(!st.el)return;
+  const K={start:['С','text-sky-400'],flip:['К','text-amber-400'],pyr:['П','text-green-400']};
+  const row=document.createElement('div');
+  row.className='flex justify-between gap-2 border-t border-[#21262d] py-0.5';
+  row.innerHTML=`<span class="text-gray-500">#${o.id} <span class="${K[o.kind][1]}">${K[o.kind][0]}</span>
+    <span class="${o.side==='BUY'?'text-green-400':'text-red-400'}">${o.side}</span> @ ${fmt(o.entry)}</span><span class="p">0.00</span>`;
+  st.el.bets.appendChild(row);
+  st.rowRefs.set(o.id,row.querySelector('.p'));
+  st.el.bets.scrollTop=st.el.bets.scrollHeight;
 }
 function updatePair(st){
   const e=st.el;if(!e)return;
@@ -331,8 +354,7 @@ function updatePair(st){
     e.pnl.textContent=fmtS(u)+' $';e.pnl.style.color=u>=0?'#4ade80':'#f87171';
     e.prog.style.width=Math.max(0,Math.min(100,u/c.tp*100))+'%';
     e.prog.style.background=u<0?'#dc2626':'';
-    const nb=countSide(b,'BUY'),ns=countSide(b,'SELL');
-    e.kvBS.textContent=`${nb} / ${ns}`;
+    e.kvBS.textContent=`${countSide(b,'BUY')} / ${countSide(b,'SELL')}`;
     const net=netQty(b);
     e.kvNet.textContent=Math.abs(net)<1e-9?'лок':fmtS(net,4);
     e.kvNet.style.color=net>0?'#4ade80':net<0?'#f87171':'#fbbf24';
@@ -345,36 +367,21 @@ function updatePair(st){
     else if(b.peakU>0){stTxt='НАБОР';stCls='text-[10px] px-1.5 py-0.5 rounded border border-green-700 text-green-400';}
     else{stTxt='СТАРТ';stCls='text-[10px] px-1.5 py-0.5 rounded border border-gray-600 text-gray-400';}
     e.status.textContent=stTxt;e.status.className='status '+stCls;
-    let tot=0;
     for(const o of b.orders){
       const r=st.rowRefs.get(o.id);if(!r)continue;
-      const op=(o.side==='BUY'?st.price-o.entry:o.entry-st.price)*o.qty;tot+=op;
+      const op=(o.side==='BUY'?st.price-o.entry:o.entry-st.price)*o.qty;
       r.textContent=fmtS(op);r.style.color=op>=0?'#4ade80':'#f87171';}
   }else{
     e.pnl.textContent='+0.00 $';e.pnl.style.color='#9ca3af';
-    e.prog.style.width='0%';
+    e.prog.style.width='0%';e.prog.style.background='';
     ['kvBS','kvNet','kvPeak','kvGuard','kvExp','kvCnt'].forEach(k=>{e[k].textContent='—';e[k].style.color='';});
     e.status.textContent=G.running?'ПАУЗА':'ОЖИДАНИЕ';
     e.status.className='status text-[10px] px-1.5 py-0.5 rounded border border-[#30363d] text-gray-400';
   }
 }
-function renderBets(st){
-  const e=st.el;if(!e)return;
-  e.bets.innerHTML='';st.rowRefs.clear();
-  if(!st.basket)return;
-  const K={start:['С','text-sky-400'],flip:['К','text-amber-400'],pyr:['П','text-green-400']};
-  st.basket.orders.forEach(o=>{
-    const row=document.createElement('div');
-    row.className='flex justify-between gap-2 border-t border-[#21262d] py-0.5';
-    row.innerHTML=`<span class="text-gray-500">#${o.id} <span class="${K[o.kind][1]}">${K[o.kind][0]}</span>
-      <span class="${o.side==='BUY'?'text-green-400':'text-red-400'}">${o.side}</span> @ ${fmt(o.entry)}</span><span class="p"></span>`;
-    e.bets.appendChild(row);
-    st.rowRefs.set(o.id,row.querySelector('.p'));});
-}
 
-/* ═══ итоговая статистика ═══ */
+/* ═══ итог ═══ */
 function renderStats(){
-  let real=0;for(const sym of sel)real+=P[sym].realized;
   let realAll=0;for(const k in P)realAll+=P[k].realized;
   const el=$('stReal');el.textContent=fmtS(realAll)+' $';el.style.color=realAll>=0?'#4ade80':'#f87171';
   $('stOW').textContent=G.ordWin;$('stOWsum').textContent='+$'+fmt(G.ordWinSum);
@@ -395,27 +402,26 @@ function pushEq(){
 function fit(cv){const r=cv.getBoundingClientRect(),d=window.devicePixelRatio||1;
   if(cv.width!==Math.round(r.width*d)||cv.height!==Math.round(r.height*d)){cv.width=Math.round(r.width*d);cv.height=Math.round(r.height*d);}
   const ctx=cv.getContext('2d');ctx.setTransform(d,0,0,d,0,0);return{ctx,w:r.width,h:r.height};}
-let rafPend=false;
-function scheduleDraw(){if(rafPend)return;rafPend=true;requestAnimationFrame(()=>{rafPend=false;drawAll();});}
-function drawAll(){
-  for(const sym of sel){const st=P[sym];if(!st.el)continue;
-    const{ctx,w,h}=fit(st.el.spark);ctx.clearRect(0,0,w,h);
-    const v=st.hist;if(v.length<2)continue;
-    let mn=Math.min(...v),mx=Math.max(...v);if(mx-mn<1e-9){mx+=1;mn-=1;}
-    const up=v[v.length-1]>=v[0],col=up?'#4ade80':'#f87171';
-    ctx.beginPath();
-    v.forEach((x,i)=>{const X=i/(v.length-1)*(w-2)+1,Y=2+(mx-x)/(mx-mn)*(h-4);
-      i?ctx.lineTo(X,Y):ctx.moveTo(X,Y);});
-    ctx.strokeStyle=col;ctx.lineWidth=1.3;ctx.stroke();}
+function drawSpark(st){
+  if(!st.el)return;
+  const{ctx,w,h}=fit(st.el.spark);ctx.clearRect(0,0,w,h);
+  const v=st.hist;if(v.length<2)return;
+  let mn=Math.min(...v),mx=Math.max(...v);if(mx-mn<1e-9){mx+=1;mn-=1;}
+  const up=v[v.length-1]>=v[0];
+  ctx.beginPath();
+  v.forEach((x,i)=>{const X=i/(v.length-1)*(w-2)+1,Y=2+(mx-x)/(mx-mn)*(h-4);
+    i?ctx.lineTo(X,Y):ctx.moveTo(X,Y);});
+  ctx.strokeStyle=up?'#4ade80':'#f87171';ctx.lineWidth=1.3;ctx.stroke();
+}
+function drawEq(){
   const{ctx,w,h}=fit($('eqCanvas'));ctx.clearRect(0,0,w,h);
   const v=G.eqHist;
-  if(v.length>1){
-    let mn=Math.min(...v),mx=Math.max(...v);if(mx-mn<.02){mx+=.01;mn-=.01;}
-    const Y=x=>2+(mx-x)/(mx-mn)*(h-4),X=i=>i/(v.length-1)*(w-2)+1;
-    const up=v[v.length-1]>=v[0];
-    ctx.beginPath();v.forEach((x,i)=>{i?ctx.lineTo(X(i),Y(x)):ctx.moveTo(X(i),Y(x));});
-    ctx.strokeStyle=up?'#4ade80':'#f87171';ctx.lineWidth=1.4;ctx.stroke();}
-  else{ctx.fillStyle='#6b7280';ctx.font='10px IBM Plex Sans';ctx.fillText('накопление…',4,h/2+3);}
+  if(v.length<2){ctx.fillStyle='#6b7280';ctx.font='10px IBM Plex Sans';ctx.fillText('накопление…',4,h/2+3);return;}
+  let mn=Math.min(...v),mx=Math.max(...v);if(mx-mn<.02){mx+=.01;mn-=.01;}
+  const Y=x=>2+(mx-x)/(mx-mn)*(h-4),X=i=>i/(v.length-1)*(w-2)+1;
+  const up=v[v.length-1]>=v[0];
+  ctx.beginPath();v.forEach((x,i)=>{i?ctx.lineTo(X(i),Y(x)):ctx.moveTo(X(i),Y(x));});
+  ctx.strokeStyle=up?'#4ade80':'#f87171';ctx.lineWidth=1.4;ctx.stroke();
 }
 
 /* ═══ сохранение ═══ */
@@ -452,12 +458,11 @@ $('btnReset').onclick=()=>{
 
 /* ═══ init ═══ */
 setInterval(()=>$('clock').textContent=new Date().toLocaleString('ru-RU',{hour:'2-digit',minute:'2-digit',second:'2-digit'}),1000);
-setInterval(()=>{for(const sym of sel){const st=P[sym];
-  if(st&&!st.tickFetched){st.tickFetched=true;
-    fetch(`https://api.binance.com/api/v3/exchangeInfo?symbol=${sym}`).then(r=>r.json()).then(j=>{
-      st.tickSize=parseFloat(j.filters.find(f=>f.filterType==='PRICE_FILTER').tickSize)||.01;}).catch(()=>{});}}},4000);
-load();buildPairBox();buildCards();renderStats();connect();
-log('sys','Автопилот v5: у каждой пары своя корзина, ставка фиксированная, инвариант «на одну больше».');
+setTimeout(()=>{for(const sym of sel){const st=P[sym];
+  fetch(`https://api.binance.com/api/v3/exchangeInfo?symbol=${sym}`).then(r=>r.json()).then(j=>{
+    st.tickSize=parseFloat(j.filters.find(f=>f.filterType==='PRICE_FILTER').tickSize)||.01;}).catch(()=>{});}},800);
+load();buildPairBox();buildCards();renderStats();connect();drawEq();
+log('sys','Автопилот v5.1: инвариант «на одну больше» удерживается каждый тик, пока баланс в минусе.');
 log('warn','Режим PAPER: комиссии не учитываются.');
 </script>
 </body>

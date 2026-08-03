@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>КОРЗИНА·СКАЛЬП v4 — фиксированная ставка · Binance Live</title>
+<title>КОРЗИНА·СКАЛЬП v4.1 — флип ×2 · Binance Live</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='5' y='10' width='6' height='14' fill='%23ff5062'/><rect x='7.5' y='5' width='1' height='24' fill='%23ff5062'/><rect x='20' y='6' width='6' height='16' fill='%233ee08c'/><rect x='22.5' y='2' width='1' height='26' fill='%233ee08c'/></svg>">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
@@ -42,12 +42,11 @@ tailwind.config={theme:{extend:{
 
 <div id="banner" class="fixed top-4 left-1/2 z-50 font-disp text-xs font-bold tracking-wider px-6 py-3 rounded-md border pointer-events-none"></div>
 
-<!-- ═══ TOPBAR ═══ -->
 <header class="relative z-10 flex flex-wrap items-center gap-x-6 gap-y-2 px-5 py-3 border-b border-line bg-panel/90">
   <div class="flex items-center gap-2.5 font-disp font-black text-[15px] tracking-wide whitespace-nowrap">
     <span id="wsLed" class="led-off w-2.5 h-2.5 rounded-full inline-block"></span>
     КОРЗИНА<span class="text-grn">·</span>СКАЛЬП
-    <span class="font-mono font-normal text-[10px] text-mut border border-line2 rounded px-1.5 py-0.5 tracking-widest">PAPER v4.0 · FIXED BET</span>
+    <span class="font-mono font-normal text-[10px] text-mut border border-line2 rounded px-1.5 py-0.5 tracking-widest">PAPER v4.1 · FLIP ×2</span>
   </div>
   <div class="flex items-center gap-2 text-xs text-mut"><span id="wsTxt">подключение…</span><span id="latEl" class="font-mono"></span></div>
   <select id="symSel" class="bg-panel2 border border-line2 rounded px-2.5 py-1.5 font-mono text-[13px] cursor-pointer">
@@ -68,12 +67,10 @@ tailwind.config={theme:{extend:{
   <div id="clock" class="font-mono text-[13px] text-mut"></div>
 </header>
 
-<!-- ═══ TAPE ═══ -->
 <div class="tape relative z-10 overflow-hidden border-b border-line bg-[#0b1118]">
   <div id="tape" class="tape-track flex gap-10 w-max py-1.5 font-mono text-xs"></div>
 </div>
 
-<!-- ═══ MAIN ═══ -->
 <main class="relative z-10 grid gap-3 p-3 max-w-[1760px] mx-auto xl:grid-cols-[308px_minmax(0,1fr)_344px] items-start">
 
   <!-- LEFT -->
@@ -85,9 +82,9 @@ tailwind.config={theme:{extend:{
         <div class="grid grid-cols-2 gap-2.5">
           <label class="text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Ставка, $ (всегда)<input id="baseUsd" type="number" value="100" min="10" step="10" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px]"></label>
           <label class="text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Цель корзины, $<input id="tpUsd" type="number" value="0.80" min="0.05" step="0.05" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px]"></label>
-          <label class="text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Шаг добавления, %<input id="stepAdd" type="number" value="0.10" min="0.02" step="0.01" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px]"></label>
+          <label class="text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Шаг движения, %<input id="stepAdd" type="number" value="0.10" min="0.02" step="0.01" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px]"></label>
           <label class="text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Стоп-просадка, $<input id="maxDD" type="number" value="5" min="0.5" step="0.5" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px]"></label>
-          <label class="text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Макс. ставок<input id="maxOrd" type="number" value="25" min="3" max="60" step="1" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px]"></label>
+          <label class="text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Макс. ставок<input id="maxOrd" type="number" value="30" min="3" max="80" step="1" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px]"></label>
           <label class="text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Пауза, мс<input id="cooldownMs" type="number" value="1500" min="0" step="250" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px]"></label>
           <label class="col-span-2 text-[10px] uppercase tracking-wide text-mut flex flex-col gap-1">Первый вход
             <select id="dirMode" class="w-full bg-panel2 border border-line2 rounded px-2 py-1.5 font-mono text-[12.5px] cursor-pointer">
@@ -106,7 +103,7 @@ tailwind.config={theme:{extend:{
 
         <div class="mt-3 pt-3 border-t border-dashed border-line2 text-[11.5px] leading-relaxed text-mut">
           <b class="text-cyn">1.</b> Ставка всегда одна и та же: старт, компенсации, пирамида — <b class="text-slate-200">×1</b>.<br>
-          <b class="text-red2">2.</b> Баланс из + в − → противоположная ставка; минус продолжается → <b class="text-slate-200">ещё по одной за шаг</b>.<br>
+          <b class="text-red2">2.</b> Баланс ушёл в минус → сразу <b class="text-slate-200">2 противоположные ставки</b> (гасим нетто + переворот), дальше на каждый шаг движения — <b class="text-slate-200">ещё 2 в нужную сторону</b>.<br>
           <b class="text-grn">3.</b> Баланс в плюсе → за каждый шаг в прибыль <b class="text-slate-200">ещё одна такая же</b>, и так до цели.<br>
           <b class="text-amb">4.</b> Цель → закрыть. Падение на <b class="text-slate-200">$0.01</b> от пика → закрыть всё.
         </div>
@@ -220,7 +217,6 @@ tailwind.config={theme:{extend:{
 
 <script>
 'use strict';
-/* ═══ helpers ═══ */
 const $=id=>document.getElementById(id);
 const fmt=(n,d=2)=>Number(n).toLocaleString('ru-RU',{minimumFractionDigits:d,maximumFractionDigits:d});
 const fmtS=(n,d=2)=>(n>=0?'+':'−')+fmt(Math.abs(n),d);
@@ -228,8 +224,8 @@ const round2=n=>Math.round(n*100)/100;
 const roundStep=(v,s)=>Math.round(v/s)*s;
 const hhmmss=t=>new Date(t).toLocaleTimeString('ru-RU');
 const LS='basket-scalper.v4';
+const FLIP_N=2;   /* противоположных ставок за раз: гасим нетто + переворот */
 
-/* ═══ state ═══ */
 const S={symbol:'BTCUSDT',price:0,prevPrice:0,tickSize:.01,latency:0,ws:null,retries:0,pollTimer:null,connected:false,
   emaF:null,emaS:null,ticks:0,candles:[],CANDLE_MS:2000,
   running:false,realized:0,baskets:0,wins:0,losses:0,best:null,worst:null,
@@ -238,10 +234,9 @@ const S={symbol:'BTCUSDT',price:0,prevPrice:0,tickSize:.01,latency:0,ws:null,ret
 function cfg(){return{
   base:Math.max(10,+$('baseUsd').value||100), tp:Math.max(.05,+$('tpUsd').value||.8),
   step:Math.max(.02,+$('stepAdd').value||.1), maxDD:Math.max(.5,+$('maxDD').value||5),
-  maxOrders:Math.max(3,+$('maxOrd').value|0||25), cooldown:Math.max(0,+$('cooldownMs').value|0||1500),
+  maxOrders:Math.max(3,+$('maxOrd').value|0||30), cooldown:Math.max(0,+$('cooldownMs').value|0||1500),
   dir:$('dirMode').value};}
 
-/* ═══ log / banner / sound ═══ */
 const LG={sys:'border-cyn/70 text-cyn',buy:'border-grn/80 text-grn/90',sell:'border-red2/80 text-red2/90',
   flip:'border-amb text-amb font-semibold',ok:'border-grn text-grn font-semibold',
   err:'border-red2 text-red2 font-semibold bg-red2/5',warn:'border-amb/70 text-amb/90'};
@@ -268,7 +263,6 @@ function beep(f,dur=.13,type='sine',vol=.06){
     o.connect(g).connect(AC.destination);o.start();o.stop(AC.currentTime+dur);}catch(e){}
 }
 
-/* ═══ data feeds ═══ */
 function setWs(state,txt){$('wsLed').className='w-2.5 h-2.5 rounded-full inline-block led-'+state;$('wsTxt').textContent=txt;}
 function connect(){
   try{S.ws&&S.ws.close()}catch(e){}
@@ -304,7 +298,6 @@ async function fetchTape(){try{
     return `<span class="flex gap-2 whitespace-nowrap"><span class="text-slate-200 font-semibold">${s.replace('USDT','')}</span><span class="text-slate-200">${fmt(parseFloat(t.lastPrice))}</span><span style="color:${c>=0?'#3ee08c':'#ff5062'}">${fmtS(c,2)}%</span></span>`;}).join('');
   $('tape').innerHTML=html+html;}catch(e){}}
 
-/* ═══ price / candles / EMA ═══ */
 function onPrice(p,eventTs){
   S.prevPrice=S.price;S.price=p;S.ticks++;
   S.latency=Math.max(0,Date.now()-eventTs);
@@ -320,7 +313,7 @@ function pushCandle(p,t){
   else{if(p>c.h)c.h=p;if(p<c.l)c.l=p;c.c=p;}
 }
 
-/* ═══ basket engine — FIXED BET ═══ */
+/* ═══ basket engine — FIXED BET, FLIP ×2 ═══ */
 function basketU(price){if(!S.basket)return 0;let u=0;
   for(const o of S.basket.orders)u+=(o.side==='BUY'?price-o.entry:o.entry-price)*o.qty;return u;}
 function netQty(b){let q=0;for(const o of b.orders)q+=(o.side==='BUY'?o.qty:-o.qty);return q;}
@@ -344,6 +337,11 @@ function _add(side,price,kind){                       /* размер всегд
   beep(kind==='flip'?500:(side==='BUY'?620:440),kind==='flip'?.1:.05,'square',.04);
   renderOrders();return o;
 }
+function addBets(side,price,n,kind){for(let i=0;i<n;i++){if(!canAdd())break;_add(side,price,kind);}}
+function compDir(){                                    /* противоположно нетто; при локе — противоположно последней */
+  const b=S.basket,net=netQty(b);
+  return net>1e-9?'SELL':net<-1e-9?'BUY':(b.lastDir==='BUY'?'SELL':'BUY');
+}
 function openBasket(dir){
   S.basket={orders:[],peakU:0,openRealized:S.realized,openedAt:Date.now(),
             flipArmed:true,lastDir:null,lastEntry:0,warnedLim:false};
@@ -355,16 +353,12 @@ function closeBasket(reason,win){
   const b=S.basket,u=round2(basketU(S.price));
   S.realized=round2(S.realized+u);S.baskets++;
   if(win){S.wins++;if(S.best==null||u>S.best)S.best=u;}
-  else{S.losses++;if(S.worst==null||u<S.worst)S.worst=u;}
+  else{S.losses++;if(S.worst==null||u>S.worst)S.worst=u;}
   const nK=b.orders.filter(o=>o.kind==='flip').length,nP=b.orders.filter(o=>o.kind==='pyr').length;
   log(win?'ok':'err',`${win?'✔ КОРИЗИНА ЗАКРЫТА':'⛔ КОРИЗИНА ЗАКРЫТА'} [${reason}] · ${fmtS(u)} $ · ставок ${b.orders.length} (К:${nK} П:${nP})`);
   banner(win?`КОРЗИНА В КОПИЛКУ ${fmtS(u)} $`:`ЗАКРЫТО ${fmtS(u)} $ · ${reason}`,win);
   win?beep(880,.18):beep(190,.3,'sawtooth',.08);
   S.basket=null;S.lastCloseTs=Date.now();renderOrders();save();
-}
-function compDir(){                                    /* противоположно нетто; при локе — противоположно последней */
-  const b=S.basket,net=netQty(b);
-  return net>1e-9?'SELL':net<-1e-9?'BUY':(b.lastDir==='BUY'?'SELL':'BUY');
 }
 function engine(price){
   if(!S.basket){
@@ -377,18 +371,23 @@ function engine(price){
   const u=basketU(price);
   if(u>b.peakU)b.peakU=u;
 
-  if(u>=c.tp)return closeBasket('цель '+fmt(c.tp)+' $',true);                       /* цель → в копилку */
-  if(b.peakU>0&&u<=b.peakU-0.01)return closeBasket('просадка $0.01 от пика',u>=0); /* защита −1 цент */
-  if(u<=-c.maxDD)return closeBasket('стоп-просадка −'+fmt(c.maxDD)+' $',false);     /* абсолютный стоп */
+  if(u>=c.tp)return closeBasket('цель '+fmt(c.tp)+' $',true);
+  if(b.peakU>0&&u<=b.peakU-0.01)return closeBasket('просадка $0.01 от пика',u>=0);
+  if(u<=-c.maxDD)return closeBasket('стоп-просадка −'+fmt(c.maxDD)+' $',false);
 
   const step=c.step/100;
   if(u<0){
-    /* баланс ушёл в минус */
-    if(b.flipArmed){b.flipArmed=false;if(canAdd())_add(compDir(),price,'flip');}    /* сразу противоположная ставка */
-    else if(price>=b.lastEntry*(1+step)){if(canAdd())_add('BUY',price,'flip');}     /* движение вверх — ещё ставка вверх */
-    else if(price<=b.lastEntry*(1-step)){if(canAdd())_add('SELL',price,'flip');}    /* движение вниз — ещё ставка вниз */
+    /* минус: сразу 2 противоположные (иначе лок), дальше на каждый шаг — ещё в сторону движения */
+    if(b.flipArmed){
+      b.flipArmed=false;
+      const net=netQty(b);
+      log('flip',`Баланс в минусе → 2 противоположные ставки · нетто было ${fmtS(net,5)}`);
+      addBets(compDir(),price,FLIP_N,'flip');
+    }
+    else if(price>=b.lastEntry*(1+step))addBets('BUY',price,FLIP_N,'flip');   /* движение вверх — ставки вверх */
+    else if(price<=b.lastEntry*(1-step))addBets('SELL',price,FLIP_N,'flip');  /* движение вниз — ставки вниз */
   }else{
-    /* баланс не уходит в минус → ставим ещё одну и так далее */
+    /* плюс: баланс не уходит в минус → ставим ещё одну и так далее */
     b.flipArmed=true;
     const fav=b.lastDir==='BUY'?price>=b.lastEntry*(1+step):price<=b.lastEntry*(1-step);
     if(fav&&canAdd())_add(b.lastDir,price,'pyr');
@@ -453,7 +452,7 @@ function uiTick(){
     $('sMode').classList.add('hidden');
     ['sNet','sPeak','sSpare','sDDroom','sAvg','sExp'].forEach(i=>{$(i).textContent='—';$(i).style.color='';});
     $('sSpeed').textContent='—';$('sSpeed').style.color='';
-    $('sCnt').textContent='0 / '+(+$('maxOrd').value||25);
+    $('sCnt').textContent='0 / '+(+$('maxOrd').value||30);
     $('tpBar').style.width='0%';$('tpPct').textContent='0%';
     $('fCnt').textContent='—';$('fExp').textContent='$0.00';$('fPnl').textContent='$0.00';$('fPnl').style.color='';
   }
@@ -484,7 +483,6 @@ function renderOrders(){
   $('fCnt').textContent=S.basket.orders.length+' шт';
 }
 
-/* ═══ charts ═══ */
 function fit(cv){const r=cv.getBoundingClientRect(),d=window.devicePixelRatio||1;
   if(cv.width!==Math.round(r.width*d)||cv.height!==Math.round(r.height*d)){cv.width=Math.round(r.width*d);cv.height=Math.round(r.height*d);}
   const ctx=cv.getContext('2d');ctx.setTransform(d,0,0,d,0,0);return{ctx,w:r.width,h:r.height};}
@@ -541,7 +539,6 @@ function drawEq(){
   ctx.fillStyle=col;ctx.font='800 11px JetBrains Mono';ctx.fillText(fmtS(v[v.length-1])+' $',8,13);
 }
 
-/* ═══ persistence ═══ */
 function save(){try{localStorage.setItem(LS,JSON.stringify({
   realized:S.realized,baskets:S.baskets,wins:S.wins,losses:S.losses,best:S.best,worst:S.worst,
   cfg:{b:$('baseUsd').value,st:$('stepAdd').value,t:$('tpUsd').value,dd:$('maxDD').value,
@@ -550,16 +547,15 @@ function load(){try{const j=JSON.parse(localStorage.getItem(LS)||'null');if(!j)r
   S.realized=j.realized||0;S.baskets=j.baskets||0;S.wins=j.wins||0;S.losses=j.losses||0;
   S.best=j.best??null;S.worst=j.worst??null;
   if(j.cfg){$('baseUsd').value=j.cfg.b;$('stepAdd').value=j.cfg.st||.1;$('tpUsd').value=j.cfg.t;
-    $('maxDD').value=j.cfg.dd||5;$('maxOrd').value=j.cfg.o||25;
+    $('maxDD').value=j.cfg.dd||5;$('maxOrd').value=j.cfg.o||30;
     $('cooldownMs').value=j.cfg.c;$('dirMode').value=j.cfg.d;}
   log('sys','Статистика восстановлена из localStorage');}catch(e){}}
 
-/* ═══ controls ═══ */
 $('btnStart').onclick=()=>{
   if(!S.connected&&S.ticks===0){log('warn','Дождитесь подключения к потоку котировок');return;}
   S.running=true;$('btnStart').disabled=true;$('btnStop').disabled=false;
   try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();AC.resume&&AC.resume();}catch(e){}
-  log('ok','▶ Бот запущен · фиксированная ставка · PAPER');beep(700,.08);
+  log('ok','▶ Бот запущен · фиксированная ставка, флип ×2 · PAPER');beep(700,.08);
 };
 $('btnStop').onclick=()=>{
   S.running=false;$('btnStart').disabled=false;$('btnStop').disabled=true;
@@ -581,11 +577,10 @@ $('symSel').onchange=async e=>{
 ['baseUsd','stepAdd','tpUsd','maxDD','maxOrd','cooldownMs','dirMode']
   .forEach(id=>$(id).addEventListener('change',save));
 
-/* ═══ init ═══ */
 setInterval(()=>$('clock').textContent=new Date().toLocaleString('ru-RU',{weekday:'short',hour:'2-digit',minute:'2-digit',second:'2-digit'}),1000);
 setInterval(fetch24,10000);setInterval(fetchTape,60000);
 load();
-log('sys','Инициализация v4.0: <b>фиксированная ставка</b>, компенсации по одной, пирамида пока баланс в плюсе.');
+log('sys','Инициализация v4.1: фиксированная ставка, <b>флип всегда ×2</b> — нетто переходит на другую сторону, лока нет.');
 log('warn','Режим PAPER: ордера виртуальные, комиссии не учитываются.');
 fetchTick();fetch24();fetchTape();connect();
 </script>
